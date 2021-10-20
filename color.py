@@ -27,7 +27,7 @@ def Example():  #Example
          
        
     
-def printcol(color, style): #Definición del color y el estilo de impresión
+def printcol(color, style, text): #Definición del color y el estilo de impresión
         
 	s_color = t.Tools(8)	#Instancia objeto Switch
 	s_color.setSwitch_color()	#Creador del switch
@@ -37,7 +37,7 @@ def printcol(color, style): #Definición del color y el estilo de impresión
 	s_style.setSwitch_style()
 	style = s_style.switch(style)
 
-	print("\033[" + style + ";"  + color + ";m")	#Imprimir color en el terminal
+	print("\033[" + style + ";"  + color + ";m" + " " + text)	#Imprimir color en el terminal
     
 def rescol():   #Restaurar el color y estilo normal
     print("\033[0m")        

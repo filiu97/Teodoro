@@ -9,7 +9,11 @@ import wikipedia
 import os
 import sys
 import time
-  
+
+from apiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+import pickle
+
 
 Names = ["Teodoro",
 		 "Teo",
@@ -146,11 +150,9 @@ def Take_query():
 			for name in Names:
 				n += name + ", o "
 			speak("Me puedes llamar " + n[:-2] + ", tu asistente fiel")
-			continue
 		
 		elif ("hola" == query.replace(" ", "")) or ("qué tal" in query) or ("reiníciate" in query):
 			Hello()
-			continue
 		
 		elif "anímame" in query:
 			speak("Venga señor, no pasa nada, aquí está Teodoro para servirle")
@@ -159,35 +161,27 @@ def Take_query():
 			query = query.partition("google")
 			speak("Abriendo Google")
 			webbrowser.open("https://www.google.es/search?q=" + query[2])
-			continue
 		
 		elif "qué día es hoy" in query: 
 			tellDay()
-			continue
 		
 		elif "qué hora es" in query: 
 			tellTime()
-			continue
 		
 		elif "pon la música" in query:
 			os.system(Spotify["play"])
-			continue
 		
 		elif "pasa de canción" in query or "siguiente canción" in query:
 			os.system(Spotify["next"])
-			continue
 		
 		elif "anterior canción" in query:
 			os.system(Spotify["previous"])
-			continue	
 		
 		elif "para la música" in query or "para spotify" in query:
 			os.system(Spotify["pause"])
-			continue
 		
 		elif "cierra spotify" in query or "quita la música" in query:
 			os.system(Spotify["stop"])
-			continue
 		
 		elif "busca en wikipedia" in query: 
 			query = query.partition("wikipedia") 
@@ -218,7 +212,6 @@ def Take_query():
 							break
 					except:
 						break
-			continue
 		
 		elif "tiempo hace" in query:
 			query = query.partition("en")
@@ -237,7 +230,6 @@ def Take_query():
 				i+=1
 			speak("En " + place + ",  está " + desc + " y hace " + str(temp) + " grados.")
 			os.system("display " + place + ".png")
-			continue
 		
 		elif "alarma" in query:
 			list_of_words = query.split()
@@ -250,10 +242,6 @@ def Take_query():
 			t *= m
 			name = list_of_words[list_of_words.index("nombre") + 1]
 			countdown(t,name)
-			continue
-		
-		
-		
 		
 		
 		elif ("apágate" in query) or ("adiós" in query): 
@@ -263,6 +251,12 @@ def Take_query():
 		elif "apaga el ordenador" in query:
 			speak("En seguida, que tengas un buen día")
 			os.system("shutdown now -h")
+
+		elif ("suspende el ordenador" in query) or ("suspensión" in query):
+			os.system("sudo pm-suspend")
+
+			
+
 			
 		elif "prueba" in query:
 			
