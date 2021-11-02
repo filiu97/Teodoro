@@ -8,19 +8,31 @@ import datetime
 import wikipedia 
 import os
 import sys
-import time
-
+from time import sleep, time
+from dateutil.relativedelta import relativedelta
+import datefinder
+from datetime import datetime, timedelta
 from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 import pickle
+import iso8601
+
+scopes = ['https://www.googleapis.com/auth/calendar']
+flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
+
+# Para hacerlo por primera vez, las credenciales
+#credentials = flow.run_console()
+#pickle.dump(credentials, open("token.pkl", "wb")) 
+
+credentials = pickle.load(open("token.pkl", "rb"))  
+
+service = build("calendar", "v3", credentials=credentials)
 
 
 Names = ["Teodoro",
 		 "Teo",
-		 "subnormal",
-		 "imbécil",
-		 "gilipollas"
 		]
+
 
 Spotify = {"pause" : "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause",
 		   "play" : "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play",
@@ -29,17 +41,23 @@ Spotify = {"pause" : "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spot
 		   "stop" : "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop"            
 		}
 
-Day_dict = {1: 'Lunes', 2: 'Martes',  
-			3: 'Miércoles', 4: 'Jueves',  
-			5: 'Viernes', 6: 'Sábado', 
-			7: 'Domingo'} 
+Day_dict = {1: 'lunes', 2: 'martes',  
+			3: 'miércoles', 4: 'jueves',  
+			5: 'viernes', 6: 'sábado', 
+			7: 'domingo'} 
 
-Month_dict = {'01': 'Enero', '02': 'Febrero',
-			  '03': 'Marzo', '04': 'Abril',
-			  '05': 'Mayo', '06': 'Junio',
-			  '07': 'Julio', '08': 'Agosto',
-			  '09': 'Septiembre', '10': 'Octubre',
-			  '11': 'Noviembre', '12' : 'Diciembre'}
+Month_dict = {'01': 'enero', '02': 'febrero',
+			  '03': 'marzo', '04': 'abril',
+			  '05': 'mayo', '06': 'junio',
+			  '07': 'julio', '08': 'agosto',
+			  '09': 'septiembre', '10': 'octubre',
+			  '11': 'noviembre', '12' : 'diciembre'}
+
+Number_dict = {1: 'uno', 2: 'dos',  
+			   3: 'tres', 4: 'cuatro',  
+			   5: 'cinco', 6: 'seis', 
+			   7: 'siete', 8: 'ocho',
+			   9: 'nueve', 10: 'diez'} 
 
 s_time_unit = t.Tools(3)	#Instancia objeto Switch
 s_time_unit.setSwitch_time_unit()	#Creador del switch
@@ -68,7 +86,7 @@ def takeCommand():
 					if (Query.find(name)) != -1:
 						speak("¿Si?")
 						print("Reconociendo")
-						audio = r.record(source, 5) 
+						audio = r.record(source, 10) 
 #						Request = Query.partition(name)
 						try:
 							Request = r.recognize_google(audio, language='es-ES')
@@ -93,8 +111,8 @@ def speak(audio):
   
 def tellDay():
 	
-	day = datetime.datetime.today().weekday() + 1
-	today = datetime.datetime.today()
+	day = datetime.today().weekday() + 1
+	today = datetime.today()
 	number = str(today.date())
 	
 	#if day in Day_dict.keys(): 
@@ -104,7 +122,7 @@ def tellDay():
   
 def tellTime(): 
       
-    t = str(datetime.datetime.now()) 
+    t = str(datetime.now()) 
     print(t) 
     hour = t[11:13] 
     minutes = t[14:16] 
@@ -126,7 +144,7 @@ def countdown(t, name):
 		mins, secs = divmod(t, 60)
 		timeformat = '{:02d}:{:02d}'.format(mins, secs)
 		print("alarma " + name + "  --->  " + timeformat, end="\r")
-		time.sleep(1)
+		sleep(1)
 		t -= 1
 		os.system("clear")
 		
@@ -135,14 +153,63 @@ def countdown(t, name):
 	os.system(Spotify["play"])
 
 
+def get_date_hours(date_input, time_format = "date"):
+
+	date_obj = iso8601.parse_date(date_input)
+	if time_format == "date":
+		return date_obj.strftime('%H:%M del %d-%m-%Y ')
+	elif time_format == "hours":
+		return date_obj.strftime('%H:%M')
+	elif time_format == "day_complete":
+		return date_obj.strftime('%d-%m-%Y ')
+
+def get_relative_events(duration, offset = 0, maxResults = 50):
+	today = datetime.today()
+	today = datetime.combine(today, datetime.min.time())
+	today = today + relativedelta(days=offset)
+	diff = today + relativedelta(days=duration)
+	tmin = today.isoformat('T') + "Z"
+	tmax = diff.isoformat('T') + "Z"
+	eventsResult = service.events().list(
+		calendarId='primary',
+		timeMin=tmin,
+		timeMax=tmax,
+		maxResults=maxResults,
+		singleEvents=True,
+		orderBy='startTime',
+	).execute()
+	return eventsResult
+
+def get_absolute_events(day_str, maxResults = 50):
+	matches = list(datefinder.find_dates(day_str))
+	day = matches[0]
+	diff = day + relativedelta(days=1)
+	tmin = day.isoformat('T') + "Z"
+	tmax = diff.isoformat('T') + "Z"
+	eventsResult = service.events().list(
+		calendarId='primary',
+		timeMin=tmin,
+		timeMax=tmax,
+		maxResults=maxResults,
+		singleEvents=True,
+		orderBy='startTime',
+	).execute()
+	return eventsResult
+
+
 def Take_query(): 
 
 	Hello() 
+	os.system("clear")
+	start = time()
 	
 	while(True): 
 		
-		os.system("clear")
-		
+		end = time()
+		if end-start > 120:
+			os.system("clear")
+			start = time()
+
 		query = takeCommand().lower() 
 		
 		if ("cómo te llamas" in query) or ("cómo te puedo llamar" in query): 
@@ -231,7 +298,7 @@ def Take_query():
 			speak("En " + place + ",  está " + desc + " y hace " + str(temp) + " grados.")
 			os.system("display " + place + ".png")
 		
-		elif "alarma" in query:
+		elif "alarma" in query:  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
 			list_of_words = query.split()
 			try:
 				t = int(list_of_words[list_of_words.index("de") + 1])
@@ -243,6 +310,117 @@ def Take_query():
 			name = list_of_words[list_of_words.index("nombre") + 1]
 			countdown(t,name)
 		
+
+		elif ("eventos" in query) or ("calendario" in query): # "(Enséñame/muéstrame mis/mi) eventos/calendario para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
+			start = time()
+			list_of_words = query.split()
+
+			if "semanas" in query:
+				number = list_of_words[list_of_words.index("semanas") - 1]
+				time_str = "las próximas " + number + " semanas"
+				time_format = "date"
+				key_list = list(Number_dict.keys())
+				val_list = list(Number_dict.values())
+				position = val_list.index(number)
+				number = key_list[position]
+				duration = 7*number
+				eventsResult = get_relative_events(duration)
+
+			elif "semana" in query:
+				time_unit = list_of_words[list_of_words.index("semana") - 1]
+				if time_unit == "esta":
+					time_str = "esta semana"
+					time_format = "date"
+					duration = 7
+					eventsResult = get_relative_events(duration)
+				elif time_unit == "próxima" or time_unit == "siguiente":
+					time_str = "la próxima semana"
+					time_format = "date"
+					duration = 7
+					offset = 7
+					eventsResult = get_relative_events(duration, offset)
+			
+			elif "meses" in query:
+				number = list_of_words[list_of_words.index("meses") - 1]
+				time_str = "los próximos " + number + " meses"
+				time_format = "date"
+				key_list = list(Number_dict.keys())
+				val_list = list(Number_dict.values())
+				position = val_list.index(number)
+				number = key_list[position]
+				duration = 30*number
+				eventsResult = get_relative_events(duration)
+
+			elif "mes" in query:
+				time_unit = list_of_words[list_of_words.index("mes") - 1]
+				if time_unit == "este":
+					time_str = "este mes"
+					time_format = "date"
+					duration = 30
+					eventsResult = get_relative_events(duration)
+				elif time_unit == "próximo" or time_unit == "siguiente":
+					time_str = "la próximo mes"
+					time_format = "date"
+					duration = 30
+					offset = 30
+					eventsResult = get_relative_events(duration, offset)
+
+			else:
+				time_unit = "para"
+				if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
+					time_str = "hoy"
+					time_format = "hours"
+					today = datetime.today()
+					day_str = today.strftime("%m-%d-%Y")
+					eventsResult = get_absolute_events(day_str)
+				elif list_of_words[list_of_words.index(time_unit) + 1] == "mañana":
+					time_str = "mañana"
+					time_format = "hours"
+					today = datetime.today()
+					day_str = today + timedelta(days=1)
+					day_str = day_str.strftime("%m-%d-%Y")
+					eventsResult = get_absolute_events(day_str)
+				elif list_of_words[list_of_words.index(time_unit) + 1] == "pasado":
+					time_str = "pasado mañana"
+					time_format = "hours"
+					today = datetime.today()
+					day_str = today + timedelta(days=2)
+					day_str = day_str.strftime("%m-%d-%Y")
+					eventsResult = get_absolute_events(day_str)
+				else:
+					day = list_of_words[list_of_words.index(time_unit) + 2]
+					try:
+						month = list_of_words[list_of_words.index(time_unit) + 4]
+					except:
+						today = datetime.today()
+						month = today.month
+					try:
+						year = list_of_words[list_of_words.index(time_unit) + 6]
+					except:
+						today = datetime.today()
+						year = today.year
+					time_str = "el día " + str(day) + " de " +  str(month) + " de " + str(year)
+					time_format = "hours"
+					key_list = list(Month_dict.keys())
+					val_list = list(Month_dict.values())
+					position = val_list.index(month)
+					month = key_list[position]
+					day_str = str(month) + "/" + str(day) + "/" + str(year)
+					eventsResult = get_absolute_events(day_str)
+
+			if eventsResult['items']:
+				speak("Tus eventos para " + time_str + " son:")
+				for event in eventsResult['items']:
+					if 'dateTime' in event['start'].keys():
+						print("   -" + event['summary'] + " a las " + get_date_hours(event['start']['dateTime'], time_format))
+					else:
+						print("   -" + event['summary'] + " el día " + get_date_hours(event['start']['date'], 'day_complete'))
+			else:
+				speak("No tienes ningún evento para " + time_str)
+
+
+			
+
 		
 		elif ("apágate" in query) or ("adiós" in query): 
 			speak("Adiós señor, que tenga un buen día")
@@ -263,5 +441,5 @@ def Take_query():
 			continue
 				
 if __name__ == '__main__': 
-      
-    Take_query()
+       
+	Take_query()
