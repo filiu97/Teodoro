@@ -8,7 +8,8 @@ import pprint as pp
 from datetime import datetime, time, timedelta
 import color
 
-
+trello = 'qonfs68h23u3uct5656hlrscusfeiale@import.calendar.google.com'
+personal = 'karlosfiliu97@gmail.com'
 
 scopes = ['https://www.googleapis.com/auth/calendar']
 flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
@@ -77,7 +78,7 @@ tmin = today.isoformat('T') + "Z"
 tmax = diff.isoformat('T') + "Z"
 maxResults = 50
 eventsResult = service.events().list(
-    calendarId='primary',
+    calendarId=personal,
     timeMin=tmin,
     timeMax=tmax,
     maxResults=maxResults,
@@ -96,7 +97,12 @@ def get_date(date_input):
 
 print("Tus eventos de los próximos " + str(d) + " días son:")
 
-for event in eventsResult['items']:
+# Get the list of colors
+colors = service.colors().get().execute()
+
+
+
+for event in eventsResult('items'):
     if 'dateTime' in event['start'].keys():
         print("   -" + event['summary'] + " a las " + get_date(event['start']['dateTime']))
     else:
@@ -117,7 +123,7 @@ diff = day + relativedelta(days=1)
 tmin = day.isoformat('T') + "Z"
 tmax = diff.isoformat('T') + "Z"
 eventsResult = service.events().list(
-    calendarId='primary',
+    calendarId='karlosfiliu97@gmail.com',
     timeMin=tmin,
     timeMax=tmax,
     maxResults=maxResults,

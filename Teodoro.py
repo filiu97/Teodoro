@@ -28,6 +28,9 @@ credentials = pickle.load(open("token.pkl", "rb"))
 
 service = build("calendar", "v3", credentials=credentials)
 
+trello = 'qonfs68h23u3uct5656hlrscusfeiale@import.calendar.google.com'
+personal = 'karlosfiliu97@gmail.com'
+
 
 Names = ["Teodoro",
 		 "Teo",
@@ -163,7 +166,7 @@ def get_date_hours(date_input, time_format = "date"):
 	elif time_format == "day_complete":
 		return date_obj.strftime('%d-%m-%Y ')
 
-def get_relative_events(duration, offset = 0, maxResults = 50):
+def get_relative_events(calendarID, duration, offset = 0, maxResults = 50):
 	today = datetime.today()
 	today = datetime.combine(today, datetime.min.time())
 	today = today + relativedelta(days=offset)
@@ -171,7 +174,7 @@ def get_relative_events(duration, offset = 0, maxResults = 50):
 	tmin = today.isoformat('T') + "Z"
 	tmax = diff.isoformat('T') + "Z"
 	eventsResult = service.events().list(
-		calendarId='primary',
+		calendarId=calendarID,
 		timeMin=tmin,
 		timeMax=tmax,
 		maxResults=maxResults,
@@ -180,14 +183,14 @@ def get_relative_events(duration, offset = 0, maxResults = 50):
 	).execute()
 	return eventsResult
 
-def get_absolute_events(day_str, maxResults = 50):
+def get_absolute_events(calendarID, day_str, maxResults = 50):
 	matches = list(datefinder.find_dates(day_str))
 	day = matches[0]
 	diff = day + relativedelta(days=1)
 	tmin = day.isoformat('T') + "Z"
 	tmax = diff.isoformat('T') + "Z"
 	eventsResult = service.events().list(
-		calendarId='primary',
+		calendarId=calendarID,
 		timeMin=tmin,
 		timeMax=tmax,
 		maxResults=maxResults,
@@ -195,6 +198,38 @@ def get_absolute_events(day_str, maxResults = 50):
 		orderBy='startTime',
 	).execute()
 	return eventsResult
+
+def create_event(start_time_str, summary, duration=1, attendees=None, description=None, location=None):
+    matches = list(datefinder.find_dates(start_time_str))
+    if len(matches):
+        start_time = matches[0]
+        end_time = start_time + timedelta(hours = duration)
+                
+    event = {
+        'summary': summary,
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': start_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': 'Europe/Madrid',
+        },
+        'end': {
+            'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': 'Europe/Madrid',
+        },
+        'attendees': [
+        {'email':attendees },
+    ],
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10},
+            ],
+        },
+    }
+        
+    return service.events().insert(calendarId= personal, body = event, sendNotifications = True).execute()
 
 
 def Take_query(): 
@@ -311,10 +346,17 @@ def Take_query():
 			countdown(t,name)
 		
 
-		elif ("eventos" in query) or ("calendario" in query): # "(Enséñame/muéstrame mis/mi) eventos/calendario para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
+		elif ("eventos" in query) or ("calendario" in query) or ('tareas' in query): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
+			
 			start = time()
 			list_of_words = query.split()
-
+			if ("eventos" in query) or ("calendario" in query):
+				calendarID = personal
+				event_type = "eventos"
+			else:
+				calendarID = trello
+				event_type = "tareas"
+			
 			if "semanas" in query:
 				number = list_of_words[list_of_words.index("semanas") - 1]
 				time_str = "las próximas " + number + " semanas"
@@ -324,7 +366,7 @@ def Take_query():
 				position = val_list.index(number)
 				number = key_list[position]
 				duration = 7*number
-				eventsResult = get_relative_events(duration)
+				eventsResult = get_relative_events(calendarID, duration)
 
 			elif "semana" in query:
 				time_unit = list_of_words[list_of_words.index("semana") - 1]
@@ -332,13 +374,13 @@ def Take_query():
 					time_str = "esta semana"
 					time_format = "date"
 					duration = 7
-					eventsResult = get_relative_events(duration)
+					eventsResult = get_relative_events(calendarID, duration)
 				elif time_unit == "próxima" or time_unit == "siguiente":
 					time_str = "la próxima semana"
 					time_format = "date"
 					duration = 7
 					offset = 7
-					eventsResult = get_relative_events(duration, offset)
+					eventsResult = get_relative_events(calendarID, duration, offset)
 			
 			elif "meses" in query:
 				number = list_of_words[list_of_words.index("meses") - 1]
@@ -349,7 +391,7 @@ def Take_query():
 				position = val_list.index(number)
 				number = key_list[position]
 				duration = 30*number
-				eventsResult = get_relative_events(duration)
+				eventsResult = get_relative_events(calendarID, duration)
 
 			elif "mes" in query:
 				time_unit = list_of_words[list_of_words.index("mes") - 1]
@@ -357,13 +399,13 @@ def Take_query():
 					time_str = "este mes"
 					time_format = "date"
 					duration = 30
-					eventsResult = get_relative_events(duration)
+					eventsResult = get_relative_events(calendarID, duration)
 				elif time_unit == "próximo" or time_unit == "siguiente":
 					time_str = "la próximo mes"
 					time_format = "date"
 					duration = 30
 					offset = 30
-					eventsResult = get_relative_events(duration, offset)
+					eventsResult = get_relative_events(calendarID, duration, offset)
 
 			else:
 				time_unit = "para"
@@ -372,21 +414,21 @@ def Take_query():
 					time_format = "hours"
 					today = datetime.today()
 					day_str = today.strftime("%m-%d-%Y")
-					eventsResult = get_absolute_events(day_str)
+					eventsResult = get_absolute_events(calendarID, day_str)
 				elif list_of_words[list_of_words.index(time_unit) + 1] == "mañana":
 					time_str = "mañana"
 					time_format = "hours"
 					today = datetime.today()
 					day_str = today + timedelta(days=1)
 					day_str = day_str.strftime("%m-%d-%Y")
-					eventsResult = get_absolute_events(day_str)
+					eventsResult = get_absolute_events(calendarID, day_str)
 				elif list_of_words[list_of_words.index(time_unit) + 1] == "pasado":
 					time_str = "pasado mañana"
 					time_format = "hours"
 					today = datetime.today()
 					day_str = today + timedelta(days=2)
 					day_str = day_str.strftime("%m-%d-%Y")
-					eventsResult = get_absolute_events(day_str)
+					eventsResult = get_absolute_events(calendarID, day_str)
 				else:
 					day = list_of_words[list_of_words.index(time_unit) + 2]
 					try:
@@ -406,17 +448,17 @@ def Take_query():
 					position = val_list.index(month)
 					month = key_list[position]
 					day_str = str(month) + "/" + str(day) + "/" + str(year)
-					eventsResult = get_absolute_events(day_str)
+					eventsResult = get_absolute_events(calendarID, day_str)
 
 			if eventsResult['items']:
-				speak("Tus eventos para " + time_str + " son:")
+				speak("Tus " + event_type + "  para " + time_str + " son:")
 				for event in eventsResult['items']:
 					if 'dateTime' in event['start'].keys():
 						print("   -" + event['summary'] + " a las " + get_date_hours(event['start']['dateTime'], time_format))
 					else:
 						print("   -" + event['summary'] + " el día " + get_date_hours(event['start']['date'], 'day_complete'))
 			else:
-				speak("No tienes ningún evento para " + time_str)
+				speak("No tienes nada para " + time_str)
 
 
 			
