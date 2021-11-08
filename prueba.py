@@ -102,7 +102,7 @@ colors = service.colors().get().execute()
 
 
 
-for event in eventsResult('items'):
+for event in eventsResult['items']:
     if 'dateTime' in event['start'].keys():
         print("   -" + event['summary'] + " a las " + get_date(event['start']['dateTime']))
     else:
@@ -138,3 +138,15 @@ for event in eventsResult['items']:
         print("   -" + event['summary'] + " a las " + get_hours(event['start']['dateTime']))
     else:
         print("   -" + event['summary'] + " el día " + event['start']['date'])
+
+
+List = open("Names.txt").read().splitlines()
+print(List)
+
+
+Spotify = {}
+file = open("Spotify.txt")
+for line in file:
+    key, value = line.split(":")
+    Spotify[key] = value
+print(Spotify.keys())
