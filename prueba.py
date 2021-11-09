@@ -68,85 +68,86 @@ def create_event(start_time_str, summary, duration=1, attendees=None, descriptio
 # create_event('24 Jul 12.30pm', "Test Meeting using CreateFunction Method",0.5,"karlosfiliu97@gmail.com","Test Description","En mi culo")
 
 
-from dateutil.relativedelta import relativedelta
+# from dateutil.relativedelta import relativedelta
 
-# Get events
-today = datetime.today()
-d = 7
-diff = today + relativedelta(days=d)
-tmin = today.isoformat('T') + "Z"
-tmax = diff.isoformat('T') + "Z"
-maxResults = 50
-eventsResult = service.events().list(
-    calendarId=personal,
-    timeMin=tmin,
-    timeMax=tmax,
-    maxResults=maxResults,
-    singleEvents=True,
-    orderBy='startTime',
-).execute()
-
-
-import iso8601
-
-def get_date(date_input):
-
-    date_obj = iso8601.parse_date(date_input)
-    return date_obj.strftime('%H:%M del %d-%m-%Y ')
+# # Get events
+# today = datetime.today()
+# d = 7
+# diff = today + relativedelta(days=d)
+# tmin = today.isoformat('T') + "Z"
+# tmax = diff.isoformat('T') + "Z"
+# maxResults = 50
+# eventsResult = service.events().list(
+#     calendarId=personal,
+#     timeMin=tmin,
+#     timeMax=tmax,
+#     maxResults=maxResults,
+#     singleEvents=True,
+#     orderBy='startTime',
+# ).execute()
 
 
-print("Tus eventos de los próximos " + str(d) + " días son:")
+# import iso8601
 
-# Get the list of colors
-colors = service.colors().get().execute()
+# def get_date(date_input):
+
+#     date_obj = iso8601.parse_date(date_input)
+#     return date_obj.strftime('%H:%M del %d-%m-%Y ')
 
 
+# print("Tus eventos de los próximos " + str(d) + " días son:")
 
-for event in eventsResult['items']:
-    if 'dateTime' in event['start'].keys():
-        print("   -" + event['summary'] + " a las " + get_date(event['start']['dateTime']))
-    else:
-        print("   -" + event['summary'] + " el día " + get_date(event['start']['date']))
+# # Get the list of colors
+# colors = service.colors().get().execute()
 
 
 
-def get_hours(date_input):
+# for event in eventsResult['items']:
+#     if 'dateTime' in event['start'].keys():
+#         print("   -" + event['summary'] + " a las " + get_date(event['start']['dateTime']))
+#     else:
+#         print("   -" + event['summary'] + " el día " + get_date(event['start']['date']))
 
-    date_obj = iso8601.parse_date(date_input)
-    return date_obj.strftime('%H:%M')
 
-day_str = "2021/11/02"
-matches = list(datefinder.find_dates(day_str))
 
-day = matches[0]
-diff = day + relativedelta(days=1)
-tmin = day.isoformat('T') + "Z"
-tmax = diff.isoformat('T') + "Z"
-eventsResult = service.events().list(
-    calendarId='karlosfiliu97@gmail.com',
-    timeMin=tmin,
-    timeMax=tmax,
-    maxResults=maxResults,
-    singleEvents=True,
-    orderBy='startTime',
-).execute()
+# def get_hours(date_input):
 
-print("Tus eventos para el día " + str(day.strftime("%d-%m-%Y")) + " son:")
+#     date_obj = iso8601.parse_date(date_input)
+#     return date_obj.strftime('%H:%M')
 
-for event in eventsResult['items']:
-    if 'dateTime' in event['start'].keys():
-        print("   -" + event['summary'] + " a las " + get_hours(event['start']['dateTime']))
-    else:
-        print("   -" + event['summary'] + " el día " + event['start']['date'])
+# day_str = "2021/11/02"
+# matches = list(datefinder.find_dates(day_str))
+
+# day = matches[0]
+# diff = day + relativedelta(days=1)
+# tmin = day.isoformat('T') + "Z"
+# tmax = diff.isoformat('T') + "Z"
+# eventsResult = service.events().list(
+#     calendarId='karlosfiliu97@gmail.com',
+#     timeMin=tmin,
+#     timeMax=tmax,
+#     maxResults=maxResults,
+#     singleEvents=True,
+#     orderBy='startTime',
+# ).execute()
+
+# print("Tus eventos para el día " + str(day.strftime("%d-%m-%Y")) + " son:")
+
+# for event in eventsResult['items']:
+#     if 'dateTime' in event['start'].keys():
+#         print("   -" + event['summary'] + " a las " + get_hours(event['start']['dateTime']))
+#     else:
+#         print("   -" + event['summary'] + " el día " + event['start']['date'])
+
 
 
 List = open("Names.txt").read().splitlines()
 print(List)
 
-
-Spotify = {}
-file = open("Spotify.txt")
-for line in file:
-    key, value = line.split(":")
-    Spotify[key] = value
-print(Spotify.keys())
+Prueba = {}
+file = open("Prueba.txt")
+prueba = eval(file.read())
+print(prueba)
+print(type(prueba))
+query = "Hola Teodoro, dime, cómo te llamas"
+print(bool([match for match in prueba["Nombre"] if(match in query)]))

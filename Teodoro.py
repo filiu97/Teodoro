@@ -18,7 +18,8 @@ class Teodoro(System, Applications, Calendar):
 				days_file = "Days.txt", 
 				months_file = "Months.txt",
 				numbers_file = "Numbers.txt",
-				calendarsid_file = "CalendarsID.txt"):
+				calendarsid_file = "CalendarsID.txt",
+				commands_file = "Commands.txt"):
 
 		self.Names = open(names_file).read().splitlines()
 		self.SpotifyActions = {}
@@ -36,6 +37,9 @@ class Teodoro(System, Applications, Calendar):
 		for line in file:
 			key, value = line.rstrip("\n").replace(" ", "").split(":")
 			self.Months[key] = value
+		
+		file = open(commands_file)
+		self.Commands = eval(file.read())
 
 		System.__init__(self)
 		Applications.__init__(self, self.SpotifyActions)
@@ -79,63 +83,63 @@ def Take_query(Teo):
 
 		query = Teo.takeCommand().lower() 
 		
-		if ("cómo te llamas" in query) or ("cómo te puedo llamar" in query): 
+		if bool([match for match in Teo.Commands["Name"] if(match in query)]): 
 			n = str()
 			for name in Teo.Names:
 				n += name + ", o "
 			Teo.speak("Me puedes llamar " + n[:-2] + ", tu asistente fiel")
 		
-		elif ("hola" == query.replace(" ", "")) or ("qué tal" in query):
+		elif bool([match for match in Teo.Commands["Greetings"] if(match in query)]):
 			Teo.Hello()
 		
-		elif "anímame" in query:
+		elif bool([match for match in Teo.Commands["Cheer up"] if(match in query)]):
 			Teo.speak("Venga señor, no pasa nada, aquí está Teodoro para servirle")
 
-		elif "qué día es hoy" in query: 
+		elif bool([match for match in Teo.Commands["Today"] if(match in query)]): 
 			Teo.tellDay()
 		
-		elif "qué hora es" in query: 
+		elif bool([match for match in Teo.Commands["Time"] if(match in query)]): 
 			Teo.tellTime()
 		
-		elif "busca en google" in query:
+		elif bool([match for match in Teo.Commands["Google"] if(match in query)]):
 			Teo.google(query)
 
-		elif "busca en wikipedia" in query: 
+		elif bool([match for match in Teo.Commands["Wikipedia"] if(match in query)]): 
 			response = Teo.wikipedia(query)
 			if response is None:
 				Teo.speak("No se ha podido encontrar la página solicitada")
 
-		elif "pon la música" in query:
+		elif bool([match for match in Teo.Commands["Play"] if(match in query)]):
 			Teo.spotify("play")
 		
-		elif "pasa de canción" in query or "siguiente canción" in query:
+		elif bool([match for match in Teo.Commands["Next"] if(match in query)]):
 			Teo.spotify("next")
 		
-		elif "anterior canción" in query:
+		elif bool([match for match in Teo.Commands["Previous"] if(match in query)]):
 			Teo.spotify("previous")
 		
-		elif "para la música" in query or "para spotify" in query:
+		elif bool([match for match in Teo.Commands["Pause"] if(match in query)]):
 			Teo.spotify("pause")
 		
-		elif "cierra spotify" in query or "quita la música" in query:
+		elif bool([match for match in Teo.Commands["Stop"] if(match in query)]):
 			Teo.spotify("stop")
 			
-		elif "tiempo hace" in query:
+		elif bool([match for match in Teo.Commands["Weather"] if(match in query)]):
 			Teo.weather(query)
 		
-		elif "alarma" in query:  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
+		elif bool([match for match in Teo.Commands["Alarm"] if(match in query)]):  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
 			Teo.alarm(query)
 		
-		elif ("eventos" in query) or ("calendario" in query) or ('tareas' in query): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
+		elif bool([match for match in Teo.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
 			Teo.getCalendar(query)
 			
-		elif "apaga el ordenador" in query:
+		elif bool([match for match in Teo.Commands["Shutdown"] if(match in query)]):
 			Teo.shutdown()
 
-		elif ("suspende el ordenador" in query) or ("suspensión" in query):
+		elif bool([match for match in Teo.Commands["Suspend"] if(match in query)]):
 			Teo.suspend()
 		
-		elif ("apágate" in query) or ("adiós" in query): 
+		elif bool([match for match in Teo.Commands["Del"] if(match in query)]): 
 			del Teo
 
 				

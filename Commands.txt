@@ -1,0 +1,96 @@
+{
+"Name":[
+	"cómo te llamas",
+	"cómo te puedo llamar",
+	"dime tu nombre",
+	"quién eres"
+	],
+"Greetings":[
+	"hola",
+	"qué tal",
+	"cómo te va",
+	"hey"
+	],
+"Cheer up":[
+	"anímame",
+	"cómo te puedo llamar",
+	"dime tu nombre",
+	"quién eres"
+	],
+"Today":[
+	"qué día es hoy",
+	"hoy qué es",
+	"a qué fecha estamos"
+	],
+"Time":[
+	"qué hora es",
+	"tienes hora",
+	"dime la hora"
+	],
+"Google":[
+	"google"
+	],
+"Wikipedia":[
+	"wikipedia"
+	],
+"Play":[
+	"pon la música",
+	"reanuda",
+	"reproduce",
+	"play",
+	"reproducir",
+	"reanudar"
+	],
+"Pause":[
+	"para la música",
+	"pausa",
+	"pause"
+	],
+"Next":[
+	"pasa de canción",
+	"pasa la canción",
+	"pasa a la siguiente",
+	"siguiente canción",
+	"no me gusta esta canción",
+	"odio esta canción",
+	"quita esta canción",
+	"pásala"
+	],
+"Previous":[
+	"canción anterior",
+	"anterior canción",
+	"vuelve a la anterior"
+	],
+"Stop":[
+	"quita la música",
+	"quita spotify",
+	"cierra spotify"
+	],
+"Weather":[
+	"tiempo hace"
+	],
+"Alarm":[
+	"alarma"
+	],
+"GetCalendar":[
+	"eventos",
+	"calendario",
+	"tareas"
+	],
+"Shutdown":[
+	"apaga el ordenador",
+	"apagado",
+	"apagar"
+	],
+"Suspend":[
+	"suspende el ordenador",
+	"suspensión",
+	"suspender"
+	],
+"Del":[
+	"apágate",
+	"adiós",
+	"hasta luego",
+	"quítate"
+	],
+}
