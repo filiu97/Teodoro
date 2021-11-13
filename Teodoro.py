@@ -144,7 +144,7 @@ class Teodoro(System, Applications, Calendar):
 			return None
 		
 		elif bool([match for match in self.Commands["Alarm"] if(match in query)]):  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
-			speech, text, window = self.alarm(query)
+			speech, text, window = self.alarm(query,window)
 			self.spotify("pause")
 			self.speak(speech)
 			self.spotify("play")

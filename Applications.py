@@ -6,7 +6,7 @@ import webbrowser
 import urllib.request
 import re
 import tools as t
-
+import threading
 
 
 
@@ -23,8 +23,7 @@ class Applications(SpeechEngine):
     def spotify(self, action):
         os.system(self.SpotifyActions[action])
 
-    def countdown(self, t, name):
-        window = None
+    def countdown(self, t, name, window):
         while t:
             mins, secs = divmod(t, 60)
             timeformat = '{:02d}:{:02d}'.format(mins, secs)
@@ -33,7 +32,6 @@ class Applications(SpeechEngine):
             os.system("clear")
             window = self.GUI("Countdown", text = "Alarma " + name + "  --->  " + timeformat, size = 16, prev_window = window)
         return window
-
 
     def google(self, query):
         words = query.split()
@@ -97,7 +95,7 @@ class Applications(SpeechEngine):
         return speech, place
 
 
-    def alarm(self, query):
+    def alarm(self, query, window):
         list_of_words = query.split()
         try:
             t = int(list_of_words[list_of_words.index("de") + 1])
@@ -107,7 +105,7 @@ class Applications(SpeechEngine):
         m = self.s_time_unit.switch(unit)
         t *= m
         name = list_of_words[list_of_words.index("nombre") + 1]
-        window = self.countdown(t,name)
+        window = self.countdown(t,name,window)
         speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de " + name
         text = "Fin de la alarma de " + name
         return speech, text, window

@@ -66,7 +66,6 @@ class SpeechEngine():
         
         if prev_window is not None:
             prev_window.destroy()
-            print("caca")
 
         window = Tk()
         window.geometry(geometry)
@@ -128,6 +127,7 @@ class SpeechEngine():
                 )
             label.pack(expand=True)
             window.update()
+            return window
 
         elif action == "GetCalendar":
             f = Frame(window)
