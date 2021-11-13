@@ -4,7 +4,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from apiclient.discovery import build
 import pickle
 import datefinder
-import pprint as pp
 from datetime import datetime, time, timedelta
 import color
 
@@ -28,7 +27,7 @@ service = build("calendar", "v3", credentials=credentials)
 # result = service.events().list(calendarId=calendar_id).execute()
 # print(result['items'][0])
 
-def create_event(start_time_str, summary, duration=1, attendees=None, description=None, location=None):
+def create_event(start_time_str, summary, duration=1, description=None, location=None):
     matches = list(datefinder.find_dates(start_time_str))
     if len(matches):
         start_time = matches[0]
@@ -46,9 +45,6 @@ def create_event(start_time_str, summary, duration=1, attendees=None, descriptio
             'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
             'timeZone': 'Europe/Madrid',
         },
-        'attendees': [
-        {'email':attendees },
-    ],
         'reminders': {
             'useDefault': False,
             'overrides': [
@@ -57,15 +53,10 @@ def create_event(start_time_str, summary, duration=1, attendees=None, descriptio
             ],
         },
     }
-    pp.pprint('''*** %r event added: 
-    With: %s
-    Start: %s
-    End:   %s''' % (summary.encode('utf-8'),
-        attendees,start_time, end_time))
-        
-    return service.events().insert(calendarId='primary', body=event, sendNotifications=True).execute()
+    
+    return service.events().insert(calendarId=personal, body=event, sendNotifications=True).execute()
 
-# create_event('24 Jul 12.30pm', "Test Meeting using CreateFunction Method",0.5,"karlosfiliu97@gmail.com","Test Description","En mi culo")
+# create_event('11/10/2021 12:30pm',"Prueba")
 
 
 # from dateutil.relativedelta import relativedelta
@@ -141,13 +132,80 @@ def create_event(start_time_str, summary, duration=1, attendees=None, descriptio
 
 
 
-List = open("Names.txt").read().splitlines()
-print(List)
+# List = open("Names.txt").read().splitlines()
+# print(List)
 
-Prueba = {}
-file = open("Prueba.txt")
-prueba = eval(file.read())
-print(prueba)
-print(type(prueba))
-query = "Hola Teodoro, dime, cómo te llamas"
-print(bool([match for match in prueba["Nombre"] if(match in query)]))
+# Prueba = {}
+# file = open("Prueba.txt")
+# prueba = eval(file.read())
+# print(prueba)
+# print(type(prueba))
+# query = "Hola Teodoro, dime, cómo te llamas"
+# print(bool([match for match in prueba["Nombre"] if(match in query)]))
+
+
+# import webbrowser 
+
+# webbrowser.open("http://youtube.com")
+
+# import urllib.request
+# import re
+
+# search_keyword="caca de mono"
+# html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword.replace(" ", "+"))
+# video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+# print("https://www.youtube.com/watch?v=" + video_ids[0])
+# webbrowser.open("https://www.youtube.com/watch?v=" + video_ids[0])
+
+from tkinter import *
+
+
+window = Tk()
+window.geometry("400x200")
+window.configure(bg = "LightSkyBlue1")
+window.title("Teodoro Prueba")
+window.resizable(False, True)
+font1 = "Times New Roman"
+font2 = "Helvetica"
+
+
+global description, location
+# frame1 = Frame(window)
+# frame1.pack()
+label = Label(
+    window,
+    text="¿Quieres añadir una descripción \ny localización a tu evento",
+    font=(font1, 12, "bold"),
+    padx=0,
+    pady=0,
+    bg='LightSkyBlue1'
+    )
+label.pack()
+
+global desc
+
+def enter(desc):
+    desc = desc_entry.get()
+    window.destroy()
+
+# frame2 = Frame(window)
+# frame2.pack()
+Label(window, text="Description",font=(font1, 12, "bold")).pack()
+# description = StringVar()
+desc_entry = Entry(window)
+desc_entry.bind('<Return>',enter)
+desc_entry.pack()
+# desc_entry.grid(row=0, column=1, sticky=W)
+Label(window, text="Location",font=(font1, 12, "bold")).pack()
+# location = StringVar()
+loc_entry = Entry(window)
+loc_entry.pack()
+
+# frame3 = Frame(window)
+# frame3.pack()
+# b1 = Button(window,text=" Ok ",command=lambda:window.destroy()).pack()
+
+window.mainloop()
+
+print(desc)
+print(loc)

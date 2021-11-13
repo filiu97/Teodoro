@@ -10,10 +10,10 @@ import sys
 from time import sleep, time
 
 
-
 class Teodoro(System, Applications, Calendar):
 	
-	def __init__(self, names_file = "Names.txt",
+	def __init__(self,
+				names_file = "Names.txt",
 				spotify_file = "Spotify.txt",
 				days_file = "Days.txt", 
 				months_file = "Months.txt",
@@ -56,16 +56,126 @@ class Teodoro(System, Applications, Calendar):
 		day = str(datetime.today().weekday() + 1)
 		today = datetime.today()
 		number = str(today.date())
-		print(self.Days[day]  + ". " + number) 
-		self.speak("Hoy es " + self.Days[day]  + ", " + number[-2:] + " de " + self.Months[number[5:7]] + " de " + number[0:4]) 
+		speech = "Hoy es " + self.Days[day]  + ", " + number[-2:] + " de " + self.Months[number[5:7]] + " de " + number[0:4]
+		text = self.Days[day] + ", " +  number[-2:] + " de\n" + self.Months[number[5:7]] + " de " + number[0:4]
+		return speech, text
 	
 	def tellTime(self): 
 		t = datetime.now() 
-		print(t.strftime('%H:%M')) 
+		text = t.strftime('%H:%M')
 		t = str(t)
 		hour = t[11:13] 
 		minutes = t[14:16] 
-		self.speak("Son las" + hour + "horas y" + minutes + "minutos")     
+		speech = "Son las" + hour + "horas y" + minutes + "minutos"
+		return speech, text   
+
+	def getAction(self, query, window = None):
+
+		if bool([match for match in self.Commands["Name"] if(match in query)]): 
+			n = str()
+			m = str()
+			for name in self.Names:
+				n += name + ", o "
+				m += name + "\n"
+			speech = "Me puedes llamar " + n[:-2] + ", tu asistente fiel"
+			self.speak(speech) 
+			self.GUI("Show", text = m, size = 24, prev_window = window)
+			return None
+		
+		elif bool([match for match in self.Commands["Greetings"] if(match in query)]):
+			self.Hello()
+			return None
+		
+		elif bool([match for match in self.Commands["Cheer up"] if(match in query)]):
+			self.speak("Venga señor, no pasa nada, aquí estoy para servirle")
+			return None
+
+		elif bool([match for match in self.Commands["Today"] if(match in query)]): 
+			speech, text = self.tellDay()
+			self.speak(speech) 
+			self.GUI("Show", text = text, size = 24, prev_window = window)
+			return None
+		
+		elif bool([match for match in self.Commands["Time"] if(match in query)]): 
+			speech, text = self.tellTime()
+			self.speak(speech)
+			self.GUI("Show", text = text, size = 24, prev_window = window) 
+			return None
+		
+		elif bool([match for match in self.Commands["Google"] if(match in query)]):
+			self.google(query)
+			return None
+
+		elif bool([match for match in self.Commands["Wikipedia"] if(match in query)]): 
+			response = self.wikipedia(query)
+			if response is None:
+				self.speak("No se ha podido encontrar la página solicitada")
+			return None
+
+		elif bool([match for match in self.Commands["Youtube"] if(match in query)]):
+			self.youtube(query)
+			return None
+
+		elif bool([match for match in self.Commands["Play"] if(match in query)]):
+			self.spotify("play")
+			return None
+		
+		elif bool([match for match in self.Commands["Next"] if(match in query)]):
+			self.spotify("next")
+			return None
+		
+		elif bool([match for match in self.Commands["Previous"] if(match in query)]):
+			self.spotify("previous")
+			return None
+		
+		elif bool([match for match in self.Commands["Pause"] if(match in query)]):
+			self.spotify("pause")
+			return None
+		
+		elif bool([match for match in self.Commands["Stop"] if(match in query)]):
+			self.spotify("stop")
+			return None
+			
+		elif bool([match for match in self.Commands["Weather"] if(match in query)]):
+			speech, image = self.weather(query)
+			self.speak(speech)
+			os.system("display " + image + ".png")
+			# self.GUI("Image", image = image + ".png", geometry = "1750X1000", prev_window = window)
+			return None
+		
+		elif bool([match for match in self.Commands["Alarm"] if(match in query)]):  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
+			speech, text, window = self.alarm(query)
+			self.spotify("pause")
+			self.speak(speech)
+			self.spotify("play")
+			self.GUI("Show", text = text, size = 16, prev_window = window)
+			return None
+		
+		elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
+			speech, text = self.getCalendar(query)
+			self.speak(speech)
+			self.GUI("GetCalendar", text = text, size = 12, geometry = "800x200", prev_window = window)
+			return None
+
+		elif bool([match for match in self.Commands["SetCalendar"] if(match in query)]): # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' a las X de nombre X "
+			self.setCalendar(query, window)
+			return None
+			
+		elif bool([match for match in self.Commands["Shutdown"] if(match in query)]):
+			self.shutdown()
+			return None
+
+		elif bool([match for match in self.Commands["Suspend"] if(match in query)]):
+			self.suspend()
+			return None
+		
+		elif bool([match for match in self.Commands["Del"] if(match in query)]): 
+			del self
+			return None
+
+		else:
+			self.speak("Lo siento, no te he entendido")
+			return -1
 		
 		
 def Take_query(Teo): 
@@ -77,74 +187,22 @@ def Take_query(Teo):
 	while(True): 
 		
 		end = time()
-		if end-start > 120:
+		if end-start > 60:
 			os.system("clear")
+			# if bool(window):
+			# 	window.destroy()
 			start = time()
 
-		query = Teo.takeCommand().lower() 
+		query, window = Teo.takeCommand()
+		if query is not None:
+			query = query.lower()
+			response = Teo.getAction(query, window)
+			if response is not None:
+				Teo.speak("¿Puede repetir su petición?")
+				query = Teo.repeat()
+				Teo.getAction(query)
 		
-		if bool([match for match in Teo.Commands["Name"] if(match in query)]): 
-			n = str()
-			for name in Teo.Names:
-				n += name + ", o "
-			Teo.speak("Me puedes llamar " + n[:-2] + ", tu asistente fiel")
-		
-		elif bool([match for match in Teo.Commands["Greetings"] if(match in query)]):
-			Teo.Hello()
-		
-		elif bool([match for match in Teo.Commands["Cheer up"] if(match in query)]):
-			Teo.speak("Venga señor, no pasa nada, aquí está Teodoro para servirle")
-
-		elif bool([match for match in Teo.Commands["Today"] if(match in query)]): 
-			Teo.tellDay()
-		
-		elif bool([match for match in Teo.Commands["Time"] if(match in query)]): 
-			Teo.tellTime()
-		
-		elif bool([match for match in Teo.Commands["Google"] if(match in query)]):
-			Teo.google(query)
-
-		elif bool([match for match in Teo.Commands["Wikipedia"] if(match in query)]): 
-			response = Teo.wikipedia(query)
-			if response is None:
-				Teo.speak("No se ha podido encontrar la página solicitada")
-
-		elif bool([match for match in Teo.Commands["Play"] if(match in query)]):
-			Teo.spotify("play")
-		
-		elif bool([match for match in Teo.Commands["Next"] if(match in query)]):
-			Teo.spotify("next")
-		
-		elif bool([match for match in Teo.Commands["Previous"] if(match in query)]):
-			Teo.spotify("previous")
-		
-		elif bool([match for match in Teo.Commands["Pause"] if(match in query)]):
-			Teo.spotify("pause")
-		
-		elif bool([match for match in Teo.Commands["Stop"] if(match in query)]):
-			Teo.spotify("stop")
-			
-		elif bool([match for match in Teo.Commands["Weather"] if(match in query)]):
-			Teo.weather(query)
-		
-		elif bool([match for match in Teo.Commands["Alarm"] if(match in query)]):  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
-			Teo.alarm(query)
-		
-		elif bool([match for match in Teo.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
-			Teo.getCalendar(query)
-			
-		elif bool([match for match in Teo.Commands["Shutdown"] if(match in query)]):
-			Teo.shutdown()
-
-		elif bool([match for match in Teo.Commands["Suspend"] if(match in query)]):
-			Teo.suspend()
-		
-		elif bool([match for match in Teo.Commands["Del"] if(match in query)]): 
-			del Teo
-
 				
 if __name__ == '__main__': 
-
 	Teo = Teodoro()
-
 	Take_query(Teo)

@@ -85,7 +85,7 @@ class Calendar(SpeechEngine):
         ).execute()
         return eventsResult
 
-    def create_event(self, start_time_str, summary, duration=1, attendees=None, description=None, location=None):
+    def create_event(self, start_time_str, summary, duration=1, description=None, location=None):
         matches = list(datefinder.find_dates(start_time_str))
         if len(matches):
             start_time = matches[0]
@@ -103,9 +103,6 @@ class Calendar(SpeechEngine):
                 'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                 'timeZone': 'Europe/Madrid',
             },
-            'attendees': [
-            {'email':attendees },
-        ],
             'reminders': {
                 'useDefault': False,
                 'overrides': [
@@ -120,7 +117,6 @@ class Calendar(SpeechEngine):
 
     def getCalendar(self, query):
 
-        start = time()
         list_of_words = query.split()
         if ("eventos" in query) or ("calendario" in query):
             calendarID = self.CalendarsID['personal']
@@ -184,7 +180,10 @@ class Calendar(SpeechEngine):
                 eventsResult = self.get_relative_events(calendarID, duration, offset)
 
         else:
-            time_unit = "para"
+            if "para" in query:
+                time_unit = "para"
+            elif "de" in query:
+                time_unit = "de"
             if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
                 time_str = "hoy"
                 time_format = "hours"
@@ -206,33 +205,109 @@ class Calendar(SpeechEngine):
                 day_str = day_str.strftime("%m-%d-%Y")
                 eventsResult = self.get_absolute_events(calendarID, day_str)
             else:
-                day = list_of_words[list_of_words.index(time_unit) + 2]
+                try:
+                    day = list_of_words[list_of_words.index(time_unit) + 2]
+                    key_list = list(self.Numbers.keys())
+                    val_list = list(self.Numbers.values())
+                    position = val_list.index(day)
+                    day = key_list[position]
+                except:
+                    day = list_of_words[list_of_words.index(time_unit) + 2]
                 try:
                     month = list_of_words[list_of_words.index(time_unit) + 4]
+                    key_list = list(self.Months.keys())
+                    val_list = list(self.Months.values())
+                    position = val_list.index(month)
+                    month = key_list[position]
                 except:
                     today = datetime.today()
                     month = today.month
                 try:
-                    year = list_of_words[list_of_words.index(time_unit) + 6]
+                    year = int(list_of_words[list_of_words.index(time_unit) + 6])
                 except:
                     today = datetime.today()
                     year = today.year
                 time_str = "el día " + str(day) + " de " +  str(month) + " de " + str(year)
                 time_format = "hours"
-                key_list = list(self.Months.keys())
-                val_list = list(self.Months.values())
-                position = val_list.index(month)
-                month = key_list[position]
                 day_str = str(month) + "/" + str(day) + "/" + str(year)
                 eventsResult = self.get_absolute_events(calendarID, day_str)
 
         if eventsResult['items']:
-            self.speak("Tus " + event_type + "  para " + time_str + " son:")
+            speech = "Tus " + event_type + "  para " + time_str + " son:"
+            text = str()
             for event in eventsResult['items']:
                 if 'dateTime' in event['start'].keys():
-                    print("   -" + event['summary'] + " a las " + self.get_date_hours(event['start']['dateTime'], time_format))
+                    text += "   -" + event['summary'] + " a las " + self.get_date_hours(event['start']['dateTime'], time_format) + "\n"
                 else:
-                    print("   -" + event['summary'] + " el día " + self.get_date_hours(event['start']['date'], 'day_complete'))
+                    text += "   -" + event['summary'] + " el día " + self.get_date_hours(event['start']['date'], 'day_complete') + "\n"
         else:
-            self.speak("No tienes nada para " + time_str)
+            speech = "No tienes nada para " + time_str
+            text = "No tienes nada para " + time_str
+        
+        return speech, text
 
+    def setCalendar(self, query, window):
+        calendarID = self.CalendarsID['personal']
+        list_of_words = query.split()
+        time_unit = "para"
+        if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
+            time_str = "hoy"
+            today = datetime.today()
+            day_str = today.strftime("%m-%d-%Y")
+        elif list_of_words[list_of_words.index(time_unit) + 1] == "mañana":
+            time_str = "mañana"
+            today = datetime.today()
+            day_str = today + timedelta(days=1)
+            day_str = day_str.strftime("%m-%d-%Y")
+        elif list_of_words[list_of_words.index(time_unit) + 1] == "pasado":
+            time_str = "pasado mañana"
+            today = datetime.today()
+            day_str = today + timedelta(days=2)
+            day_str = day_str.strftime("%m-%d-%Y")
+        else:
+            try:
+                day = list_of_words[list_of_words.index(time_unit) + 2]
+                key_list = list(self.Numbers.keys())
+                val_list = list(self.Numbers.values())
+                position = val_list.index(day)
+                day = key_list[position]
+            except:
+                day = list_of_words[list_of_words.index(time_unit) + 2]
+            try:
+                month = list_of_words[list_of_words.index(time_unit) + 4]
+                key_list = list(self.Months.keys())
+                val_list = list(self.Months.values())
+                position = val_list.index(month)
+                month = key_list[position]
+            except:
+                today = datetime.today()
+                month = today.month
+            try:
+                year = int(list_of_words[list_of_words.index(time_unit) + 6])
+            except:
+                today = datetime.today()
+                year = today.year
+            time_str = "el día " + str(day) + " de " +  str(month) + " de " + str(year)
+            time_format = "hours"
+
+            day_str = str(month) + "/" + str(day) + "/" + str(year)
+        
+        hours_str = list_of_words[list_of_words.index("a") + 2]
+
+        # if list_of_words[list_of_words.index("a") + 3] == "de":
+        #     day_moment = list_of_words[list_of_words.index("de") + 2]
+        #     if day_moment == "tarde" or day_moment == "noche":
+        #         hour_format = "pm"
+        #     else:
+        #         hour_format = "am"
+
+        time_str = hours_str #+ " " + hour_format
+        summary = list_of_words[-1]
+        print(time_str)
+
+        description, location = self.GUI("SetCalendar", prev_window=window)
+
+        print(description)
+        print(location)
+
+        self.create_event(time_str,summary.title(), description=description, location=location)

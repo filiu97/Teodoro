@@ -28,10 +28,13 @@
 	"dime la hora"
 	],
 "Google":[
-	"google"
+	"en google"
 	],
 "Wikipedia":[
-	"wikipedia"
+	"en wikipedia"
+	],
+"Youtube":[
+	"en youtube"
 	],
 "Play":[
 	"pon la música",
@@ -76,6 +79,14 @@
 	"eventos",
 	"calendario",
 	"tareas"
+	],
+"SetCalendar":[
+	"crear un evento",
+	"crea un evento",
+	"creame un evento",
+	"hacer un evento",
+	"haz un evento",
+	"hazme un evento"
 	],
 "Shutdown":[
 	"apaga el ordenador",
