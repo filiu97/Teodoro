@@ -3,7 +3,7 @@ import pyttsx3
 from tkinter import *
 
 
-class SpeechEngine():
+class Engine():
 
     def __init__(self, Names, pause_thr = 0.8):
         
@@ -48,17 +48,16 @@ class SpeechEngine():
         r = sr.Recognizer()
         with sr.Microphone() as source:
             try:
-                print('Escuchando') 
+                window = self.GUI("Status", "Reconociendo...")
                 audio = r.record(source, 10)
                 try: 
                     Request = r.recognize_google(audio, language='es-ES')
-                    print("Usted ha dicho:", Request)
-                    return Request
+                    return Request, window
                 except:
                     self.speak("No he reconocido lo que ha dicho, lo siento")
-                    return None
+                    return None, None
             except:
-                return None
+                return None, None
 
     def GUI(self, action, text = None, size = 24, 
             image = None, geometry = "400x200", 

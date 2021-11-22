@@ -1,10 +1,10 @@
-from SpeechEngine import SpeechEngine
+from Engine import Engine
 import os
 
-class System(SpeechEngine):
+class System(Engine):
 
     def __init__(self):
-        SpeechEngine.__init__(self, self.Names, pause_thr = 0.8)
+        Engine.__init__(self, self.Names, pause_thr = 0.8)
 
 
     def shutdown(self):

@@ -157,55 +157,75 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 # print("https://www.youtube.com/watch?v=" + video_ids[0])
 # webbrowser.open("https://www.youtube.com/watch?v=" + video_ids[0])
 
-from tkinter import *
+# from tkinter import *
 
 
-window = Tk()
-window.geometry("400x200")
-window.configure(bg = "LightSkyBlue1")
-window.title("Teodoro Prueba")
-window.resizable(False, True)
-font1 = "Times New Roman"
-font2 = "Helvetica"
+# window = Tk()
+# window.geometry("400x200")
+# window.configure(bg = "LightSkyBlue1")
+# window.title("Teodoro Prueba")
+# window.resizable(False, True)
+# font1 = "Times New Roman"
+# font2 = "Helvetica"
 
 
-global description, location
-# frame1 = Frame(window)
-# frame1.pack()
-label = Label(
-    window,
-    text="¿Quieres añadir una descripción \ny localización a tu evento",
-    font=(font1, 12, "bold"),
-    padx=0,
-    pady=0,
-    bg='LightSkyBlue1'
-    )
-label.pack()
+# global description, location
+# # frame1 = Frame(window)
+# # frame1.pack()
+# label = Label(
+#     window,
+#     text="¿Quieres añadir una descripción \ny localización a tu evento",
+#     font=(font1, 12, "bold"),
+#     padx=0,
+#     pady=0,
+#     bg='LightSkyBlue1'
+#     )
+# label.pack()
 
-global desc
+# global desc
 
-def enter(desc):
-    desc = desc_entry.get()
-    window.destroy()
+# def enter(desc):
+#     desc = desc_entry.get()
+#     window.destroy()
 
-# frame2 = Frame(window)
-# frame2.pack()
-Label(window, text="Description",font=(font1, 12, "bold")).pack()
-# description = StringVar()
-desc_entry = Entry(window)
-desc_entry.bind('<Return>',enter)
-desc_entry.pack()
-# desc_entry.grid(row=0, column=1, sticky=W)
-Label(window, text="Location",font=(font1, 12, "bold")).pack()
-# location = StringVar()
-loc_entry = Entry(window)
-loc_entry.pack()
+# # frame2 = Frame(window)
+# # frame2.pack()
+# Label(window, text="Description",font=(font1, 12, "bold")).pack()
+# # description = StringVar()
+# desc_entry = Entry(window)
+# desc_entry.bind('<Return>',enter)
+# desc_entry.pack()
+# # desc_entry.grid(row=0, column=1, sticky=W)
+# Label(window, text="Location",font=(font1, 12, "bold")).pack()
+# # location = StringVar()
+# loc_entry = Entry(window)
+# loc_entry.pack()
 
-# frame3 = Frame(window)
-# frame3.pack()
-# b1 = Button(window,text=" Ok ",command=lambda:window.destroy()).pack()
+# # frame3 = Frame(window)
+# # frame3.pack()
+# # b1 = Button(window,text=" Ok ",command=lambda:window.destroy()).pack()
 
-window.mainloop()
+# window.mainloop()
 
-print(desc)
-print(loc)
+# print(desc)
+# print(loc)
+
+
+from time import sleep, time
+import os
+
+import threading
+
+
+
+def prueba(t = 5, name = 'prueba'):
+
+    mins, secs = divmod(t, 60)
+    timeformat = '{:02d}:{:02d}'.format(mins, secs)
+    os.system("clear")
+    print("Alarma " + name + "  --->  " + timeformat)
+
+timer = threading.Timer(5, prueba)
+timer.start()
+for i in range(10):
+    print("algo")

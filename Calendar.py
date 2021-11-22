@@ -1,4 +1,4 @@
-from SpeechEngine import SpeechEngine
+from Engine import Engine
 
 from time import time
 from dateutil.relativedelta import relativedelta
@@ -38,7 +38,7 @@ class Calendar(SpeechEngine):
             pickle.dump(self.__credentials, open("token.pkl", "wb")) 
         self.service = build("calendar", "v3", credentials=self.__credentials)
 
-        SpeechEngine.__init__(self, self.Names, pause_thr = 0.8)
+        Engine.__init__(self, self.Names, pause_thr = 0.8)
         
 
 

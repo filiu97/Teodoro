@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import os
 import sys
 from time import sleep, time
+import threading
 
 
 class Teodoro(System, Applications, Calendar):
@@ -49,6 +50,15 @@ class Teodoro(System, Applications, Calendar):
 		self.speak("Adiós señor, que tenga un buen día")
 		sys.exit() 
 
+	def tellNames(self):
+		n = str()
+		text = str()
+		for name in self.Names:
+			n += name + ", o "
+			text += name + "\n"
+		speech = "Me puedes llamar " + n[:-2] + ", tu asistente fiel"
+		return speech, text
+
 	def Hello(self): 
 		self.speak("Hola señor, aquí estoy para lo que necesite.")
 			
@@ -67,19 +77,20 @@ class Teodoro(System, Applications, Calendar):
 		hour = t[11:13] 
 		minutes = t[14:16] 
 		speech = "Son las" + hour + "horas y" + minutes + "minutos"
-		return speech, text   
+		return speech, text  
+
+	def alarmEnd(self, text, speech, window):
+		self.spotify("pause")
+		self.speak(speech)
+		self.spotify("play")	
+		self.GUI("Show", text = text, size = 16, prev_window = window)
 
 	def getAction(self, query, window = None):
 
 		if bool([match for match in self.Commands["Name"] if(match in query)]): 
-			n = str()
-			m = str()
-			for name in self.Names:
-				n += name + ", o "
-				m += name + "\n"
-			speech = "Me puedes llamar " + n[:-2] + ", tu asistente fiel"
+			speech, text = self.tellNames()
 			self.speak(speech) 
-			self.GUI("Show", text = m, size = 24, prev_window = window)
+			self.GUI("Show", text = text, prev_window = window)
 			return None
 		
 		elif bool([match for match in self.Commands["Greetings"] if(match in query)]):
@@ -87,7 +98,7 @@ class Teodoro(System, Applications, Calendar):
 			return None
 		
 		elif bool([match for match in self.Commands["Cheer up"] if(match in query)]):
-			self.speak("Venga señor, no pasa nada, aquí estoy para servirle")
+			self.speak("Ánimo señor, no se preocupe")
 			return None
 
 		elif bool([match for match in self.Commands["Today"] if(match in query)]): 
@@ -144,11 +155,9 @@ class Teodoro(System, Applications, Calendar):
 			return None
 		
 		elif bool([match for match in self.Commands["Alarm"] if(match in query)]):  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
-			speech, text, window = self.alarm(query,window)
-			self.spotify("pause")
-			self.speak(speech)
-			self.spotify("play")
-			self.GUI("Show", text = text, size = 16, prev_window = window)
+			speech, text, t = self.alarm(query,window)
+			timer = threading.Timer(t, self.alarmEnd(text=text, speech=speech, window=window))
+			timer.start()
 			return None
 		
 		elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
@@ -182,16 +191,16 @@ def Take_query(Teo):
 
 	Teo.Hello() 
 	os.system("clear")
-	start = time()
+	# start = time()
 	
 	while(True): 
 		
-		end = time()
-		if end-start > 60:
-			os.system("clear")
-			# if bool(window):
-			# 	window.destroy()
-			start = time()
+		# end = time()
+		# if end-start > 60:
+		# 	os.system("clear")
+		# 	# if bool(window):
+		# 	# 	window.destroy()
+		# 	start = time()
 
 		query, window = Teo.takeCommand()
 		if query is not None:

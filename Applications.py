@@ -1,4 +1,4 @@
-from SpeechEngine import SpeechEngine
+from Engine import Engine
 from time import sleep, time
 import os
 import wikipedia 
@@ -18,7 +18,7 @@ class Applications(SpeechEngine):
         self.s_time_unit = t.Tools(3)	#Instancia objeto Switch
         self.s_time_unit.setSwitch_time_unit()	#Creador del switch
 
-        SpeechEngine.__init__(self, self.Names, pause_thr = 0.8)
+        Engine.__init__(self, self.Names, pause_thr = 0.8)
 
     def spotify(self, action):
         os.system(self.SpotifyActions[action])
@@ -105,10 +105,10 @@ class Applications(SpeechEngine):
         m = self.s_time_unit.switch(unit)
         t *= m
         name = list_of_words[list_of_words.index("nombre") + 1]
-        window = self.countdown(t,name,window)
-        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de " + name
-        text = "Fin de la alarma de " + name
-        return speech, text, window
+
+        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
+        text = "Fin de la alarma de nombre " + name
+        return speech, text, t
 
                    
 
