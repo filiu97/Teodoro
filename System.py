@@ -12,4 +12,9 @@ class System(Engine):
         os.system("shutdown now -h")
 
     def suspend(self):
+        self.speak("Perfecto, suspendiendo el equipo")
         os.system("sudo pm-suspend")
+
+    def restart(self):
+        self.speak("Perfecto, reiniciando el equipo")
+        os.system("shutdown now -r")

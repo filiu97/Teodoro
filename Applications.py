@@ -9,14 +9,23 @@ import tools as t
 import threading
 
 
+window = None
 
-class Applications(SpeechEngine):
+
+class Applications(Engine):
     def __init__(self, SpotifyActions):
 
         self.SpotifyActions = SpotifyActions
         wikipedia.set_lang("es") 
         self.s_time_unit = t.Tools(3)	#Instancia objeto Switch
         self.s_time_unit.setSwitch_time_unit()	#Creador del switch
+
+        self.alarmDuration = None
+        self.alarmSpeech = None
+        self.alarmText = None
+        self.alarmFirstFlag = True
+        self.alarmIndex = 1
+        self.alarmWindow = None
 
         Engine.__init__(self, self.Names, pause_thr = 0.8)
 
@@ -95,20 +104,48 @@ class Applications(SpeechEngine):
         return speech, place
 
 
-    def alarm(self, query, window):
+    def set_alarm(self, query, window):
         list_of_words = query.split()
         try:
             t = int(list_of_words[list_of_words.index("de") + 1])
         except:
             t = 1
         unit = list_of_words[list_of_words.index("de") + 2]
-        m = self.s_time_unit.switch(unit)
+        try:
+            m = self.s_time_unit.switch(unit)
+        except:
+            m = 60
         t *= m
-        name = list_of_words[list_of_words.index("nombre") + 1]
+        try:
+            name = list_of_words[list_of_words.index("nombre") + 1]
+        except:
+            name = "Alarma"
 
-        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
-        text = "Fin de la alarma de nombre " + name
-        return speech, text, t
+        self.alarmSpeech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
+        self.alarmText = "Fin de la alarma de nombre " + name
+        self.alarmDuration = t
 
-                   
+    def alarm(self):
+        global window
+        if self.alarmFirstFlag:
+            t = self.alarmDuration
+            self.alarmFirstFlag = False
+        else:
+            t = self.alarmDuration-self.alarmIndex
+            self.alarmIndex = self.alarmIndex + 1
+            self.alarmWindow.destroy()
+        mins, secs = divmod(t, 60)
+        timeformat = '{:02d}:{:02d}'.format(mins, secs)
+        self.alarmWindow = self.GUI("Countdown", text = timeformat, size = 16)
+
+        if t:
+            timer = threading.Timer(1, self.alarm)
+            timer.start()
+        else:    
+            os.system("clear")
+            self.spotify("pause")
+            self.speak(self.alarmSpeech)
+            self.spotify("play")	
+            self.GUI("Show", text = self.alarmText, size = 16, prev_window = self.alarmWindow)
+                    
 

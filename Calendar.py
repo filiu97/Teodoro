@@ -10,7 +10,7 @@ import pickle
 import iso8601
 
 
-class Calendar(SpeechEngine):
+class Calendar(Engine):
     
     def __init__(self, calendarsid_file, numbers_file, Months):
 

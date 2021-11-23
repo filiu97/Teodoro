@@ -79,12 +79,6 @@ class Teodoro(System, Applications, Calendar):
 		speech = "Son las" + hour + "horas y" + minutes + "minutos"
 		return speech, text  
 
-	def alarmEnd(self, text, speech, window):
-		self.spotify("pause")
-		self.speak(speech)
-		self.spotify("play")	
-		self.GUI("Show", text = text, size = 16, prev_window = window)
-
 	def getAction(self, query, window = None):
 
 		if bool([match for match in self.Commands["Name"] if(match in query)]): 
@@ -155,8 +149,8 @@ class Teodoro(System, Applications, Calendar):
 			return None
 		
 		elif bool([match for match in self.Commands["Alarm"] if(match in query)]):  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
-			speech, text, t = self.alarm(query,window)
-			timer = threading.Timer(t, self.alarmEnd(text=text, speech=speech, window=window))
+			self.set_alarm(query,window)
+			timer = threading.Timer(1, self.alarm)
 			timer.start()
 			return None
 		

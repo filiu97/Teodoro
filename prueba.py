@@ -216,16 +216,35 @@ import os
 
 import threading
 
+i = 0
+first = True
 
+def countdown(t = 60, name = 'prueba'):
 
-def prueba(t = 5, name = 'prueba'):
+    global first, i
 
-    mins, secs = divmod(t, 60)
+    if first:
+        t_ = t
+        first = False
+    else:
+        t_ = t-i
+        i = i + 1
+    mins, secs = divmod(t_, 60)
     timeformat = '{:02d}:{:02d}'.format(mins, secs)
     os.system("clear")
     print("Alarma " + name + "  --->  " + timeformat)
+    if t_:
+        timer2 = threading.Timer(1, countdown)
+        timer2.start()
+    else:
+        fin()
 
-timer = threading.Timer(5, prueba)
-timer.start()
-for i in range(10):
-    print("algo")
+
+def fin(name = 'prueba'):
+
+    os.system("clear")
+    print("Alarma " + name + "  --->  Finalizada!")
+
+
+timer1 = threading.Timer(1, countdown)
+timer1.start()

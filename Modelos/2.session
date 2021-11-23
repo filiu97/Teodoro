@@ -1,8 +1,8 @@
-window_sizes 1920 1031 313 1601 836 136
+window_sizes 1920 1031 313 1601 900 72
 cleanlooks_style
 diagrams
   active  sequencediagram_ref 128258 // Functionalities
-    1914 836 40 Custom 72 0
+    1914 836 70 Custom 671 0
 end
 show_stereotypes
 selected sequencediagram_ref 128258 // Functionalities
