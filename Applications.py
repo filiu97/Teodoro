@@ -20,6 +20,7 @@ class Applications(Engine):
 
         Engine.__init__(self, self.Names, pause_thr = 0.8)
 
+
     def spotify(self, action, window = None):
         if window is not None:
             self.GUI("Close", prev_window=window)
@@ -34,16 +35,6 @@ class Applications(Engine):
             return speech, text
         else:
             os.system(self.SpotifyActions[action])
-
-    def countdown(self, t, name, window):
-        while t:
-            mins, secs = divmod(t, 60)
-            timeformat = '{:02d}:{:02d}'.format(mins, secs)
-            sleep(1)
-            t -= 1
-            os.system("clear")
-            window = self.GUI("Countdown", text = "Alarma " + name + "  --->  " + timeformat, size = 16, prev_window = window)
-        return window
 
     def google(self, query):
         words = query.split()
@@ -107,7 +98,7 @@ class Applications(Engine):
         return speech, place
 
 
-    def set_alarm(self, query):
+    def setAlarm(self, query):
         list_of_words = query.split()
         try:
             t = int(list_of_words[list_of_words.index("de") + 1])
@@ -127,6 +118,7 @@ class Applications(Engine):
         speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
         text = "Fin de la alarma \nde nombre " + name
         return t, speech, text
+
 
     def alarm(self, speech, text):
         os.system("clear")

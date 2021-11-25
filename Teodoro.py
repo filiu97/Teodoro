@@ -187,7 +187,7 @@ class Teodoro(System, Applications, Calendar):
 			if window is not None:
 				self.GUI("Close", prev_window=window)
 
-			t, speech, text = self.set_alarm(query)
+			t, speech, text = self.setAlarm(query)
 			timer = threading.Timer(t, self.alarm(speech, text))
 			timer.start()
 			return None

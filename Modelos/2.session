@@ -1,13 +1,15 @@
-window_sizes 1920 1031 313 1601 900 72
+window_sizes 1280 975 329 945 844 72
 cleanlooks_style
 diagrams
   active  sequencediagram_ref 128258 // Functionalities
-    1914 836 70 Custom 671 0
+    945 844 90 Custom 0 0
+  classdiagram_ref 128130 // Classes
+    124 120 90 Custom 72 335
 end
 show_stereotypes
-selected sequencediagram_ref 128258 // Functionalities
+selected operation_ref 128258 // Hello
 open
-  classview_ref 128130 // Clases
+  class_ref 128130 // Teodoro
   usecaseview_ref 128130 // Funcionalidades
 end
 end

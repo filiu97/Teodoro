@@ -1,0 +1,17 @@
+window_sizes 1366 705 187 1174 548 104
+
+diagrams
+  active  sequencediagram_ref 128258 // Functionalities
+    1464 836 78 Custom 1236 0
+end
+show_stereotypes
+selected operation_ref 129410 // shutdown
+open
+  class_ref 128130 // Teodoro
+  class_ref 128258 // System
+  class_ref 128514 // Engine
+  class_ref 128642 // Applications
+  class_ref 128770 // Calendar
+  usecaseview_ref 128130 // Funcionalidades
+end
+end

@@ -1,6 +1,6 @@
 format 224
 "Modelos"
-  revision 3
+  revision 5
   modified_by 2 "filiu"
 
 
@@ -152,7 +152,9 @@ ${docstring}${members}
 
       operation 128258 "Hello"
 	public explicit_return_type ""
-	nparams 0
+	nparams 1
+	  param in name "window" explicit_type ""
+	    defaultvalue "None"
 	
 	
 	
@@ -379,6 +381,66 @@ ${docstring}${body}
 "
 	
       end
+
+      attribute 136066 "voiceEngine"
+	private explicit_type ""
+	init_value "pyttsx3.init()"
+	cpp_decl ""
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	mysql_decl ""
+	MysqlColumn
+      end
+
+      attribute 136194 "defaultVoice"
+	private explicit_type "string"
+	init_value "'spanish+m3'"
+	cpp_decl ""
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	mysql_decl ""
+	MysqlColumn
+      end
+
+      attribute 136322 "defaultWisperVoice"
+	private explicit_type "string"
+	init_value "'spanish+whisper'"
+	cpp_decl ""
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	mysql_decl ""
+	MysqlColumn
+      end
+
+      attribute 136450 "defaultRate"
+	private explicit_type "int"
+	init_value "180"
+	cpp_decl ""
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	mysql_decl ""
+	MysqlColumn
+      end
+
+      attribute 136578 "maxVoices"
+	private explicit_type "int"
+	init_value "7"
+	cpp_decl ""
+	java_decl ""
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+	mysql_decl ""
+	MysqlColumn
+      end
     end
 
     class 128642 "Applications"
@@ -477,6 +539,29 @@ ${docstring}${body}
 	    python "${type}"
 	    classrelation_ref 130178 // <generalisation>
 	  b parent class_ref 128514 // Engine
+      end
+
+      operation 137602 "setAlarm"
+	public explicit_return_type ""
+	nparams 1
+	  param in name "query" explicit_type "string"
+	
+	
+	
+	
+	
+      end
+
+      operation 137730 "alarm"
+	public explicit_return_type ""
+	nparams 2
+	  param in name "speech" explicit_type "string"
+	  param in name "text" explicit_type "string"
+	
+	
+	
+	
+	
       end
     end
 
