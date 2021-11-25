@@ -1,6 +1,7 @@
 import speech_recognition as sr 
 import pyttsx3 
 from tkinter import *
+from time import sleep, time
 
 
 class Engine():
@@ -12,13 +13,17 @@ class Engine():
         r.pause_threshold = pause_thr
         with sr.Microphone() as source:
             r.adjust_for_ambient_noise(source)
+        self.voiceEngine = pyttsx3.init()
+        self.defaultVoice = 'spanish+m3'
+        self.defaultWisperVoice = 'spanish+whisper'
+        self.defaultRate = 180
+        self.maxVoices = 7
+        self.voiceEngine.setProperty('voice', self.defaultVoice)
+        self.voiceEngine.setProperty('rate', self.defaultRate)
     
     def speak(self, audio): 
-        engine = pyttsx3.init()
-        engine.setProperty('voice', 'spanish')
-        engine.setProperty('rate', 165)
-        engine.say(audio)
-        engine.runAndWait() 
+        self.voiceEngine.say(audio)
+        self.voiceEngine.runAndWait() 
 
     def takeCommand(self): 
 
@@ -63,8 +68,10 @@ class Engine():
             image = None, geometry = "400x200", 
             prev_window = None):
         
-        if prev_window is not None:
+        if prev_window is not None or action == "Close":
             prev_window.destroy()
+            if action == "Close":
+                return
 
         window = Tk()
         window.geometry(geometry)
@@ -115,22 +122,9 @@ class Engine():
             canvas.create_image(20,20, anchor=NW, image=img) 
             window.mainloop()
 
-        elif action == "Countdown":
-            label = Label(
-                window,
-                text=text,
-                font=(font1, size, "bold"),
-                padx=0,
-                pady=0,
-                bg='LightSkyBlue1'
-                )
-            label.pack(expand=True)
-            window.update()
-            return window
-
         elif action == "GetCalendar":
             f = Frame(window)
-            canvas = Canvas(f, width="400")
+            canvas = Canvas(f, width="800")
             scroll = Scrollbar(f, orient = "vertical", command=canvas.yview)
             scroll_frame = Frame(canvas)
             f_close = Frame(window)

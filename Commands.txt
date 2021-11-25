@@ -17,6 +17,11 @@
 	"dime tu nombre",
 	"quién eres"
 	],
+"Secret":[
+	"dime un secreto",
+	"cuéntame un secreto",
+	"tienes secretos"	
+	],
 "Today":[
 	"qué día es hoy",
 	"hoy qué es",
@@ -69,6 +74,12 @@
 	"quita spotify",
 	"cierra spotify"
 	],
+"Song":[
+	"qué canción es esta",
+	"cual es esta canción",
+	"cómo se llama esta canción",
+	"dime el nombre de esta canción",
+	],
 "Weather":[
 	"tiempo hace"
 	],
@@ -97,6 +108,15 @@
 	"suspende el ordenador",
 	"suspensión",
 	"suspender"
+	],
+"Restart":[
+	"reinicia el ordenador",
+	"reinicio",
+	"reiniciar"	
+	],
+"Nothing":[
+	"nada",
+	"me he equivocado"	
 	],
 "Del":[
 	"apágate",

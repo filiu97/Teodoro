@@ -211,40 +211,56 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 # print(loc)
 
 
-from time import sleep, time
-import os
+# from time import sleep, time
+# import os
 
-import threading
+# import threading
 
-i = 0
-first = True
+# i = 0
+# first = True
 
-def countdown(t = 60, name = 'prueba'):
+# def countdown(t = 60, name = 'prueba'):
 
-    global first, i
+#     global first, i
 
-    if first:
-        t_ = t
-        first = False
-    else:
-        t_ = t-i
-        i = i + 1
-    mins, secs = divmod(t_, 60)
-    timeformat = '{:02d}:{:02d}'.format(mins, secs)
-    os.system("clear")
-    print("Alarma " + name + "  --->  " + timeformat)
-    if t_:
-        timer2 = threading.Timer(1, countdown)
-        timer2.start()
-    else:
-        fin()
-
-
-def fin(name = 'prueba'):
-
-    os.system("clear")
-    print("Alarma " + name + "  --->  Finalizada!")
+#     if first:
+#         t_ = t
+#         first = False
+#     else:
+#         t_ = t-i
+#         i = i + 1
+#     mins, secs = divmod(t_, 60)
+#     timeformat = '{:02d}:{:02d}'.format(mins, secs)
+#     os.system("clear")
+#     print("Alarma " + name + "  --->  " + timeformat)
+#     if t_:
+#         timer2 = threading.Timer(1, countdown)
+#         timer2.start()
+#     else:
+#         fin()
 
 
-timer1 = threading.Timer(1, countdown)
-timer1.start()
+# def fin(name = 'prueba'):
+
+#     os.system("clear")
+#     print("Alarma " + name + "  --->  Finalizada!")
+
+
+# timer1 = threading.Timer(1, countdown)
+# timer1.start()
+
+# import subprocess as sp
+
+# prueba = sp.getoutput('''dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus'|egrep -A 1 "string"|cut -b 26-|cut -d '"' -f 1|egrep -v ^$''')
+
+# print(prueba)
+
+import pyttsx3
+
+engine = pyttsx3.init()
+voices = engine.getProperty('voices')
+engine.setProperty('rate', 200)
+engine.setProperty('voice', 'spanish+whisper')
+
+engine.say('Hola, ¿cómo estás?')
+engine.runAndWait()

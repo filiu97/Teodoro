@@ -26,7 +26,7 @@ class Teodoro(System, Applications, Calendar):
 		self.SpotifyActions = {}
 		file = open(spotify_file)
 		for line in file:
-			key, value = line.rstrip("\n").split(":")
+			key, value = line.rstrip("\n").split("_")
 			self.SpotifyActions[key] = value
 		self.Days = {}
 		file = open(days_file)
@@ -59,8 +59,11 @@ class Teodoro(System, Applications, Calendar):
 		speech = "Me puedes llamar " + n[:-2] + ", tu asistente fiel"
 		return speech, text
 
-	def Hello(self): 
+	def Hello(self, window = None): 
+		if window is not None:
+			self.GUI("Close", prev_window=window)
 		self.speak("Hola señor, aquí estoy para lo que necesite.")
+		
 			
 	def tellDay(self):
 		day = str(datetime.today().weekday() + 1)
@@ -87,61 +90,93 @@ class Teodoro(System, Applications, Calendar):
 			self.GUI("Show", text = text, prev_window = window)
 			return None
 		
-		elif bool([match for match in self.Commands["Greetings"] if(match in query)]):
-			self.Hello()
+		elif bool([match for match in self.Commands["Greetings"] if(match in query)]):	
+			self.Hello(window)
 			return None
 		
 		elif bool([match for match in self.Commands["Cheer up"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
 			self.speak("Ánimo señor, no se preocupe")
+			return None
+
+		elif bool([match for match in self.Commands["Secret"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+			
+			self.voiceEngine.setProperty('voice', self.defaultWisperVoice)
+			self.speak("""En realidad, soy un extraterreste en misión oficial,
+			para poder estudiar a los humanos y observar su comportamiento""")
+			self.voiceEngine.setProperty('voice', self.defaultVoice)
+			
 			return None
 
 		elif bool([match for match in self.Commands["Today"] if(match in query)]): 
 			speech, text = self.tellDay()
 			self.speak(speech) 
-			self.GUI("Show", text = text, size = 24, prev_window = window)
+			self.GUI("Show", text = text, prev_window = window)
 			return None
 		
 		elif bool([match for match in self.Commands["Time"] if(match in query)]): 
 			speech, text = self.tellTime()
 			self.speak(speech)
-			self.GUI("Show", text = text, size = 24, prev_window = window) 
+			self.GUI("Show", text = text, prev_window = window) 
 			return None
 		
 		elif bool([match for match in self.Commands["Google"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
 			self.google(query)
 			return None
 
 		elif bool([match for match in self.Commands["Wikipedia"] if(match in query)]): 
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
 			response = self.wikipedia(query)
 			if response is None:
 				self.speak("No se ha podido encontrar la página solicitada")
 			return None
 
 		elif bool([match for match in self.Commands["Youtube"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+				
 			self.youtube(query)
 			return None
 
 		elif bool([match for match in self.Commands["Play"] if(match in query)]):
-			self.spotify("play")
+			self.spotify("play", window)
 			return None
 		
 		elif bool([match for match in self.Commands["Next"] if(match in query)]):
-			self.spotify("next")
+			self.spotify("next", window)
 			return None
 		
 		elif bool([match for match in self.Commands["Previous"] if(match in query)]):
-			self.spotify("previous")
+			self.spotify("previous", window)
 			return None
 		
 		elif bool([match for match in self.Commands["Pause"] if(match in query)]):
-			self.spotify("pause")
+			self.spotify("pause", window)
 			return None
 		
 		elif bool([match for match in self.Commands["Stop"] if(match in query)]):
-			self.spotify("stop")
+			self.spotify("stop", window)
+			return None
+
+		elif bool([match for match in self.Commands["Song"] if(match in query)]):
+			speech, text = self.spotify("song")
+			self.speak(speech)
+			self.GUI("Show", text = text, size = 16, prev_window = window) 
 			return None
 			
 		elif bool([match for match in self.Commands["Weather"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
 			speech, image = self.weather(query)
 			self.speak(speech)
 			os.system("display " + image + ".png")
@@ -149,15 +184,21 @@ class Teodoro(System, Applications, Calendar):
 			return None
 		
 		elif bool([match for match in self.Commands["Alarm"] if(match in query)]):  # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
-			self.set_alarm(query,window)
-			timer = threading.Timer(1, self.alarm)
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
+			t, speech, text = self.set_alarm(query)
+			timer = threading.Timer(t, self.alarm(speech, text))
 			timer.start()
 			return None
 		
 		elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
 			speech, text = self.getCalendar(query)
-			self.speak(speech)
-			self.GUI("GetCalendar", text = text, size = 12, geometry = "800x200", prev_window = window)
+			if speech != None:
+				self.speak(speech)
+				self.GUI("GetCalendar", text = text, size = 12, geometry = "1000x200", prev_window = window)
+			else:
+				self.speak("Credenciales actualizadas")
 			return None
 
 		elif bool([match for match in self.Commands["SetCalendar"] if(match in query)]): # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' a las X de nombre X "
@@ -172,6 +213,19 @@ class Teodoro(System, Applications, Calendar):
 			self.suspend()
 			return None
 		
+		elif bool([match for match in self.Commands["Restart"] if(match in query)]):
+			self.restart()
+			return None
+
+		elif bool([match for match in self.Commands["Nothing"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
+			self.voiceEngine.setProperty('voice', self.defaultWisperVoice)
+			self.speak("Vale, aquí no ha pasado nada")
+			self.voiceEngine.setProperty('voice', self.defaultVoice)
+			return None
+		
 		elif bool([match for match in self.Commands["Del"] if(match in query)]): 
 			del self
 			return None
@@ -181,20 +235,12 @@ class Teodoro(System, Applications, Calendar):
 			return -1
 		
 		
-def Take_query(Teo): 
+def takeQuery(Teo): 
 
 	Teo.Hello() 
 	os.system("clear")
-	# start = time()
 	
 	while(True): 
-		
-		# end = time()
-		# if end-start > 60:
-		# 	os.system("clear")
-		# 	# if bool(window):
-		# 	# 	window.destroy()
-		# 	start = time()
 
 		query, window = Teo.takeCommand()
 		if query is not None:
@@ -208,4 +254,4 @@ def Take_query(Teo):
 				
 if __name__ == '__main__': 
 	Teo = Teodoro()
-	Take_query(Teo)
+	takeQuery(Teo)

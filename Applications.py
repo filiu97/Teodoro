@@ -7,9 +7,7 @@ import urllib.request
 import re
 import tools as t
 import threading
-
-
-window = None
+import subprocess as sp
 
 
 class Applications(Engine):
@@ -20,17 +18,22 @@ class Applications(Engine):
         self.s_time_unit = t.Tools(3)	#Instancia objeto Switch
         self.s_time_unit.setSwitch_time_unit()	#Creador del switch
 
-        self.alarmDuration = None
-        self.alarmSpeech = None
-        self.alarmText = None
-        self.alarmFirstFlag = True
-        self.alarmIndex = 1
-        self.alarmWindow = None
-
         Engine.__init__(self, self.Names, pause_thr = 0.8)
 
-    def spotify(self, action):
-        os.system(self.SpotifyActions[action])
+    def spotify(self, action, window = None):
+        if window is not None:
+            self.GUI("Close", prev_window=window)
+        if action == "status":
+            return sp.getoutput(self.SpotifyActions[action])
+        elif action == "song":
+            title = sp.getoutput(self.SpotifyActions["title"])
+            album = sp.getoutput(self.SpotifyActions["album"])
+            artist = sp.getoutput(self.SpotifyActions["artist"])
+            speech = "Es " + title + ", del album " + album + ", de " + artist
+            text = title + "\n" + album + "\n" + artist
+            return speech, text
+        else:
+            os.system(self.SpotifyActions[action])
 
     def countdown(self, t, name, window):
         while t:
@@ -104,7 +107,7 @@ class Applications(Engine):
         return speech, place
 
 
-    def set_alarm(self, query, window):
+    def set_alarm(self, query):
         list_of_words = query.split()
         try:
             t = int(list_of_words[list_of_words.index("de") + 1])
@@ -121,31 +124,18 @@ class Applications(Engine):
         except:
             name = "Alarma"
 
-        self.alarmSpeech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
-        self.alarmText = "Fin de la alarma de nombre " + name
-        self.alarmDuration = t
+        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
+        text = "Fin de la alarma \nde nombre " + name
+        return t, speech, text
 
-    def alarm(self):
-        global window
-        if self.alarmFirstFlag:
-            t = self.alarmDuration
-            self.alarmFirstFlag = False
-        else:
-            t = self.alarmDuration-self.alarmIndex
-            self.alarmIndex = self.alarmIndex + 1
-            self.alarmWindow.destroy()
-        mins, secs = divmod(t, 60)
-        timeformat = '{:02d}:{:02d}'.format(mins, secs)
-        self.alarmWindow = self.GUI("Countdown", text = timeformat, size = 16)
-
-        if t:
-            timer = threading.Timer(1, self.alarm)
-            timer.start()
-        else:    
-            os.system("clear")
+    def alarm(self, speech, text):
+        os.system("clear")
+        if self.spotify("status") == "Playing":
             self.spotify("pause")
-            self.speak(self.alarmSpeech)
-            self.spotify("play")	
-            self.GUI("Show", text = self.alarmText, size = 16, prev_window = self.alarmWindow)
-                    
+            self.speak(speech)
+            self.spotify("play")
+        else:
+            self.speak(speech)
+        self.GUI("Show", text = text, size = 16)
+                
 
