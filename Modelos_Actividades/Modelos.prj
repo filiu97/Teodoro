@@ -1,6 +1,6 @@
 format 224
 "Modelos"
-  revision 5
+  revision 8
   modified_by 2 "filiu"
 
 
@@ -743,6 +743,246 @@ ${docstring}${body}
 	    classrelation_ref 130306 // <generalisation>
 	  b parent class_ref 128514 // Engine
       end
+    end
+
+    activity 128002 "GetCalendar"
+      activitydiagram 134786 "GetCalendar"
+	activitydiagramsettings draw_all_relations no
+	 end
+	size 2000x2000
+      end
+
+      activitynode 128002 initial_node ""
+	flow 128002 "<flow>"
+	  on activityaction_ref 128002 // activity action Initialize calendar service
+	end
+      end
+
+      activityaction 128002 "Initialize calendar service"
+	opaque_action
+	flow 128130 "<flow>"
+	  on activityaction_ref 128130 // activity action Set calendar ID
+	end
+      end
+
+      activityaction 128130 "Set calendar ID"
+	opaque_action
+	flow 128258 "<flow>"
+	  on activitynode_ref 128130 // fork
+	end
+
+	flow 128642 "calendar keyword in query"
+	  on activitynode_ref 128258 // decision
+	end
+      end
+
+      activitynode 128130 fork ""
+	flow 128386 "\"eventos\" or \"calendario\" in query"
+	  on activityaction_ref 128258 // activity action Personal
+	end
+
+	flow 128514 "\"tareas\" in query"
+	  on activityaction_ref 128386 // activity action Trello
+	end
+      end
+
+      activityaction 128258 "Personal"
+	opaque_action
+	flow 129154 "<flow>"
+	  on activitynode_ref 128514 // join
+	end
+      end
+
+      activityaction 128386 "Trello"
+	opaque_action
+	flow 129282 "<flow>"
+	  on activitynode_ref 128514 // join
+	end
+      end
+
+      activitynode 128258 decision ""
+	flow 128770 "\"eventos\" or \"calendario\""
+	  on activityaction_ref 128258 // activity action Personal
+	end
+
+	flow 128898 "\"tareas\""
+	  on activityaction_ref 128386 // activity action Trello
+	end
+      end
+
+      activitynode 128514 join ""
+	flow 129410 "time keyword in query"
+	  on activitynode_ref 128642 // decision
+	end
+      end
+
+      activitynode 128642 decision ""
+	flow 129538 "<flow>"
+	  on activityaction_ref 128514 // activity action Weeks logic
+	end
+
+	flow 129666 "<flow>"
+	  on activityaction_ref 128642 // activity action Week logic
+	end
+
+	flow 129794 "<flow>"
+	  on activityaction_ref 128770 // activity action Months logic
+	end
+
+	flow 129922 "<flow>"
+	  on activityaction_ref 128898 // activity action Month logic
+	end
+
+	flow 130050 "<flow>"
+	  on activityaction_ref 129026 // activity action Today logic
+	end
+
+	flow 130178 "<flow>"
+	  on activityaction_ref 129154 // activity action Tomorrow logic
+	end
+
+	flow 130306 "<flow>"
+	  on activityaction_ref 129282 // activity action Past tomorrow logic
+	end
+
+	flow 130434 "<flow>"
+	  on activityaction_ref 129410 // activity action Concrete date logic
+	end
+      end
+
+      activityaction 128514 "Weeks logic"
+	opaque_action
+	flow 130562 ""
+	  on activitynode_ref 128770 // join
+	end
+      end
+
+      activityaction 128642 "Week logic"
+	opaque_action
+	flow 130690 "<flow>"
+	  on activitynode_ref 128770 // join
+	end
+
+	flow 131074 "week keyword"
+	  on activitynode_ref 128898 // decision
+	end
+      end
+
+      activityaction 128770 "Months logic"
+	opaque_action
+	flow 130818 "<flow>"
+	  on activitynode_ref 128770 // join
+	end
+
+	flow 131586 "<flow>"
+	  on activitynode_ref 128770 // join
+	end
+      end
+
+      activityaction 128898 "Month logic"
+	opaque_action
+	flow 130946 ""
+	  on activitynode_ref 128770 // join
+	end
+
+	flow 131714 "month keyword"
+	  on activitynode_ref 129026 // decision
+	end
+      end
+
+      activityaction 129026 "Today logic"
+	opaque_action
+	flow 132098 "<flow>"
+	  on activitynode_ref 129154 // join
+	end
+      end
+
+      activityaction 129154 "Tomorrow logic"
+	opaque_action
+	flow 132226 "<flow>"
+	  on activitynode_ref 129154 // join
+	end
+      end
+
+      activityaction 129282 "Past tomorrow logic"
+	opaque_action
+	flow 132354 "<flow>"
+	  on activitynode_ref 129154 // join
+	end
+      end
+
+      activityaction 129410 "Concrete date logic"
+	opaque_action
+	flow 132482 "<flow>"
+	  on activitynode_ref 129154 // join
+	end
+      end
+
+      activitynode 128770 join ""
+	flow 132610 "<flow>"
+	  on activityaction_ref 129538 // activity action get_relative_events(calendarID, duration, offset)
+	end
+      end
+
+      activitynode 128898 decision ""
+	flow 131202 "<flow>"
+	  on activitynode_ref 128770 // join
+	end
+
+	flow 131330 "\"esta\""
+	  on activitynode_ref 128770 // join
+	end
+
+	flow 131458 "\"próxima\" or \"siguiente\""
+	  on activitynode_ref 128770 // join
+	end
+      end
+
+      activitynode 129026 decision ""
+	flow 131842 "\"este\""
+	  on activitynode_ref 128770 // join
+	end
+
+	flow 131970 "\"próximo\" or \"siguiente\""
+	  on activitynode_ref 128770 // join
+	end
+      end
+
+      activitypartition 128002 "caca"
+      end
+
+      activitynode 129154 join ""
+	flow 132738 "<flow>"
+	  on activityaction_ref 129666 // activity action get_absolute_events(day_str)
+	end
+      end
+
+      activityaction 129538 "get_relative_events(calendarID, duration, offset)"
+	opaque_action
+	flow 132866 "<flow>"
+	  on activityaction_ref 129794 // activity action Set speech and text
+	end
+      end
+
+      activityaction 129666 "get_absolute_events(day_str)"
+	opaque_action
+	flow 132994 "<flow>"
+	  on activityaction_ref 129794 // activity action Set speech and text
+	end
+      end
+
+      activityaction 129794 "Set speech and text"
+	opaque_action
+	flow 133122 "<flow>"
+	  on activitynode_ref 129282 // activity_final
+	end
+      end
+
+      activitynode 129282 activity_final ""
+      end
+    end
+
+    activity 128130 "Time units logic"
     end
   end
 

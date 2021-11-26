@@ -1,0 +1,9 @@
+window_sizes 1920 1031 508 1406 882 90
+cleanlooks_style
+show_stereotypes
+selected activity_ref 128002 // GetCalendar
+open
+  classview_ref 128130 // Clases
+  usecaseview_ref 128130 // Funcionalidades
+end
+end
