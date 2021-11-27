@@ -1,6 +1,6 @@
 format 224
 "Modelos"
-  revision 8
+  revision 13
   modified_by 2 "filiu"
 
 
@@ -761,11 +761,11 @@ ${docstring}${body}
       activityaction 128002 "Initialize calendar service"
 	opaque_action
 	flow 128130 "<flow>"
-	  on activityaction_ref 128130 // activity action Set calendar ID
+	  on activityaction_ref 128130 // activity action Set calendarID
 	end
       end
 
-      activityaction 128130 "Set calendar ID"
+      activityaction 128130 "Set calendarID"
 	opaque_action
 	flow 128258 "<flow>"
 	  on activitynode_ref 128130 // fork
@@ -811,7 +811,7 @@ ${docstring}${body}
       end
 
       activitynode 128514 join ""
-	flow 129410 "time keyword in query"
+	flow 129410 "date keyword in query"
 	  on activitynode_ref 128642 // decision
 	end
       end
@@ -846,7 +846,7 @@ ${docstring}${body}
 	end
 
 	flow 130434 "<flow>"
-	  on activityaction_ref 129410 // activity action Concrete date logic
+	  on activityaction_ref 129410 // activity action Specific date logic
 	end
       end
 
@@ -911,7 +911,7 @@ ${docstring}${body}
 	end
       end
 
-      activityaction 129410 "Concrete date logic"
+      activityaction 129410 "Specific date logic"
 	opaque_action
 	flow 132482 "<flow>"
 	  on activitynode_ref 129154 // join
@@ -948,25 +948,22 @@ ${docstring}${body}
 	end
       end
 
-      activitypartition 128002 "caca"
-      end
-
       activitynode 129154 join ""
 	flow 132738 "<flow>"
-	  on activityaction_ref 129666 // activity action get_absolute_events(day_str)
+	  on activityaction_ref 129666 // activity action get_absolute_events(CalendarID, day_str)
 	end
       end
 
       activityaction 129538 "get_relative_events(calendarID, duration, offset)"
 	opaque_action
-	flow 132866 "<flow>"
+	flow 132866 "eventsResults"
 	  on activityaction_ref 129794 // activity action Set speech and text
 	end
       end
 
-      activityaction 129666 "get_absolute_events(day_str)"
+      activityaction 129666 "get_absolute_events(CalendarID, day_str)"
 	opaque_action
-	flow 132994 "<flow>"
+	flow 132994 "eventsResults"
 	  on activityaction_ref 129794 // activity action Set speech and text
 	end
       end
@@ -982,7 +979,544 @@ ${docstring}${body}
       end
     end
 
-    activity 128130 "Time units logic"
+    activity 134658 "SetCalendar"
+      activitydiagram 141314 "SetCalendar"
+	activitydiagramsettings
+	 end
+	size 2000x2000
+      end
+
+      activitynode 135810 initial_node ""
+	flow 139650 "<flow>"
+	  on activityaction_ref 136322 // activity action Initialize calendar service
+	end
+      end
+
+      activityaction 136322 "Initialize calendar service"
+	opaque_action
+	flow 139778 "<flow>"
+	  on activityaction_ref 136450 // activity action Set CalendarID
+	end
+      end
+
+      activityaction 136450 "Set CalendarID"
+	opaque_action
+	flow 139906 "date keyword in query"
+	  on activitynode_ref 135938 // decision
+	end
+      end
+
+      activitynode 135938 decision ""
+	flow 140034 "<flow>"
+	  on activityaction_ref 137218 // activity action Today logic
+	end
+
+	flow 140162 "<flow>"
+	  on activityaction_ref 137346 // activity action Tomorrow logic
+	end
+
+	flow 140290 "<flow>"
+	  on activityaction_ref 137474 // activity action Past tomorrow logic
+	end
+
+	flow 140418 "<flow>"
+	  on activityaction_ref 137602 // activity action Specific date logic
+	end
+      end
+
+      activitynode 136066 join ""
+	flow 141058 "hour keyword in query"
+	  on activityaction_ref 136578 // activity action Set hour_str
+	end
+      end
+
+      activityaction 136578 "Set hour_str"
+	opaque_action
+	flow 141186 "<flow>"
+	  on activityaction_ref 136706 // activity action Set time_str = day_str + hours_str
+	end
+      end
+
+      activitynode 136194 fork ""
+      end
+
+      activityaction 136706 "Set time_str = day_str + hours_str"
+	opaque_action
+	flow 141314 "title keyword in query"
+	  on activityaction_ref 137090 // activity action Set summary
+	end
+      end
+
+      activityaction 136834 "GUI(\"SetCalendar\", prev_window = window)"
+	opaque_action
+	flow 141570 "description, location"
+	  on activityaction_ref 136962 // activity action create_event(time_str, summary, description, location)
+	end
+      end
+
+      activityaction 136962 "create_event(time_str, summary, description, location)"
+	opaque_action
+	flow 141698 "<flow>"
+	  on activitynode_ref 136322 // activity_final
+	end
+      end
+
+      activityaction 137090 "Set summary"
+	opaque_action
+	flow 141442 "<flow>"
+	  on activityaction_ref 136834 // activity action GUI("SetCalendar", prev_window = window)
+	end
+      end
+
+      activitynode 136322 activity_final ""
+      end
+
+      activityaction 137218 "Today logic"
+	opaque_action
+	flow 140546 "<flow>"
+	  on activitynode_ref 136066 // join
+	end
+      end
+
+      activityaction 137346 "Tomorrow logic"
+	opaque_action
+	flow 140674 "<flow>"
+	  on activitynode_ref 136066 // join
+	end
+      end
+
+      activityaction 137474 "Past tomorrow logic"
+	opaque_action
+	flow 140802 "<flow>"
+	  on activitynode_ref 136066 // join
+	end
+      end
+
+      activityaction 137602 "Specific date logic"
+	opaque_action
+	flow 140930 "<flow>"
+	  on activitynode_ref 136066 // join
+	end
+      end
+    end
+
+    activity 134914 "Spotify"
+      activitydiagram 141442 "Spotify"
+	activitydiagramsettings draw_all_relations no
+	 end
+	size 1500x1500
+      end
+    end
+
+    activity 135042 "spotify"
+      activitynode 136450 initial_node ""
+	flow 141826 "window = None?"
+	  on activitynode_ref 136578 // decision
+	end
+      end
+
+      activitynode 136578 decision ""
+	flow 141954 "action = \"status\"?"
+	  on activitynode_ref 136834 // decision
+	end
+
+	flow 142082 "None"
+	  on activitynode_ref 136706 // activity_final
+	end
+      end
+
+      activitynode 136706 activity_final ""
+      end
+
+      activitynode 136834 decision ""
+	flow 142210 "<flow>"
+	  on activitynode_ref 136706 // activity_final
+	end
+
+	flow 142338 "action = song?"
+	  on activitynode_ref 136962 // decision
+	end
+
+	flow 142722 "<flow>"
+	  on activityaction_ref 137858 // activity action Get status from terminal
+	end
+      end
+
+      activitynode 136962 decision ""
+	flow 142466 "<flow>"
+	  on activityaction_ref 137730 // activity action system(action)
+	end
+
+	flow 142978 "<flow>"
+	  on activityaction_ref 137986 // activity action Get title, album and artist from terminal
+	end
+      end
+
+      activityaction 137730 "system(action)"
+	opaque_action
+	flow 142594 "None"
+	  on activitynode_ref 136706 // activity_final
+	end
+      end
+
+      activityaction 137858 "Get status from terminal"
+	opaque_action
+	flow 142850 "status"
+	  on activitynode_ref 136706 // activity_final
+	end
+      end
+
+      activityaction 137986 "Get title, album and artist from terminal"
+	opaque_action
+	flow 143106 "<flow>"
+	  on activityaction_ref 138114 // activity action Set speech and text
+	end
+      end
+
+      activityaction 138114 "Set speech and text"
+	opaque_action
+	flow 143234 "speech, text"
+	  on activitynode_ref 136706 // activity_final
+	end
+
+	flow 143362 "speech, text"
+	  on activitynode_ref 136706 // activity_final
+	end
+      end
+    end
+
+    activity 135170 "alarm"
+      activitydiagram 141570 "set_alarm"
+	activitydiagramsettings draw_all_relations no
+	 end
+	size 2000x2000
+      end
+
+      activitydiagram 148098 "alarm"
+	activitydiagramsettings
+	 end
+	size 1500x1500
+      end
+
+      activitynode 144514 initial_node ""
+	flow 152322 "spotify(\"status\") = \"Playing\""
+	  on activitynode_ref 144642 // decision
+	end
+      end
+
+      activityobject 134530 "<< Timer ends >>"
+	 explicit_type ""
+	unordered 
+      end
+
+      activitynode 144642 decision ""
+	flow 152450 "<flow>"
+	  on activityaction_ref 145666 // activity action spotify("pause")
+	end
+
+	flow 152578 "<flow>"
+	  on activityaction_ref 146050 // activity action speak(speech)
+	end
+      end
+
+      activityaction 145666 "spotify(\"pause\")"
+	opaque_action
+	flow 152706 "<flow>"
+	  on activityaction_ref 145794 // activity action speak(speech)
+	end
+      end
+
+      activityaction 145794 "speak(speech)"
+	opaque_action
+	flow 152834 "<flow>"
+	  on activityaction_ref 145922 // activity action spotify("play")
+	end
+      end
+
+      activityaction 145922 "spotify(\"play\")"
+	opaque_action
+	flow 152962 "<flow>"
+	  on activitynode_ref 144770 // join
+	end
+      end
+
+      activityaction 146050 "speak(speech)"
+	opaque_action
+	flow 153090 "<flow>"
+	  on activitynode_ref 144770 // join
+	end
+      end
+
+      activitynode 144770 join ""
+	flow 153218 "<flow>"
+	  on activityaction_ref 146178 // activity action GUI("Show", text)
+	end
+      end
+
+      activityaction 146178 "GUI(\"Show\", text)"
+	opaque_action
+	flow 153346 "<flow>"
+	  on activitynode_ref 144898 // activity_final
+	end
+      end
+
+      activitynode 144898 activity_final ""
+      end
+
+      activityobject 134658 "<< User close >>"
+	 explicit_type ""
+	unordered 
+      end
+    end
+
+    activity 135298 "set_alarm"
+      activitynode 137090 initial_node ""
+	flow 143490 "Search duration in query"
+	  on activitynode_ref 137218 // decision
+	end
+
+	flow 143618 "duration keyword in query"
+	  on activitynode_ref 137218 // decision
+	end
+      end
+
+      activitynode 137218 decision ""
+	flow 144130 "<flow>"
+	  on activityaction_ref 138242 // activity action t = duration
+	end
+
+	flow 144258 "<flow>"
+	  on activityaction_ref 138370 // activity action t = 1
+	end
+      end
+
+      activitynode 137346 decision ""
+	flow 144386 "<flow>"
+	  on activityaction_ref 138498 // activity action m = seconds in unit time
+	end
+
+	flow 144514 "<flow>"
+	  on activityaction_ref 138626 // activity action m = 60
+	end
+      end
+
+      activityaction 138242 "t = duration"
+	opaque_action
+	flow 143746 "<flow>"
+	  on activitynode_ref 137474 // join
+	end
+      end
+
+      activityaction 138370 "t = 1"
+	opaque_action
+	flow 143874 "<flow>"
+	  on activitynode_ref 137474 // join
+	end
+      end
+
+      activitynode 137474 join ""
+	flow 144002 "unit time keyword in query"
+	  on activitynode_ref 137346 // decision
+	end
+      end
+
+      activityaction 138498 "m = seconds in unit time"
+	opaque_action
+	flow 144642 "<flow>"
+	  on activitynode_ref 137602 // join
+	end
+      end
+
+      activityaction 138626 "m = 60"
+	opaque_action
+	flow 144770 "<flow>"
+	  on activitynode_ref 137602 // join
+	end
+      end
+
+      activitynode 137602 join ""
+	flow 144898 "<flow>"
+	  on activityaction_ref 138754 // activity action t *= m
+	end
+      end
+
+      activityaction 138754 "t *= m"
+	opaque_action
+	flow 145026 "alarm name keyword in query"
+	  on activitynode_ref 137730 // decision
+	end
+      end
+
+      activitynode 137730 decision ""
+	flow 145154 "<flow>"
+	  on activityaction_ref 138882 // activity action name = alarm name
+	end
+
+	flow 145282 "<flow>"
+	  on activityaction_ref 139010 // activity action name = "Alarma"
+	end
+      end
+
+      activityaction 138882 "name = alarm name"
+	opaque_action
+	flow 145410 "<flow>"
+	  on activitynode_ref 137858 // join
+	end
+      end
+
+      activityaction 139010 "name = \"Alarma\""
+	opaque_action
+	flow 145538 "<flow>"
+	  on activitynode_ref 137858 // join
+	end
+      end
+
+      activitynode 137858 join ""
+	flow 145666 "<flow>"
+	  on activityaction_ref 139138 // activity action Set speech and text
+	end
+      end
+
+      activityaction 139138 "Set speech and text"
+	opaque_action
+	flow 145794 "<flow>"
+	  on activitynode_ref 137986 // activity_final
+	end
+      end
+
+      activitynode 137986 activity_final ""
+      end
+    end
+
+    activity 141826 "GUI"
+      activitydiagram 154626 "GUI"
+	activitydiagramsettings draw_all_relations no
+	 end
+	size 2000x2000
+      end
+
+      activitynode 145026 initial_node ""
+	flow 153730 "prev_window is None?"
+	  on activitynode_ref 145154 // decision
+	end
+      end
+
+      activitynode 145154 decision ""
+	flow 153858 "<flow>"
+	  on activityaction_ref 146306 // activity action prev_window.destroy()
+	end
+
+	flow 153986 "<flow>"
+	  on activityaction_ref 146434 // activity action window creation
+	end
+      end
+
+      activityaction 146306 "prev_window.destroy()"
+	opaque_action
+	flow 154114 "action = \"Close\"?"
+	  on activitynode_ref 145282 // decision
+	end
+      end
+
+      activitynode 145282 decision ""
+	flow 154242 "<flow>"
+	  on activityaction_ref 146434 // activity action window creation
+	end
+
+	flow 154370 "<flow>"
+	  on activitynode_ref 145410 // activity_final
+	end
+      end
+
+      activitynode 145410 activity_final ""
+      end
+
+      activityaction 146434 "window creation"
+	opaque_action
+	flow 154498 "action"
+	  on activitynode_ref 145538 // decision
+	end
+      end
+
+      activitynode 145538 decision ""
+	flow 154626 "\"Status\""
+	  on activityaction_ref 146562 // activity action Status window
+	end
+
+	flow 154754 "\"Show\""
+	  on activityaction_ref 146690 // activity action Show window
+	end
+
+	flow 154882 "\"Image\""
+	  on activityaction_ref 146818 // activity action Image window
+	end
+
+	flow 155010 "\"GetCalendar\""
+	  on activityaction_ref 146946 // activity action GetCalendar window
+	end
+
+	flow 155138 "\"SetCalendar\""
+	  on activityaction_ref 147074 // activity action SetCalendar window
+	end
+      end
+
+      activityaction 146562 "Status window"
+	opaque_action
+	flow 153602 "window"
+	  on activitynode_ref 145410 // activity_final
+	end
+      end
+
+      activityaction 146690 "Show window"
+	opaque_action
+	flow 155266 "<flow>"
+	  on activitynode_ref 145794 // join
+	end
+      end
+
+      activityaction 146818 "Image window"
+	opaque_action
+	flow 155394 "<flow>"
+	  on activitynode_ref 145794 // join
+	end
+      end
+
+      activityaction 146946 "GetCalendar window"
+	opaque_action
+	flow 155522 "<flow>"
+	  on activitynode_ref 145794 // join
+	end
+      end
+
+      activityaction 147074 "SetCalendar window"
+	opaque_action
+	flow 155650 "<flow>"
+	  on activitynode_ref 145794 // join
+	end
+
+	flow 155778 "description, location"
+	  on activitynode_ref 145410 // activity_final
+	end
+      end
+
+      activitynode 145666 join ""
+      end
+
+      activitynode 145794 join ""
+	flow 153474 "<< Nothing >>"
+	  on activitynode_ref 145410 // activity_final
+	end
+      end
+
+      activityobject 134786 "<< User close >>"
+	 explicit_type ""
+	unordered 
+      end
+
+      activityobject 134914 "<< User close >> "
+	 explicit_type ""
+	unordered 
+      end
     end
   end
 
@@ -1009,7 +1543,7 @@ ${docstring}${body}
      end
     sequencediagram 128258 "Functionalities"
       sequencediagramsettings end
-      overlapping_bars size 10000x10000
+      overlapping_bars size 10000x20000
     end
 
     class 128386 "User"

@@ -1,0 +1,194 @@
+format 224
+
+activitycanvas 128002 activity_ref 141826 // GUI
+  
+  xyzwh 22.9 167 2000 1670 570
+end
+note 128130 "Parameters = action, [text, size, image, geometry, prev_window]
+Returns: [window, description, location]"
+  xyzwh 111 183.4 2005 458 54
+activitynodecanvas 128258 activitynode_ref 145026 // initial_node
+  xyz 65.7 472.1 2005
+end
+activitynodecanvas 128386 activitynode_ref 145154 // decision
+  xyz 257 462.8 2005
+end
+activityactioncanvas 128514 activityaction_ref 146306 // activity action prev_window.destroy()
+  
+  show_opaque_action_definition default
+  xyzwh 314.8 366.5 2005 179 47
+end
+activitynodecanvas 128642 activitynode_ref 145282 // decision
+  xyz 626.2 373.4 2005
+end
+activitynodecanvas 128770 activitynode_ref 145410 // activity_final
+  xyz 1625.8 474.6 2005
+end
+activityactioncanvas 128898 activityaction_ref 146434 // activity action window creation
+  
+  show_opaque_action_definition default
+  xyzwh 682.3 454.8 2005 151 51
+end
+note 129026 "window configuration:
+     - geometry
+     - backgroud color
+     - title (action)
+     - fonts"
+  xyzwh 675.6 525.2 2005 173 133
+activitynodecanvas 129154 activitynode_ref 145538 // decision
+  xyz 941.4 459.4 2005
+end
+activityactioncanvas 129282 activityaction_ref 146562 // activity action Status window
+  
+  show_opaque_action_definition default
+  xyzwh 1104.6 259.1 2005 101 61
+end
+activityactioncanvas 129410 activityaction_ref 146690 // activity action Show window
+  
+  show_opaque_action_definition default
+  xyzwh 1104.6 354 2005 101 61
+end
+activityactioncanvas 129538 activityaction_ref 146818 // activity action Image window
+  
+  show_opaque_action_definition default
+  xyzwh 1106.2 447.4 2005 101 61
+end
+activityactioncanvas 129666 activityaction_ref 146946 // activity action GetCalendar window
+  
+  show_opaque_action_definition default
+  xyzwh 1108 540.8 2005 101 61
+end
+activityactioncanvas 129794 activityaction_ref 147074 // activity action SetCalendar window
+  
+  show_opaque_action_definition default
+  xyzwh 1105.4 636.7 2005 101 61
+end
+activitynodecanvas 130050 activitynode_ref 145794 // join
+   xyzwh 1324.6 432.6 2005 15 99
+end
+fragment 133506 "window type"
+  color lightgreen xyzwh 1031.6 231.9 1995 242 485
+end
+textcanvas 134274 "Yes"
+  font small_bold_italic  xyzwh 280.7 485.6 2011 27 19
+textcanvas 134402 "No"
+  font small_bold_italic  xyzwh 274.1 442.6 2011 27 19
+textcanvas 134658 "No"
+  font small_bold_italic  xyzwh 640.2 409.2 2011 27 19
+textcanvas 134786 "Yes"
+  font small_bold_italic  xyzwh 634.6 353.9 2011 27 19
+activityobjectcanvas 135042 activityobject_ref 134786 // activity object << User close >>
+  
+  xyzwh 1413.2 493.6 2005 129 35
+end
+activityobjectcanvas 135938 activityobject_ref 134914 // activity object << User close >> 
+  
+  xyzwh 1417.2 674.4 2005 133 35
+end
+flowcanvas 130178 flow_ref 153474 // << Nothing >>
+  
+  from ref 130050 z 2006 label "<< Nothing >>" xyz 1423 460 3000 to ref 128770
+   write_horizontally default
+end
+flowcanvas 130306 flow_ref 153602 // window
+  
+  from ref 129282 z 2006 label "window" xyz 1440 362 3000 to point 1248.2 284.8
+  line 134018 z 2006 to ref 128770
+   write_horizontally default
+end
+flowcanvas 130434 flow_ref 153730 // prev_window is None?
+  
+  from ref 128258 z 2006 label "prev_window is None?" xyz 95.5 452 3000 to ref 128386
+   write_horizontally default
+end
+flowcanvas 130562 flow_ref 153858 // <flow>
+  decenter_end 50
+  
+  from ref 128386 z 2006 to ref 128514
+   write_horizontally default
+end
+flowcanvas 130690 flow_ref 153986 // <flow>
+  
+  from ref 128386 z 2006 to ref 128898
+   write_horizontally default
+end
+flowcanvas 130818 flow_ref 154114 // action = "Close"?
+  
+  from ref 128514 z 2006 label "action = \"Close\"?" xyz 506 367 3000 to ref 128642
+   write_horizontally default
+end
+flowcanvas 130946 flow_ref 154242 // <flow>
+  decenter_end 57
+  
+  from ref 128642 z 2006 to ref 128898
+   write_horizontally default
+end
+flowcanvas 131074 flow_ref 154370 // <flow>
+  
+  from ref 128642 z 2006 to point 776.4 221.9
+  line 131202 z 2006 to point 1633.5 223.5
+  line 131330 z 2006 to ref 128770
+   write_horizontally default
+end
+flowcanvas 131458 flow_ref 154498 // action
+  
+  from ref 128898 z 2006 label "action" xyz 864 457 3000 to ref 129154
+   write_horizontally default
+end
+flowcanvas 131586 flow_ref 154626 // "Status"
+  
+  from ref 129154 z 2006 label "\"Status\"" xyz 984 367 3000 to point 1065.1 287.7
+  line 132354 z 2006 to ref 129282
+   write_horizontally default
+end
+flowcanvas 131714 flow_ref 154754 // "Show"
+  
+  from ref 129154 z 2006 label "\"Show\"" xyz 988 415 3000 to point 1063.5 382.2
+  line 132226 z 2006 to ref 129410
+   write_horizontally default
+end
+flowcanvas 131842 flow_ref 154882 // "Image"
+  
+  from ref 129154 z 2006 label "\"Image\"" xyz 985 467 3000 to ref 129538
+   write_horizontally default
+end
+flowcanvas 131970 flow_ref 155010 // "GetCalendar"
+  
+  from ref 129154 z 2006 label "\"GetCalendar\"" xyz 969 517 3000 to point 1061.9 569.3
+  line 132610 z 2006 to ref 129666
+   write_horizontally default
+end
+flowcanvas 132098 flow_ref 155138 // "SetCalendar"
+  decenter_end 558
+  
+  from ref 129154 z 2006 label "\"SetCalendar\"" xyz 968 571 3000 to point 1069.3 669.3
+  line 132738 z 2006 to ref 129794
+   write_horizontally default
+end
+flowcanvas 132994 flow_ref 155266 // <flow>
+  decenter_end 336
+  
+  from ref 129410 z 2006 to point 1253.4 384.6
+  line 133634 z 2006 to ref 130050
+   write_horizontally default
+end
+flowcanvas 133122 flow_ref 155394 // <flow>
+  
+  from ref 129538 z 2006 to ref 130050
+   write_horizontally default
+end
+flowcanvas 133250 flow_ref 155522 // <flow>
+  decenter_end 672
+  
+  from ref 129666 z 2006 to point 1249 569.6
+  line 133762 z 2006 to ref 130050
+   write_horizontally default
+end
+flowcanvas 135298 flow_ref 155778 // description, location
+  
+  from ref 129794 z 2006 label "description, location" xyz 1415 641 3000 to point 1252.5 662.5
+  line 135426 z 2006 to point 1635.3 665.2
+  line 135682 z 2006 to ref 128770
+   write_horizontally default
+end
+end

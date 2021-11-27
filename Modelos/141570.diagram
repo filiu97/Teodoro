@@ -1,0 +1,187 @@
+format 224
+
+activitycanvas 128002 activity_ref 135298 // set_alarm
+  
+  xyzwh 28.6 49.1 2000 1865 444
+end
+note 128130 "Parameters: query
+Returns: t, speech, text"
+  xyzwh 145.1 59.9 2005 181 61
+activitynodecanvas 128258 activitynode_ref 137090 // initial_node
+  xyz 46.8 255.4 2005
+end
+activitynodecanvas 128386 activitynode_ref 137218 // decision
+  xyz 257.2 245.3 2005
+end
+activitynodecanvas 128514 activitynode_ref 137346 // decision
+  xyz 661.9 243.7 2005
+end
+activityactioncanvas 128898 activityaction_ref 138242 // activity action t = duration
+  
+  show_opaque_action_definition default
+  xyzwh 313 186.5 2005 105 45
+end
+activityactioncanvas 129026 activityaction_ref 138370 // activity action t = 1
+  
+  show_opaque_action_definition default
+  xyzwh 329 290 2005 63 41
+end
+activitynodecanvas 129154 activitynode_ref 137474 // join
+   xyzwh 473.2 240.6 2005 15 47
+end
+textcanvas 129922 "Yes"
+  font small_bold_italic  xyzwh 272 230 2011 27 19
+textcanvas 130050 "No"
+  font small_bold_italic  xyzwh 276 277 2011 27 19
+activityactioncanvas 130178 activityaction_ref 138498 // activity action m = seconds in unit time
+  
+  show_opaque_action_definition default
+  xyzwh 725 183.3 2005 181 51
+end
+activityactioncanvas 130306 activityaction_ref 138626 // activity action m = 60
+  
+  show_opaque_action_definition default
+  xyzwh 769 283.3 2005 73 41
+end
+textcanvas 130690 "Yes"
+  font small_bold_italic  xyzwh 677 230 2011 27 19
+textcanvas 130818 "No"
+  font small_bold_italic  xyzwh 684 276 2011 27 19
+activitynodecanvas 130946 activitynode_ref 137602 // join
+   xyzwh 962.4 238.4 2005 15 47
+end
+activityactioncanvas 131330 activityaction_ref 138754 // activity action t *= m
+  
+  show_opaque_action_definition default
+  xyzwh 1025.4 241.7 2005 73 41
+end
+activitynodecanvas 131714 activitynode_ref 137730 // decision
+  xyz 1307.6 242.6 2005
+end
+activityactioncanvas 132226 activityaction_ref 138882 // activity action name = alarm name
+  
+  show_opaque_action_definition default
+  xyzwh 1365 176.6 2005 151 51
+end
+activityactioncanvas 132482 activityaction_ref 139010 // activity action name = "Alarma"
+  
+  show_opaque_action_definition default
+  xyzwh 1381 283.6 2005 135 55
+end
+textcanvas 132866 "No"
+  font small_bold_italic  xyzwh 1322 276 2011 27 19
+textcanvas 133122 "Yes"
+  font small_bold_italic  xyzwh 1319 226 2011 27 19
+activitynodecanvas 133250 activitynode_ref 137858 // join
+   xyzwh 1583 241.2 2005 15 51
+end
+activityactioncanvas 133634 activityaction_ref 139138 // activity action Set speech and text
+  
+  show_opaque_action_definition default
+  xyzwh 1655.4 236.2 2005 107 67
+end
+activitynodecanvas 133890 activitynode_ref 137986 // activity_final
+  xyz 1843 259 2005
+end
+note 134146 "Defaults to 1"
+  xyzwh 375.2 322 2005 108 38
+note 134274 "Defaults to \"minute\""
+  xyzwh 829.8 312.2 2011 158 42
+note 134402 "Defaults to \"Alarma\""
+  xyzwh 1494.4 323.2 2011 158 42
+flowcanvas 128770 flow_ref 143618 // duration keyword in query
+  
+  from ref 128258 z 2006 label "duration keyword in query" xyz 74 241 2006 to ref 128386
+   write_horizontally default
+end
+flowcanvas 129282 flow_ref 143746 // <flow>
+  
+  from ref 128898 z 2006 to ref 129154
+   write_horizontally default
+end
+flowcanvas 129410 flow_ref 143874 // <flow>
+  
+  from ref 129026 z 2006 to ref 129154
+   write_horizontally default
+end
+flowcanvas 129538 flow_ref 144002 // unit time keyword in query
+  
+  from ref 129154 z 2006 label "unit time keyword in query" xyz 489 237 2006 to ref 128514
+   write_horizontally default
+end
+flowcanvas 129666 flow_ref 144130 // <flow>
+  
+  from ref 128386 z 2006 to ref 128898
+   write_horizontally default
+end
+flowcanvas 129794 flow_ref 144258 // <flow>
+  
+  from ref 128386 z 2006 to ref 129026
+   write_horizontally default
+end
+flowcanvas 130434 flow_ref 144386 // <flow>
+  decenter_end 48
+  
+  from ref 128514 z 2006 to ref 130178
+   write_horizontally default
+end
+flowcanvas 130562 flow_ref 144514 // <flow>
+  
+  from ref 128514 z 2006 to ref 130306
+   write_horizontally default
+end
+flowcanvas 131074 flow_ref 144642 // <flow>
+  decenter_end 340
+  
+  from ref 130178 z 2006 to ref 130946
+   write_horizontally default
+end
+flowcanvas 131202 flow_ref 144770 // <flow>
+  decenter_end 574
+  
+  from ref 130306 z 2006 to ref 130946
+   write_horizontally default
+end
+flowcanvas 131586 flow_ref 144898 // <flow>
+  
+  from ref 130946 z 2006 to ref 131330
+   write_horizontally default
+end
+flowcanvas 131842 flow_ref 145026 // alarm name keyword in query
+  
+  from ref 131330 z 2006 label "alarm name keyword in query" xyz 1103 237 2006 to ref 131714
+   write_horizontally default
+end
+flowcanvas 132610 flow_ref 145154 // <flow>
+  
+  from ref 131714 z 2006 to ref 132226
+   write_horizontally default
+end
+flowcanvas 132738 flow_ref 145282 // <flow>
+  decenter_end 65
+  
+  from ref 131714 z 2006 to ref 132482
+   write_horizontally default
+end
+flowcanvas 133378 flow_ref 145410 // <flow>
+  
+  from ref 132226 z 2006 to ref 133250
+   write_horizontally default
+end
+flowcanvas 133506 flow_ref 145538 // <flow>
+  
+  from ref 132482 z 2006 to ref 133250
+   write_horizontally default
+end
+flowcanvas 133762 flow_ref 145666 // <flow>
+  
+  from ref 133250 z 2006 to ref 133634
+   write_horizontally default
+end
+flowcanvas 134018 flow_ref 145794 // <flow>
+  
+  from ref 133634 z 2006 to ref 133890
+   write_horizontally default
+end
+preferred_whz 0 0 1
+end

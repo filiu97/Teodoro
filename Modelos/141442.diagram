@@ -1,0 +1,118 @@
+format 224
+
+activitycanvas 128002 activity_ref 135042 // spotify
+  
+  xyzwh 85 84 2000 585 665
+end
+note 128130 "Parameters: action, [window]
+Returns: [None], [Terminal response] or [speech, text]"
+  xyzwh 173 92 2005 377 57
+activitynodecanvas 128258 activitynode_ref 136450 // initial_node
+  xyz 238 161 2005
+end
+activitynodecanvas 128386 activitynode_ref 136578 // decision
+  xyz 235 214 2005
+end
+activitynodecanvas 128514 activitynode_ref 136706 // activity_final
+  xyz 235 666 2005
+end
+activitynodecanvas 128642 activitynode_ref 136834 // decision
+  xyz 235.5 327 2005
+end
+activitynodecanvas 128770 activitynode_ref 136962 // decision
+  xyz 235 439 2005
+end
+textcanvas 129154 "Yes"
+  font small_bold_italic  xyzwh 256 214 2011 27 19
+activityactioncanvas 132226 activityaction_ref 137730 // activity action system(action)
+  
+  show_opaque_action_definition default
+  xyzwh 188 525 2005 119 59
+end
+textcanvas 132738 "No"
+  font small_bold_italic  xyzwh 254 246 2011 20 19
+textcanvas 132866 "Yes"
+  font small_bold_italic  xyzwh 258 328 2011 27 19
+textcanvas 132994 "Yes"
+  font small_bold_italic  xyzwh 258 438 2011 27 19
+textcanvas 133122 "No"
+  font small_bold_italic  xyzwh 254 357 2011 20 19
+textcanvas 133250 "No"
+  font small_bold_italic  xyzwh 254 472 2011 20 19
+activityactioncanvas 133378 activityaction_ref 137858 // activity action Get status from terminal
+  
+  show_opaque_action_definition default
+  xyzwh 346.5 314.5 2005 111 59
+end
+activityactioncanvas 133506 activityaction_ref 137986 // activity action Get title, album and artist from terminal
+  
+  show_opaque_action_definition default
+  xyzwh 334 427 2005 147 59
+end
+activityactioncanvas 133634 activityaction_ref 138114 // activity action Set speech and text
+  
+  show_opaque_action_definition default
+  xyzwh 358 530 2013 103 51
+end
+flowcanvas 128898 flow_ref 141826 // window = None?
+  
+  from ref 128258 z 2006 label "window = None?" xyz 193 183 2006 to ref 128386
+   write_horizontally default
+end
+flowcanvas 129026 flow_ref 141954 // action = "status"?
+  
+  from ref 128386 z 2006 label "action = \"status\"?" xyz 190 279 2006 to ref 128642
+   write_horizontally default
+end
+flowcanvas 129282 flow_ref 142082 // None
+  
+  from ref 128386 z 2006 label "None" xyz 548.5 656 2006 to point 604 229
+  line 129410 z 2006 to point 601 675
+  line 129538 z 2006 to point 245 675
+  line 129666 z 2006 to ref 128514
+   write_horizontally default
+end
+flowcanvas 132098 flow_ref 142338 // action = song?
+  
+  from ref 128642 z 2006 label "action = song?" xyz 199 381 2006 to ref 128770
+   write_horizontally default
+end
+flowcanvas 132354 flow_ref 142466 // <flow>
+  
+  from ref 128770 z 2006 to ref 132226
+   write_horizontally default
+end
+flowcanvas 132482 flow_ref 142594 // None
+  
+  from ref 132226 z 2006 label "None" xyz 229 611 2006 to ref 128514
+   write_horizontally default
+end
+flowcanvas 133890 flow_ref 142722 // <flow>
+  
+  from ref 128642 z 2006 to ref 133378
+   write_horizontally default
+end
+flowcanvas 134018 flow_ref 142850 // status
+  
+  from ref 133378 z 2006 label "status" xyz 458 617 2006 to point 565 340
+  line 134146 z 2006 to point 565 619
+  line 134274 z 2006 to ref 128514
+   write_horizontally default
+end
+flowcanvas 134658 flow_ref 142978 // <flow>
+  
+  from ref 128770 z 2006 to ref 133506
+   write_horizontally default
+end
+flowcanvas 134786 flow_ref 143106 // <flow>
+  
+  from ref 133506 z 2014 to ref 133634
+   write_horizontally default
+end
+flowcanvas 135810 flow_ref 143362 // speech, text
+  decenter_begin 553
+  
+  from ref 133634 z 2014 label "speech, text" xyz 302.5 605.5 2014 to ref 128514
+   write_horizontally default
+end
+end

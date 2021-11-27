@@ -121,7 +121,6 @@ class Applications(Engine):
 
 
     def alarm(self, speech, text):
-        os.system("clear")
         if self.spotify("status") == "Playing":
             self.spotify("pause")
             self.speak(speech)

@@ -1,848 +1,1113 @@
 format 224
 
 classinstance 128002 class_ref 128130 // Teodoro
-  name "Teo"   xyz 206.716 42.2344 2000 life_line_z 2000
+  name "Teo"   xyz 207.236 42.8944 2000 life_line_z 9960
 textcanvas 129302 "System shutdown"
-  xyzwh 1009.15 3035.8 2000 108 482
+  xyzwh 1015.48 3064.32 11985 133 34
 textcanvas 129942 "[Shutdown]"
-  xyzwh 100.1 3028.85 2000 86 60
+  xyzwh 106.8 3093.4 9960 340 70
 textcanvas 130070 "[Suspend]"
-  xyzwh 101.05 3266.75 2000 80 60
+  xyzwh 112.24 3307.04 9960 340 70
 classinstance 130306 class_ref 128386 // User
-  name ""   xyz 28.1003 38.897 2000 life_line_z 2000
+  name ""   xyz 28.6603 39.157 2000 life_line_z 9960
 textcanvas 130966 "System suspend"
-  xyzwh 1007.8 3284.2 2000 98 482
+  xyzwh 1018.9 3311 9960 127 33
 classinstance 131074 class_ref 128514 // Engine
-  name ""   xyz 593.987 41.01 2000 life_line_z 2000
+  name ""   xyz 594.107 41.29 2000 life_line_z 9960
 textcanvas 131862 "[Restart]
 "
-  xyzwh 105.1 3522.35 2000 76 54
+  xyzwh 107.88 3533.12 9960 340 70
 textcanvas 131990 "[Youtube]"
-  xyzwh 110.3 3741.55 2000 74 58
+  xyzwh 112.24 3825.08 9960 340 70
 textcanvas 132374 "Open youtube in browser with query"
-  xyzwh 1283.4 3848.35 2000 92 82
+  xyzwh 1295.48 3875.28 9960 340 80
 textcanvas 132630 "System restart
 "
-  xyzwh 1009.55 3531.05 2005 82 60
+  xyzwh 1016.18 3557.56 9965 116 29
 textcanvas 133122 "10s active listening"
-  xyzwh 648.85 390 3010 139 21
+  xyzwh 648.76 390 3010 139 21
 fragment 135042 "Functionality search"
-  xyzwh 46.9778 638.941 0 1608 8204
-  separator 609
-  separator 238
-  separator 1649
-  separator 2838
-  separator 3715
-  separator 4041
-  separator 3403
-  separator 5149
-  separator 5927
-  separator 3103
-  separator 2050
-  separator 1239
-  separator 8506
-  separator 4517
-  separator 2322
+  xyzwh 51.1578 689.641 1985 1880 7420
+  separator 634
+  separator 191
+  separator 1303
+  separator 2500
+  separator 3396
+  separator 3686
+  separator 4891
+  separator 5645
+  separator 3081
+  separator 1751
+  separator 979
+  separator 6468
+  separator 4023
+  separator 2183
+  separator 4431
+  separator 8239
+  separator 7759
+  separator 7018
+  separator 9514
+  separator 9676
+  separator 9861
 end
 textcanvas 135298 "[Greetings]"
-  xyzwh 100.7 748.8 2030 68 56
+  xyzwh 103.88 783 9990 117 30
 textcanvas 135426 "Query search match with commands"
-  font small_italic  xyzwh 57.85 689.8 2030 158 54
+  font small_italic  xyzwh 61.32 725.04 9990 179 31
 textcanvas 135938 "[Name]"
-  xyzwh 113.9 962.55 2000 50 60
+  xyzwh 119.68 987.24 9960 340 70
 classinstance 137474 class_ref 128258 // System
-  name ""   xyz 964.24 39.37 2000 life_line_z 2000
+  name ""   xyz 959.72 39.89 2000 life_line_z 3820
 classinstance 137602 class_ref 128642 // Applications
-  name ""   xyz 1225.81 37.81 2000 life_line_z 2000
+  name ""   xyz 1225.17 37.57 2000 life_line_z 9940
 classinstance 137730 class_ref 128770 // Calendar
-  name ""   xyz 1488.85 29.47 2000 life_line_z 2000
+  name ""   xyz 1488.73 29.19 2000 life_line_z 9960
 textcanvas 137858 "[Cheer up]"
-  xyzwh 99.6 1279.45 2000 66 60
-textcanvas 139138 "[Day]"
-  xyzwh 120.45 1779.3 2000 62 56
+  xyzwh 107.88 1305.48 9960 340 70
+textcanvas 139138 "[Today]"
+  xyzwh 100.92 1739.28 9960 340 70
 textcanvas 140674 "[Time]"
-  xyzwh 116.9 2091 2000 44 60
+  xyzwh 113.76 2105.56 9960 340 70
 textcanvas 142466 "Open google.es with query"
-  xyzwh 1278.75 2433.85 2000 116 486
+  xyzwh 1290.04 2466.8 9960 340 483
 textcanvas 142722 "[Google]"
-  xyzwh 109.1 2434.15 2000 68 62
+  xyzwh 101.8 2423 9960 80 50
 textcanvas 142850 "[GetCalendar absolute]"
-  xyzwh 87.35 2718.45 2000 160 66
+  xyzwh 71.8 2713.2 9960 340 70
 textcanvas 145282 "[Secret]"
-  xyzwh 110.65 1489.8 2000 88 54
+  xyzwh 119.68 1513 9960 340 70
 textcanvas 148610 "[Spotify (Basic Actions)]"
-  xyzwh 59.5 4169.95 2000 182 58
-textcanvas 149634 "- Play"
-  xyzwh 1375.3 4130.9 2015 52 68
-textcanvas 149762 "- Pause"
-  xyzwh 1377.8 4156.85 2020 66 56
-textcanvas 150018 "- Previous"
-  xyzwh 1377.15 4180.8 2015 80 44
-textcanvas 150146 "- Next
-"
-  xyzwh 1382.5 4203.45 2015 44 64
-textcanvas 150274 "- Stop
-"
-  xyzwh 1388.5 4222.65 2020 44 64
+  xyzwh 81.4 4192.4 9960 340 70
 textcanvas 151554 "Gets Title, Album and Artist of the song playing"
-  xyzwh 1296.1 4530.35 2000 134 78
+  xyzwh 1305.08 4528.88 9960 130 83
 textcanvas 151682 "Actions in Spotify"
-  xyzwh 1284.65 4167.2 2020 100 76
+  xyzwh 1295.08 4214.28 9980 73 67
 textcanvas 152834 "[Weather]"
-  xyzwh 99.65 5106.7 2000 66 16
+  xyzwh 119.68 5182.6 9960 340 70
 textcanvas 153602 "Accesses weather webpage, searches for the weather in the place specified in query, gets image of the weather"
-  xyzwh 1289.95 5039 2000 178 124
+  xyzwh 1295.68 5057.92 9960 223 107
 textcanvas 154882 "[Wikipedia]"
-  xyzwh 111.45 5684.55 2000 76 16
+  xyzwh 106.8 5682.6 9960 340 70
 textcanvas 155650 "Opens wikipedia in webbrowser with query"
-  xyzwh 1303.1 5720.1 2015 120 126
+  xyzwh 1306.52 5746.8 9975 340 123
 textcanvas 155906 "[Spotify (Song Info Action)]"
-  xyzwh 57.1 4608.8 2000 212 16
+  xyzwh 62.2 4548.4 9960 190 26
+textcanvas 157570 "[GetCalendar relative]"
+  xyzwh 78.04 6114.2 9960 163 47
+textcanvas 158210 "- Play
+- Pause
+- Previous
+- Next
+- Stop"
+  xyzwh 1385.28 4193.92 9960 73 103
+textcanvas 159746 "[SetCalendar]"
+  xyzwh 108.72 6615.52 9960 97 33
+textcanvas 161154 "[Alarm]"
+  xyzwh 119.48 7143.08 9960 57 33
+textcanvas 164610 "[Nothing]"
+  xyzwh 123.88 7787.52 9960 77 40
+textcanvas 165506 "[Del]"
+  xyzwh 121.8 7915.52 9960 40 33
+note 166018 "None : search functionality success
+-1 : search functionality fail (repeat process)"
+  xyzwh 370.74 7886.56 9960 213 96
 durationcanvas 129046 classinstance_ref 137474 // :System
-  xyzwh 991 2992.15 2010 11 183
+  xyzwh 986 3003.66 1785 11 169
 end
 durationcanvas 129558 classinstance_ref 131074 // :Engine
-  xyzwh 618 3049.9 2010 11 58
+  xyzwh 619 3061.92 9970 11 60
 end
 durationcanvas 130198 classinstance_ref 137474 // :System
-  xyzwh 991 3240.6 2010 11 185
+  xyzwh 986 3231.92 1805 11 166
 end
 durationcanvas 130434 classinstance_ref 130306 // :User
-  xyzwh 42 263.05 2010 11 36
+  xyzwh 42 241.88 2010 11 60
 end
 durationcanvas 130454 classinstance_ref 131074 // :Engine
-  xyzwh 618 3296.25 2010 11 59
+  xyzwh 619 3281.32 9970 11 77
 end
 durationcanvas 130562 classinstance_ref 128002 // Teo:Teodoro
-  xyzwh 248 264.35 2010 11 7826
+  xyzwh 249 237.88 9970 11 7819
   overlappingdurationcanvas 133890
-    xyzwh 254 660.1 2020 11 7406
+    xyzwh 255 640.52 9980 11 7389
     overlappingdurationcanvas 135554
-      xyzwh 260 703.05 2030 11 60
+      xyzwh 261 707.68 9990 11 49
     end
     overlappingdurationcanvas 136066
-      xyzwh 260 889 2030 11 24
+      xyzwh 261 888.4 9990 11 36
     end
     overlappingdurationcanvas 139266
-      xyzwh 260 1704.8 2030 11 24
+      xyzwh 261 1678.16 9990 11 40
     end
     overlappingdurationcanvas 140802
-      xyzwh 260 2052.15 2030 11 24
+      xyzwh 261 2034.72 9990 11 31
+    end
+    overlappingdurationcanvas 165634
+      xyzwh 261 7886.4 9990 11 40
+    end
+    overlappingdurationcanvas 166146
+      xyzwh 261 7072.48 9990 11 40
     end
   end
 end
 durationcanvas 131094 classinstance_ref 137474 // :System
-  xyzwh 991 3486.65 2010 11 175
+  xyzwh 986 3485.88 1805 11 170
 end
 durationcanvas 131202 classinstance_ref 128002 // Teo:Teodoro
-  xyzwh 248 167.9 2010 11 63
+  xyzwh 249 157.76 2010 11 70
 end
 durationcanvas 131330 classinstance_ref 131074 // :Engine
-  xyzwh 618 166.65 2010 11 55
+  xyzwh 619 157.76 2010 11 70
   overlappingdurationcanvas 131586
-    xyzwh 624 181.65 2020 11 25
+    xyzwh 625 182.32 2020 11 25
   end
 end
 durationcanvas 131350 classinstance_ref 131074 // :Engine
-  xyzwh 618 3538.05 2010 11 66
+  xyzwh 619 3529.76 9970 11 77
 end
 durationcanvas 131970 classinstance_ref 131074 // :Engine
-  xyzwh 618 264.45 2010 11 310
+  xyzwh 619 257.6 2010 11 327
   overlappingdurationcanvas 132226
-    xyzwh 624 282.7 2020 11 25
+    xyzwh 625 282.72 2020 11 34
   end
   overlappingdurationcanvas 132610
-    xyzwh 624 332.5 2020 11 156
+    xyzwh 625 331.24 2020 11 156
   end
   overlappingdurationcanvas 133506
-    xyzwh 624 518.6 2020 11 28
+    xyzwh 625 518.24 2020 11 31
   end
 end
 durationcanvas 132118 classinstance_ref 137602 // :Applications
-  xyzwh 1267 3833.3 2010 11 107
+  xyzwh 1267 3839.4 9950 11 83
 end
 durationcanvas 136450 classinstance_ref 131074 // :Engine
-  xyzwh 618 946.6 2010 11 93
+  xyzwh 619 937.04 9970 11 64
 end
 durationcanvas 136706 classinstance_ref 131074 // :Engine
-  xyzwh 618 1020.4 2010 11 97
+  xyzwh 619 1023.52 9970 11 73
   overlappingdurationcanvas 136962
-    xyzwh 624 1032.2 2020 11 26
+    xyzwh 625 1052.92 9980 11 24
   end
 end
 durationcanvas 137986 classinstance_ref 131074 // :Engine
-  xyzwh 618 1300.35 2010 11 95
+  xyzwh 619 1307.04 9970 11 73
 end
 durationcanvas 139650 classinstance_ref 131074 // :Engine
-  xyzwh 618 1862.75 2010 11 107
+  xyzwh 620 1869.8 9970 11 83
   overlappingdurationcanvas 139906
-    xyzwh 624 1890.15 2020 11 28
+    xyzwh 626 1905.76 9980 11 24
   end
 end
 durationcanvas 140290 classinstance_ref 131074 // :Engine
-  xyzwh 618 1768.95 2010 11 102
+  xyzwh 619 1754.04 9970 11 80
 end
 durationcanvas 141186 classinstance_ref 131074 // :Engine
-  xyzwh 618 2102.7 2010 11 105
+  xyzwh 619 2083.48 9970 11 67
 end
 durationcanvas 141570 classinstance_ref 131074 // :Engine
-  xyzwh 618 2196.5 2010 11 108
+  xyzwh 619 2174.48 9970 11 86
   overlappingdurationcanvas 141826
-    xyzwh 624 2217.45 2020 11 25
+    xyzwh 625 2215.56 9980 11 24
   end
 end
 durationcanvas 142210 classinstance_ref 137602 // :Applications
-  xyzwh 1267 2419.4 2010 11 100
+  xyzwh 1267 2422.8 9950 11 77
 end
 durationcanvas 142978 classinstance_ref 137730 // :Calendar
-  xyzwh 1520 2567.1 2010 11 192
+  xyzwh 1520 2571.96 9970 11 173
   overlappingdurationcanvas 143234
-    xyzwh 1526 2584.5 2020 11 52
+    xyzwh 1526 2583.24 9980 11 52
   end
   overlappingdurationcanvas 143618
-    xyzwh 1526 2670.4 2020 11 37
+    xyzwh 1526 2670.64 9980 11 37
   end
 end
 durationcanvas 144130 classinstance_ref 131074 // :Engine
-  xyzwh 618 2749 2010 11 103
+  xyzwh 619 2755.04 9970 11 77
 end
 durationcanvas 144514 classinstance_ref 131074 // :Engine
-  xyzwh 618 2829.65 2010 11 129
+  xyzwh 619 2851.96 9970 11 110
 end
 durationcanvas 144898 classinstance_ref 131074 // :Engine
-  xyzwh 618 725.55 2010 11 93
+  xyzwh 619 736.32 9970 11 67
 end
 durationcanvas 145410 classinstance_ref 131074 // :Engine
-  xyzwh 618 1219.3 2010 11 95
+  xyzwh 619 1224.8 9970 11 73
 end
 durationcanvas 145922 classinstance_ref 131074 // :Engine
-  xyzwh 618 1449.85 2010 11 97
+  xyzwh 619 1457.04 9970 11 73
 end
 durationcanvas 146306 classinstance_ref 131074 // :Engine
-  xyzwh 618 1534.2 2010 11 102
+  xyzwh 619 1537.28 9970 11 80
 end
 durationcanvas 146690 classinstance_ref 131074 // :Engine
-  xyzwh 618 2340.4 2010 11 97
+  xyzwh 619 2345.24 9970 11 77
 end
 durationcanvas 147074 classinstance_ref 131074 // :Engine
-  xyzwh 618 3750.85 2010 11 95
+  xyzwh 619 3757.04 9970 11 73
 end
 durationcanvas 148738 classinstance_ref 131074 // :Engine
-  xyzwh 618 3992.05 2010 11 100
+  xyzwh 619 4041.44 9970 11 73
 end
 durationcanvas 150786 classinstance_ref 137602 // :Applications
-  xyzwh 1267 4116.6 2010 11 153
+  xyzwh 1267 4147.16 9950 11 150
 end
 durationcanvas 151170 classinstance_ref 137602 // :Applications
-  xyzwh 1267 4496.9 2010 11 124
+  xyzwh 1267 4490.28 9950 11 123
 end
 durationcanvas 151810 classinstance_ref 131074 // :Engine
-  xyzwh 618 4631.8 2010 11 91
+  xyzwh 619 4633.32 9970 11 73
 end
 durationcanvas 152194 classinstance_ref 131074 // :Engine
-  xyzwh 618 4731.45 2010 11 118
+  xyzwh 619 4749.88 9970 11 94
   overlappingdurationcanvas 152578
-    xyzwh 624 4788.15 2020 11 32
+    xyzwh 625 4771.08 9980 11 32
   end
 end
 durationcanvas 152962 classinstance_ref 131074 // :Engine
-  xyzwh 618 4924.4 2010 11 89
+  xyzwh 619 4917.8 9970 11 87
 end
 durationcanvas 153346 classinstance_ref 137602 // :Applications
-  xyzwh 1267 5029.5 2010 11 123
+  xyzwh 1267 5022.24 9950 11 123
 end
 durationcanvas 153858 classinstance_ref 131074 // :Engine
-  xyzwh 618 5208.8 2010 11 96
-end
-durationcanvas 154242 classinstance_ref 131074 // :Engine
-  xyzwh 618 5341.7 2010 11 3178
-  overlappingdurationcanvas 156674
-    xyzwh 624 5367 2020 11 3144
-  end
+  xyzwh 620 5199.16 9970 11 97
 end
 durationcanvas 155010 classinstance_ref 131074 // :Engine
-  xyzwh 618 5597.1 2010 11 91
+  xyzwh 619 5589.24 9970 11 90
 end
 durationcanvas 155394 classinstance_ref 137602 // :Applications
-  xyzwh 1267 5701.35 2010 11 94
+  xyzwh 1267 5692.2 9950 11 97
 end
 durationcanvas 156290 classinstance_ref 131074 // :Engine
-  xyzwh 618 4380.15 2010 11 70
+  xyzwh 619 4369.68 9970 11 74
 end
-msg 129174 asynchronous
-  from durationcanvas_ref 133890
-  to durationcanvas_ref 129046
-  yz 3014 2025 explicitmsg "shutdown(query)"
-  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 719 2989
+durationcanvas 156930 classinstance_ref 131074 // :Engine
+  xyzwh 619 5339.2 9970 11 103
+  overlappingdurationcanvas 157186
+    xyzwh 625 5362.72 9980 11 25
+  end
+end
+durationcanvas 157698 classinstance_ref 137730 // :Calendar
+  xyzwh 1520 5959.24 9970 11 200
+  overlappingdurationcanvas 157954
+    xyzwh 1526 5984.8 9980 11 53
+  end
+  overlappingdurationcanvas 158466
+    xyzwh 1526 6079.56 9980 11 47
+  end
+end
+durationcanvas 158978 classinstance_ref 131074 // :Engine
+  xyzwh 619 6171.76 9970 11 93
+end
+durationcanvas 159362 classinstance_ref 131074 // :Engine
+  xyzwh 619 6291.2 9970 11 100
+end
+durationcanvas 159874 classinstance_ref 137730 // :Calendar
+  xyzwh 1520 6475.6 9970 11 290
+  overlappingdurationcanvas 160898
+    xyzwh 1526 6655.76 9980 11 74
+  end
+end
+durationcanvas 160258 classinstance_ref 131074 // :Engine
+  xyzwh 619 6531.36 9970 11 113
+end
+durationcanvas 161282 classinstance_ref 131074 // :Engine
+  xyzwh 619 6849.36 9970 11 77
+end
+durationcanvas 161666 classinstance_ref 137602 // :Applications
+  xyzwh 1267 6955.84 9950 11 97
+end
+durationcanvas 164738 classinstance_ref 131074 // :Engine
+  xyzwh 619 7776.52 9970 11 66
+end
+durationcanvas 165122 classinstance_ref 131074 // :Engine
+  xyzwh 619 7634.56 9970 11 86
+end
+durationcanvas 166402 classinstance_ref 137602 // :Applications
+  xyzwh 1267 7151.68 9950 11 411
+  overlappingdurationcanvas 166786
+    xyzwh 1273 7166.36 9960 11 43
+  end
+  overlappingdurationcanvas 167170
+    xyzwh 1273 7242.56 9960 11 71
+  end
+end
+durationcanvas 167426 classinstance_ref 131074 // :Engine
+  xyzwh 619 7292.44 9970 11 64
+end
+durationcanvas 168066 classinstance_ref 131074 // :Engine
+  xyzwh 619 7397.96 9970 11 71
+end
+lostfoundmsgsupport 166530 xyz 256.8 7156 9985
 msg 129430 return
   from durationcanvas_ref 129046
   to durationcanvas_ref 133890
-  yz 3137 2030 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 477 3115 3000
+  yz 3155 9990 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 477 3134 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 129686 synchronous
   from durationcanvas_ref 129046
   to durationcanvas_ref 129558
-  yz 3055 2015 explicitmsg "speak(\"En seguida, que tengas un buen día\")"
+  yz 3071 9975 explicitmsg "speak(\"En seguida, que tengas un buen día\")"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 655 3033
+  label_xy 654 3048
 msg 129814 return
   from durationcanvas_ref 129558
   to durationcanvas_ref 129046
-  yz 3091 2015 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 758 3072 3000
+  yz 3105 9975 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 758 3088 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 130326 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 130198
-  yz 3263 2025 explicitmsg "suspend(query)"
+  yz 3249 9985 explicitmsg "suspend(query)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 680 3244
+  label_xy 636 3231
 msg 130582 synchronous
   from durationcanvas_ref 130198
   to durationcanvas_ref 130454
-  yz 3302 2015 explicitmsg "speak(\"Perfecto, suspendiendo el equipo\")"
+  yz 3292 9975 explicitmsg "speak(\"Perfecto, suspendiendo el equipo\")"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 659 3281
+  label_xy 659 3271
 msg 130690 synchronous
   from durationcanvas_ref 130434
   to durationcanvas_ref 130562
-  yz 269 2015 explicitmsg "User invokes Teodoro"
+  yz 249 2015 explicitmsg "User invokes Teodoro"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 67 250
+  label_xy 68 230
 msg 130710 return
   from durationcanvas_ref 130198
   to durationcanvas_ref 133890
-  yz 3387 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 466 3368 3000
+  yz 3384 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 467 3365 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 130838 return
   from durationcanvas_ref 130454
   to durationcanvas_ref 130198
-  yz 3339 2015 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 756 3321 3000
+  yz 3339 9975 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 757 3321 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 131222 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 131094
-  yz 3503 2025 explicitmsg "restart(query)"
+  yz 3499 9985 explicitmsg "restart(query)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 692 3483
+  label_xy 636 3474
 msg 131458 synchronous
   from durationcanvas_ref 131202
   to durationcanvas_ref 131330
-  yz 172 2015 unspecifiedmsg
+  yz 173 2015 unspecifiedmsg
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 131478 synchronous
   from durationcanvas_ref 131094
   to durationcanvas_ref 131350
-  yz 3542 2015 explicitmsg "speak(\"Perfecto, reiniciando el equipo\")"
+  yz 3543 9975 explicitmsg "speak(\"Perfecto, reiniciando el equipo\")"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
   label_xy 671 3522
 msg 131606 return
   from durationcanvas_ref 131350
   to durationcanvas_ref 131094
-  yz 3582 2015 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 761 3565 3000
+  yz 3589 9975 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 761 3572 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 reflexivemsg 131714 synchronous
   to durationcanvas_ref 131586
-  yz 181 2025 explicitmsg "3s active listening loop"
+  yz 182 2025 explicitmsg "3s active listening loop"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
   label_xy 669 165
 msg 131734 return
   from durationcanvas_ref 131094
   to durationcanvas_ref 133890
-  yz 3636 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 461 3617 3000
+  yz 3641 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 461 3621 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 131842 return
   from durationcanvas_ref 131330
   to durationcanvas_ref 131202
-  yz 205 2025 explicitmsg "None"
+  yz 206 2025 explicitmsg "None"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 418 188
+  label_xy 418 190
 msg 132098 synchronous
   from durationcanvas_ref 130562
   to durationcanvas_ref 131970
-  yz 269 2015 unspecifiedmsg
+  yz 265 2015 unspecifiedmsg
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 132246 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 132118
-  yz 3857 2025 explicitmsg "youtube(query)"
+  yz 3849 9985 explicitmsg "youtube(query)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 710 3839
+  label_xy 710 3834
 reflexivemsg 132354 synchronous
   to durationcanvas_ref 132226
   yz 282 2025 explicitmsg "3s active listening loop"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 665 268
+  label_xy 665 270
 selfreflexivemsg 132482
   to durationcanvas_ref 132226
-  yz 299 2025 explicitmsg "Query with name accepted"
+  yz 308 2025 explicitmsg "Query with name accepted"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 663 304
+  label_xy 669 312
 msg 132502 return
   from durationcanvas_ref 132118
   to durationcanvas_ref 133890
-  yz 3903 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 716 3884 3000
+  yz 3898 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 717 3878 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 132866 return
   from durationcanvas_ref 131970
   to durationcanvas_ref 130562
-  yz 554 2015 explicitmsg "query, window"
+  yz 571 2015 explicitmsg "query, window"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 273 538
+  label_xy 392 551
 selfreflexivemsg 132994
   to durationcanvas_ref 132610
-  yz 480 3005 explicitmsg "query"
+  yz 479 3005 explicitmsg "query"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 662 474
+  label_xy 670 474
 reflexivemsg 133634 synchronous
   to durationcanvas_ref 133506
   yz 518 2025 explicitmsg "GUI(\"Status\", text = \"Reconociendo...\")"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 664 514
+  label_xy 670 515
 selfreflexivemsg 133762
   to durationcanvas_ref 133506
-  yz 538 2030 explicitmsg "window"
+  yz 541 2030 explicitmsg "window"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 667 544
+  label_xy 667 548
 reflexivemsg 134018 synchronous
   to durationcanvas_ref 133890
-  yz 660 2025 explicitmsg "getAction(query, window)"
+  yz 640 2025 explicitmsg "getAction(query, window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 298 650
+  label_xy 297 634
 reflexivemsg 135682 synchronous
   to durationcanvas_ref 135554
-  yz 703 2035 explicitmsg "Hello(window)"
+  yz 707 9995 explicitmsg "Hello(window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 304 697
+  label_xy 315 695
 reflexivemsg 136194 synchronous
   to durationcanvas_ref 136066
-  yz 889 2035 msg operation_ref 128770 // "tellNames()"
+  yz 888 9995 msg operation_ref 128770 // "tellNames()"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 307 882
+  label_xy 307 881
 selfreflexivemsg 136322
   to durationcanvas_ref 136066
-  yz 905 2035 explicitmsg "speech, text"
+  yz 916 9995 explicitmsg "speech, text"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 303 903
+  label_xy 306 922
 msg 136578 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 136450
-  yz 968 2025 explicitmsg "speak(speech)"
+  yz 944 9985 explicitmsg "speak(speech)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 408 949
+  label_xy 408 925
 msg 136834 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 136706
-  yz 1043 2025 explicitmsg "GUI(\"Show\", text = text, prev_window = window)"
+  yz 1034 9985 explicitmsg "GUI(\"Show\", text = text, prev_window = window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 289 1021
+  label_xy 289 1011
 reflexivemsg 137090 synchronous
   to durationcanvas_ref 136962
-  yz 1032 2025 unspecifiedmsg
-  stereotype "<<Window>>" xyz 668 1033 3000
+  yz 1052 9985 unspecifiedmsg
+  stereotype "<<Window>>" xyz 668 1054 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 137346 return
   from durationcanvas_ref 136706
   to durationcanvas_ref 133890
-  yz 1079 2025 unspecifiedmsg
-  stereotype "<<User close>>" xyz 390 1065 3000
+  yz 1079 9985 unspecifiedmsg
+  stereotype "<<User close>>" xyz 390 1068 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 138114 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 137986
-  yz 1324 2025 explicitmsg "speak(\"Ánimo señor, no se preocupe\")"
+  yz 1318 9985 explicitmsg "speak(\"Ánimo señor, no se preocupe\")"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 308 1308
+  label_xy 308 1302
 msg 138242 return
   from durationcanvas_ref 136450
   to durationcanvas_ref 133890
-  yz 1000 2030 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 400 984 3000
+  yz 986 9990 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 399 967 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 138370 return
   from durationcanvas_ref 137986
   to durationcanvas_ref 133890
-  yz 1358 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 405 1344 3000
+  yz 1352 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 405 1338 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 reflexivemsg 139394 synchronous
   to durationcanvas_ref 139266
-  yz 1704 2035 msg operation_ref 128386 // "tellDay()"
+  yz 1678 9995 msg operation_ref 128386 // "tellDay()"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 299 1703
+  label_xy 304 1672
 selfreflexivemsg 139522
   to durationcanvas_ref 139266
-  yz 1720 2035 explicitmsg "speech, text"
+  yz 1710 9995 explicitmsg "speech, text"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 296 1727
+  label_xy 291 1718
 msg 139778 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 139650
-  yz 1886 2025 explicitmsg "GUI(\"Show\", text = text, prev_window = window)"
+  yz 1881 9985 explicitmsg "GUI(\"Show\", text = text, prev_window = window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 282 1860
+  label_xy 282 1854
 reflexivemsg 140034 synchronous
   to durationcanvas_ref 139906
-  yz 1890 2025 unspecifiedmsg
-  stereotype "<<Window>>" xyz 666 1883 3000
+  yz 1905 9985 unspecifiedmsg
+  stereotype "<<Window>>" xyz 666 1900 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 140162 return
   from durationcanvas_ref 139650
   to durationcanvas_ref 133890
-  yz 1932 2025 unspecifiedmsg
-  stereotype "<<User close>>" xyz 385 1914 3000
+  yz 1926 9985 unspecifiedmsg
+  stereotype "<<User close>>" xyz 385 1908 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 140418 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 140290
-  yz 1792 2025 explicitmsg "speak(speech)"
+  yz 1764 9985 explicitmsg "speak(speech)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 394 1774
+  label_xy 389 1744
 msg 140546 return
   from durationcanvas_ref 140290
   to durationcanvas_ref 133890
-  yz 1833 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 393 1815 3000
+  yz 1805 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 389 1787 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 reflexivemsg 140930 synchronous
   to durationcanvas_ref 140802
-  yz 2052 2035 msg operation_ref 128514 // "tellTime()"
+  yz 2034 9995 msg operation_ref 128514 // "tellTime()"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 305 2043
+  label_xy 323 2017
 selfreflexivemsg 141058
   to durationcanvas_ref 140802
-  yz 2068 2035 explicitmsg "speech, text"
+  yz 2057 9995 explicitmsg "speech, text"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 293 2063
+  label_xy 311 2052
 msg 141314 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 141186
-  yz 2127 2025 explicitmsg "speak(speech)"
+  yz 2094 9985 explicitmsg "speak(speech)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 398 2110
+  label_xy 416 2075
 msg 141442 return
   from durationcanvas_ref 141186
   to durationcanvas_ref 133890
-  yz 2171 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 400 2153 3000
+  yz 2136 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 418 2120 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 141698 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 141570
-  yz 2219 2025 explicitmsg "GUI(\"Show\", text = text, prev_window = window)"
+  yz 2182 9985 explicitmsg "GUI(\"Show\", text = text, prev_window = window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 286 2202
+  label_xy 306 2164
 reflexivemsg 141954 synchronous
   to durationcanvas_ref 141826
-  yz 2217 2025 unspecifiedmsg
-  stereotype "<<Window>>" xyz 663 2211 3000
+  yz 2215 9985 unspecifiedmsg
+  stereotype "<<Window>>" xyz 681 2202 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 142082 return
   from durationcanvas_ref 141570
   to durationcanvas_ref 133890
-  yz 2267 2025 unspecifiedmsg
-  stereotype "<<User close>>" xyz 390 2250 3000
+  yz 2236 9985 unspecifiedmsg
+  stereotype "<<User close>>" xyz 409 2220 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 142338 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 142210
-  yz 2442 2025 explicitmsg "google(query)"
+  yz 2438 9985 explicitmsg "google(query)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 715 2421
+  label_xy 715 2415
 msg 142594 return
   from durationcanvas_ref 142210
   to durationcanvas_ref 133890
-  yz 2481 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 712 2460 3000
+  yz 2475 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 712 2454 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 143106 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 142978
-  yz 2590 2025 explicitmsg "getCalendar(query)"
+  yz 2584 9985 explicitmsg "getCalendar(query)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 813 2573
+  label_xy 813 2567
 reflexivemsg 143362 synchronous
   to durationcanvas_ref 143234
-  yz 2584 2025 explicitmsg "get_absolute_events(calendarID, day_str)"
+  yz 2583 9985 explicitmsg "get_absolute_events(calendarID, day_str)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 1591 2582
+  label_xy 1568 2582
 selfreflexivemsg 143490
   to durationcanvas_ref 143234
-  yz 2628 2025 explicitmsg "eventsResult"
+  yz 2627 9985 explicitmsg "eventsResult"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 1559 2631
+  label_xy 1575 2620
 reflexivemsg 143746 synchronous
   to durationcanvas_ref 143618
-  yz 2670 2025 explicitmsg "get_date_hours(date_input, time_format)"
+  yz 2670 9985 explicitmsg "get_date_hours(date_input, time_format)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 1586 2668
+  label_xy 1575 2664
 selfreflexivemsg 143874
   to durationcanvas_ref 143618
-  yz 2699 2030 explicitmsg "text"
+  yz 2699 9990 explicitmsg "text"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 1562 2695
+  label_xy 1569 2698
 msg 144002 return
   from durationcanvas_ref 142978
   to durationcanvas_ref 133890
-  yz 2722 2025 explicitmsg "speech, text"
+  yz 2719 9985 explicitmsg "speech, text"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 836 2702
+  label_xy 836 2700
 msg 144258 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 144130
-  yz 2772 2025 explicitmsg "speak(speech)"
+  yz 2766 9985 explicitmsg "speak(speech)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 387 2755
+  label_xy 388 2750
 msg 144386 return
   from durationcanvas_ref 144130
   to durationcanvas_ref 133890
-  yz 2814 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 387 2795 3000
+  yz 2808 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 387 2790 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 144642 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 144514
-  yz 2852 2025 explicitmsg "GUI(\"GetCalendar\", text = text, size = 12, geometry = \"800x200\", prev_window = window)"
+  yz 2865 9985 explicitmsg "GUI(\"GetCalendar\", text = text, size = 12, geometry = \"800x200\", prev_window = window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 274 2834
+  label_xy 271 2842
 msg 144770 return
   from durationcanvas_ref 144514
   to durationcanvas_ref 133890
-  yz 2919 2025 unspecifiedmsg
-  stereotype "<<User close>>" xyz 382 2902 3000
+  yz 2935 9985 unspecifiedmsg
+  stereotype "<<User close>>" xyz 382 2918 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 145026 synchronous
   from durationcanvas_ref 135554
   to durationcanvas_ref 144898
-  yz 746 2040 explicitmsg "self.GUI(\"Close\", prev_window=window)"
+  yz 742 10000 explicitmsg "self.GUI(\"Close\", prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 322 733
+  label_xy 317 724
 msg 145154 return
   from durationcanvas_ref 144898
   to durationcanvas_ref 133890
-  yz 781 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 395 768 3000
+  yz 788 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 395 775 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 145538 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 145410
-  yz 1243 2025 explicitmsg "self.GUI(\"Close\", prev_window=window)"
+  yz 1238 9985 explicitmsg "self.GUI(\"Close\", prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 313 1225
+  label_xy 314 1218
 msg 145666 return
   from durationcanvas_ref 145410
   to durationcanvas_ref 133890
-  yz 1277 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 404 1263 3000
+  yz 1271 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 404 1257 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 146050 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 145922
-  yz 1472 2025 explicitmsg "self.GUI(\"Close\", prev_window=window)"
+  yz 1468 9985 explicitmsg "self.GUI(\"Close\", prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 312 1453
+  label_xy 311 1448
 msg 146178 return
   from durationcanvas_ref 145922
   to durationcanvas_ref 133890
-  yz 1508 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 404 1492 3000
+  yz 1502 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 404 1488 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 146434 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 146306
-  yz 1557 2025 explicitmsg "speak('secret_query')"
+  yz 1549 9985 explicitmsg "speak('secret_query')"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 373 1536
+  label_xy 372 1530
 msg 146562 return
   from durationcanvas_ref 146306
   to durationcanvas_ref 133890
-  yz 1598 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 404 1581 3000
+  yz 1592 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 404 1575 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 146818 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 146690
-  yz 2363 2025 explicitmsg "self.GUI(\"Close\", prev_window=window)"
+  yz 2358 9985 explicitmsg "self.GUI(\"Close\", prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 312 2344
+  label_xy 311 2338
 msg 146946 return
   from durationcanvas_ref 146690
   to durationcanvas_ref 133890
-  yz 2400 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 390 2383 3000
+  yz 2395 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 389 2377 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 147202 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 147074
-  yz 3773 2025 explicitmsg "GUI(\"Close\", prev_window=window)"
+  yz 3768 9985 explicitmsg "GUI(\"Close\", prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 311 3755
+  label_xy 312 3750
 msg 147330 return
   from durationcanvas_ref 147074
   to durationcanvas_ref 133890
-  yz 3808 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 395 3792 3000
+  yz 3815 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 395 3800 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 148866 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 148738
-  yz 4014 2025 explicitmsg "GUI(\"Close\",prev_window=window)"
+  yz 4048 9985 explicitmsg "GUI(\"Close\",prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 310 3992
+  label_xy 315 4027
 msg 149250 return
   from durationcanvas_ref 148738
   to durationcanvas_ref 133890
-  yz 4053 2030 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 399 4036 3000
+  yz 4096 9990 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 404 4080 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 150914 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 150786
-  yz 4127 2025 explicitmsg "spotify(action)"
+  yz 4159 9985 explicitmsg "spotify(action)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 736 4106
+  label_xy 741 4140
 msg 151042 return
   from durationcanvas_ref 150786
   to durationcanvas_ref 133890
-  yz 4241 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 747 4222 3000
+  yz 4275 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 751 4257 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 151298 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 151170
-  yz 4508 2025 explicitmsg "spotify(action='song')"
+  yz 4502 9985 explicitmsg "spotify(action='song')"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 746 4487
+  label_xy 746 4481
 msg 151426 return
   from durationcanvas_ref 151170
   to durationcanvas_ref 133890
-  yz 4592 2025 explicitmsg "speech, text"
+  yz 4599 9985 explicitmsg "speech, text"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 752 4576
+  label_xy 751 4582
 msg 151938 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 151810
-  yz 4642 2025 explicitmsg "speak(speech)"
+  yz 4638 9985 explicitmsg "speak(speech)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 391 4622
+  label_xy 391 4617
 msg 152066 return
   from durationcanvas_ref 151810
   to durationcanvas_ref 133890
-  yz 4694 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 402 4679 3000
+  yz 4692 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 402 4680 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 152322 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 152194
-  yz 4765 2025 explicitmsg "GUI(\"Show\", text = text, size = 16, prev_window = window)"
+  yz 4752 9985 explicitmsg "GUI(\"Show\", text = text, size = 16, prev_window = window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 272 4746
+  label_xy 277 4724
 msg 152450 return
   from durationcanvas_ref 152194
   to durationcanvas_ref 133890
-  yz 4820 2025 unspecifiedmsg
-  stereotype "<<User close>>" xyz 392 4803 3000
+  yz 4829 9985 unspecifiedmsg
+  stereotype "<<User close>>" xyz 393 4810 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 reflexivemsg 152706 synchronous
   to durationcanvas_ref 152578
-  yz 4788 2025 unspecifiedmsg
-  stereotype "<<Window>>" xyz 661 4788 3000
+  yz 4771 9985 unspecifiedmsg
+  stereotype "<<Window>>" xyz 661 4770 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 153090 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 152962
-  yz 4934 2025 explicitmsg "GUI(\"Close\", prev_window=window)"
+  yz 4926 9985 explicitmsg "GUI(\"Close\", prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 326 4915
+  label_xy 327 4908
 msg 153218 return
   from durationcanvas_ref 152962
   to durationcanvas_ref 133890
-  yz 4984 2030 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 401 4967 3000
+  yz 4976 9990 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 402 4961 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 153474 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 153346
-  yz 5039 2025 explicitmsg "weather(query)"
+  yz 5034 9985 explicitmsg "weather(query)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 715 5020
+  label_xy 715 5014
 msg 153730 return
   from durationcanvas_ref 153346
   to durationcanvas_ref 133890
-  yz 5123 2025 explicitmsg "speech, place"
+  yz 5118 9985 explicitmsg "speech, place"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 720 5103
+  label_xy 721 5095
 msg 153986 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 153858
-  yz 5220 2025 explicitmsg "speak(speech)"
+  yz 5215 9985 explicitmsg "speak(speech)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 394 5201
+  label_xy 393 5195
 msg 154114 return
   from durationcanvas_ref 153858
   to durationcanvas_ref 133890
-  yz 5276 2030 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 401 5258 3000
-  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-msg 154370 synchronous
-  from durationcanvas_ref 133890
-  to durationcanvas_ref 154242
-  yz 5352 2025 explicitmsg "GUI(\"Image\", image = image + \".png\", geometry = \"1750X1000\", prev_window = window)"
-  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 305 5331
-msg 154498 return
-  from durationcanvas_ref 154242
-  to durationcanvas_ref 133890
-  yz 5418 2030 unspecifiedmsg
-  stereotype "<<User close>>" xyz 389 5401 3000
+  yz 5271 9990 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 402 5252 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 155138 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 155010
-  yz 5608 2025 explicitmsg "GUI(\"Close\", prev_window=window)"
+  yz 5599 9985 explicitmsg "GUI(\"Close\", prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 326 5588
+  label_xy 327 5581
 msg 155266 return
   from durationcanvas_ref 155010
   to durationcanvas_ref 133890
-  yz 5660 2030 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 406 5641 3000
+  yz 5654 9990 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 407 5635 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 155522 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 155394
-  yz 5711 2025 explicitmsg "wikipedia(query)"
+  yz 5704 9985 explicitmsg "wikipedia(query)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 710 5692
+  label_xy 710 5685
 msg 155778 return
   from durationcanvas_ref 155394
   to durationcanvas_ref 133890
-  yz 5766 2025 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 723 5749 3000
+  yz 5758 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 724 5742 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 msg 156418 synchronous
   from durationcanvas_ref 133890
   to durationcanvas_ref 156290
-  yz 4385 2025 explicitmsg "GUI(\"Close\",prev_window=window)"
+  yz 4379 9985 explicitmsg "GUI(\"Close\",prev_window=window)"
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-  label_xy 325 4365
+  label_xy 325 4361
 msg 156546 return
   from durationcanvas_ref 156290
   to durationcanvas_ref 133890
-  yz 4432 2030 unspecifiedmsg
-  stereotype "<<Nothing>>" xyz 399 4415 3000
+  yz 4425 9990 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 399 4410 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
-reflexivemsg 156802 asynchronous
-  to durationcanvas_ref 156674
-  yz 4242 2025 unspecifiedmsg
-  stereotype "<<Window>>" xyz 664 5368 3000
+msg 157058 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 156930
+  yz 5349 9985 explicitmsg "self.GUI(\"Image\", image = image + \".png\", geometry = \"1750X1000\", prev_window = window)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 277 5315
+reflexivemsg 157314 synchronous
+  to durationcanvas_ref 157186
+  yz 5362 9990 unspecifiedmsg
+  stereotype "<<Window>>" xyz 666 5375 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 157442 return
+  from durationcanvas_ref 156930
+  to durationcanvas_ref 133890
+  yz 5416 9985 unspecifiedmsg
+  stereotype "<<User close>>" xyz 393 5395 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 157826 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 157698
+  yz 5971 9985 explicitmsg "getCalendar(query)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 831 5950
+reflexivemsg 158082 synchronous
+  to durationcanvas_ref 157954
+  yz 5984 9985 explicitmsg "get_relative_events(calendarID, duration, offset)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1573 5981
+selfreflexivemsg 158338
+  to durationcanvas_ref 157954
+  yz 6029 9985 explicitmsg "eventResults"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1567 6028
+reflexivemsg 158594 synchronous
+  to durationcanvas_ref 158466
+  yz 6079 9985 explicitmsg "get_data_hours(date_input, time_format)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1569 6074
+selfreflexivemsg 158722
+  to durationcanvas_ref 158466
+  yz 6118 9985 explicitmsg "text"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1568 6112
+msg 158850 return
+  from durationcanvas_ref 157698
+  to durationcanvas_ref 133890
+  yz 6132 9985 explicitmsg "speech, text"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 854 6114
+msg 159106 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 158978
+  yz 6182 9985 explicitmsg "speak(speech)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 393 6162
+msg 159234 return
+  from durationcanvas_ref 158978
+  to durationcanvas_ref 133890
+  yz 6235 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 397 6214 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 159490 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 159362
+  yz 6302 9985 explicitmsg "GUI(\"GetCalendar\", text = text, size = 12, geometry = \"1000x200\", prev_window = window)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 267 6281
+msg 159618 return
+  from durationcanvas_ref 159362
+  to durationcanvas_ref 133890
+  yz 6366 9985 unspecifiedmsg
+  stereotype "<<User close>>" xyz 389 6348 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 160002 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 159874
+  yz 6488 9985 explicitmsg "setCalendar(query, window)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 803 6465
+msg 160130 return
+  from durationcanvas_ref 159874
+  to durationcanvas_ref 133890
+  yz 6739 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 852 6722 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 160386 synchronous
+  from durationcanvas_ref 159874
+  to durationcanvas_ref 160258
+  yz 6544 9975 explicitmsg "GUI(\"SetCalendar\", prev_window = window)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 998 6525
+msg 160770 return
+  from durationcanvas_ref 160258
+  to durationcanvas_ref 159874
+  yz 6621 9975 explicitmsg "description, location"
+  stereotype "<<User close>>" xyz 1023 6637 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1011 6600
+reflexivemsg 161026 synchronous
+  to durationcanvas_ref 160898
+  yz 6655 9985 explicitmsg "create_event(time_str, summary, description, location)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1563 6640
+msg 161410 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 161282
+  yz 6859 9985 explicitmsg "GUI(\"Close\", prev_window=window)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 324 6838
+msg 161538 return
+  from durationcanvas_ref 161282
+  to durationcanvas_ref 133890
+  yz 6899 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 395 6884 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 161794 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 161666
+  yz 6966 9985 explicitmsg "setAlarm(query)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 714 6945
+msg 161922 return
+  from durationcanvas_ref 161666
+  to durationcanvas_ref 133890
+  yz 7022 9985 explicitmsg "t, speech, text"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 721 7002
+msg 164866 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 164738
+  yz 7784 9985 explicitmsg "speak(\"Vale, aquí no ha pasado nada\")"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 314 7762
+msg 164994 return
+  from durationcanvas_ref 164738
+  to durationcanvas_ref 133890
+  yz 7826 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 407 7805 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 165250 synchronous
+  from durationcanvas_ref 133890
+  to durationcanvas_ref 165122
+  yz 7642 9985 explicitmsg "GUI(\"Close\", prev_window = window)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 320 7621
+msg 165378 return
+  from durationcanvas_ref 165122
+  to durationcanvas_ref 133890
+  yz 7706 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 402 7688 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+reflexivemsg 165762 synchronous
+  to durationcanvas_ref 165634
+  yz 7886 9995 explicitmsg "del self"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 300 7882
+selfreflexivemsg 165890
+  to durationcanvas_ref 133890
+  yz 8021 9985 explicitmsg "None or -1"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 306 8018
+reflexivemsg 166274 asynchronous
+  to durationcanvas_ref 166146
+  yz 4952 9995 explicitmsg "timer(t, command = alarm(speech,text)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 307 7071
+msg 166658 found_synchronous
+  from lostfoundmsgsupport_ref 166530
+  to durationcanvas_ref 166402
+  yz 7154 9985 explicitmsg "alarm(speech, text)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 705 7132
+reflexivemsg 166914 synchronous
+  to durationcanvas_ref 166786
+  yz 7166 9985 explicitmsg "spotify(\"status\")"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1319 7162
+selfreflexivemsg 167042
+  to durationcanvas_ref 166786
+  yz 7201 10965 explicitmsg "status"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1321 7195
+reflexivemsg 167298 synchronous
+  to durationcanvas_ref 167170
+  yz 7242 9985 explicitmsg "spotify status logic"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 1320 7241
+msg 167554 synchronous
+  from durationcanvas_ref 167170
+  to durationcanvas_ref 167426
+  yz 7296 9985 explicitmsg "speak(speech)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 903 7275
+msg 167938 return
+  from durationcanvas_ref 167426
+  to durationcanvas_ref 166402
+  yz 7342 9975 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 905 7325 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 168194 synchronous
+  from durationcanvas_ref 166402
+  to durationcanvas_ref 168066
+  yz 7401 9975 explicitmsg "GUI(\"Show\", text = text, size = 16)"
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+  label_xy 832 7382
+msg 168322 return
+  from durationcanvas_ref 168066
+  to durationcanvas_ref 166402
+  yz 7454 9975 unspecifiedmsg
+  stereotype "<<User close>>" xyz 896 7470 10960
+  show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
+msg 168450 return
+  from durationcanvas_ref 166402
+  to durationcanvas_ref 133890
+  yz 7545 9985 unspecifiedmsg
+  stereotype "<<Nothing>>" xyz 722 7521 10960
   show_full_operations_definition default show_class_of_operation default drawing_language default show_context_mode default
 preferred_whz 1464 836 0.78
 end

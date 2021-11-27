@@ -1,0 +1,104 @@
+format 224
+
+activitycanvas 128002 activity_ref 135170 // alarm
+  
+  xyzwh 22 114 2000 1285 305
+end
+note 128130 "Parameters: speech, text
+Returns: << Nothing >>"
+  xyzwh 115 121 2005 201 57
+activitynodecanvas 128386 activitynode_ref 144514 // initial_node
+  xyz 84 264 2005
+end
+activityobjectcanvas 128514 activityobject_ref 134530 // activity object << Timer ends >>
+  
+  xyzwh 35 295 2005 133 35
+end
+activitynodecanvas 128770 activitynode_ref 144642 // decision
+  xyz 287 256 2005
+end
+activityactioncanvas 129026 activityaction_ref 145666 // activity action spotify("pause")
+  
+  show_opaque_action_definition default
+  xyzwh 337 196 2005 135 43
+end
+activityactioncanvas 129154 activityaction_ref 145794 // activity action speak(speech)
+  
+  show_opaque_action_definition default
+  xyzwh 503 194 2005 119 47
+end
+activityactioncanvas 129282 activityaction_ref 145922 // activity action spotify("play")
+  
+  show_opaque_action_definition default
+  xyzwh 649 195 2005 119 47
+end
+activityactioncanvas 129538 activityaction_ref 146050 // activity action speak(speech)
+  
+  show_opaque_action_definition default
+  xyzwh 497 331 2005 127 47
+end
+activitynodecanvas 129666 activitynode_ref 144770 // join
+   xyzwh 846 252 2005 15 81
+end
+activityactioncanvas 129794 activityaction_ref 146178 // activity action GUI("Show", text)
+  
+  show_opaque_action_definition default
+  xyzwh 915 264 2005 155 57
+end
+activitynodecanvas 129922 activitynode_ref 144898 // activity_final
+  xyz 1254 279 2005
+end
+activityobjectcanvas 131202 activityobject_ref 134658 // activity object << User close >>
+  
+  xyzwh 1100 255 2005 129 35
+end
+textcanvas 131330 "Yes"
+  font small_bold_italic  xyzwh 301 241 2011 27 19
+textcanvas 131458 "No"
+  font small_bold_italic  xyzwh 307 289 2011 20 19
+flowcanvas 128898 flow_ref 152322 // spotify("status") = "Playing"
+  
+  from ref 128386 z 2006 label "spotify(\"status\") = \"Playing\"" xyz 106 248 2006 to ref 128770
+   write_horizontally default
+end
+flowcanvas 130050 flow_ref 152450 // <flow>
+  
+  from ref 128770 z 2006 to ref 129026
+   write_horizontally default
+end
+flowcanvas 130178 flow_ref 152578 // <flow>
+  
+  from ref 128770 z 2006 to ref 129538
+   write_horizontally default
+end
+flowcanvas 130306 flow_ref 152706 // <flow>
+  
+  from ref 129026 z 2006 to ref 129154
+   write_horizontally default
+end
+flowcanvas 130434 flow_ref 152834 // <flow>
+  
+  from ref 129154 z 2006 to ref 129282
+   write_horizontally default
+end
+flowcanvas 130562 flow_ref 152962 // <flow>
+  
+  from ref 129282 z 2006 to ref 129666
+   write_horizontally default
+end
+flowcanvas 130690 flow_ref 153090 // <flow>
+  
+  from ref 129538 z 2006 to ref 129666
+   write_horizontally default
+end
+flowcanvas 130818 flow_ref 153218 // <flow>
+  
+  from ref 129666 z 2006 to ref 129794
+   write_horizontally default
+end
+flowcanvas 130946 flow_ref 153346 // <flow>
+  
+  from ref 129794 z 2006 to ref 129922
+   write_horizontally default
+end
+end

@@ -1,0 +1,192 @@
+format 224
+
+activitycanvas 128002 activity_ref 134658 // SetCalendar
+  
+  xyzwh 74.6 94.5 1990 1793 543
+end
+note 128130 "Parameters: query, window
+Returns: << Nothing >>"
+  font bold_italic  xyzwh 188.5 104.8 2005 236 61
+activitynodecanvas 128514 activitynode_ref 135810 // initial_node
+  xyz 160.6 197.2 2005
+end
+activityactioncanvas 128642 activityaction_ref 136322 // activity action Initialize calendar service
+  
+  show_opaque_action_definition default
+  xyzwh 122 260.2 2005 95 81
+end
+activityactioncanvas 128770 activityaction_ref 136450 // activity action Set CalendarID
+  
+  show_opaque_action_definition default
+  xyzwh 119.8 391 2005 101 61
+end
+note 128898 "Personal"
+  xyzwh 194.8 369.4 2011 84 39
+activitynodecanvas 129026 activitynode_ref 135938 // decision
+  xyz 431.6 403.6 2005
+end
+fragment 129666 "Time units logic"
+  color lightgreen xyzwh 533.3 203.3 1995 975 388
+end
+note 129794 "day_str=today()+2"
+  xyzwh 829.9 407.9 2011 139 39
+note 129922 "day_str=month+\"/\"+day+\"/\"+year"
+  xyzwh 788.4 494.2 2011 234 39
+note 130050 "day_str=today()"
+  xyzwh 833.7 225.5 2011 130 39
+note 130178 "day_str=today()+1"
+  xyzwh 833.7 314.5 2011 139 39
+activitynodecanvas 130306 activitynode_ref 136066 // join
+   xyzwh 1135.2 362 2000 15 87
+end
+activityactioncanvas 130562 activityaction_ref 136578 // activity action Set hour_str
+  
+  show_opaque_action_definition default
+  xyzwh 1280.6 286.6 2000 109 47
+end
+activityactioncanvas 131074 activityaction_ref 136706 // activity action Set time_str = day_str + hours_str
+  
+  show_opaque_action_definition default
+  xyzwh 1201.8 457 2000 265 53
+end
+activityactioncanvas 131202 activityaction_ref 136834 // activity action GUI("SetCalendar", prev_window = window)
+  
+  show_opaque_action_definition default
+  xyzwh 1601.4 252.7 2000 191 83
+end
+activityactioncanvas 131330 activityaction_ref 136962 // activity action create_event(time_str, summary, description, location)
+  
+  show_opaque_action_definition default
+  xyzwh 1603.6 384.9 2000 183 107
+end
+activityactioncanvas 131458 activityaction_ref 137090 // activity action Set summary
+  
+  show_opaque_action_definition default
+  xyzwh 1641.9 161.9 2000 101 61
+end
+activitynodecanvas 131586 activitynode_ref 136322 // activity_final
+  xyz 1684.2 567.8 2000
+end
+activityactioncanvas 132098 activityaction_ref 137218 // activity action Today logic
+  
+  show_opaque_action_definition default
+  xyzwh 595.7 258 2000 105 45
+end
+activityactioncanvas 132354 activityaction_ref 137346 // activity action Tomorrow logic
+  
+  show_opaque_action_definition default
+  xyzwh 593.7 341.3 2000 120 51
+end
+activityactioncanvas 132482 activityaction_ref 137474 // activity action Past tomorrow logic
+  
+  show_opaque_action_definition default
+  xyzwh 576.2 437.3 2000 161 45
+end
+activityactioncanvas 132610 activityaction_ref 137602 // activity action Specific date logic
+  
+  show_opaque_action_definition default
+  xyzwh 584.3 525.3 2000 151 49
+end
+flowcanvas 131714 flow_ref 139650 // <flow>
+  
+  from ref 128514 z 2006 to ref 128642
+   write_horizontally default
+end
+flowcanvas 131842 flow_ref 139778 // <flow>
+  
+  from ref 128642 z 2006 to ref 128770
+   write_horizontally default
+end
+flowcanvas 131970 flow_ref 139906 // date keyword in query
+  
+  from ref 128770 z 2006 label "date keyword in query" xyz 283 395 2006 to ref 129026
+   write_horizontally default
+end
+flowcanvas 132738 flow_ref 140034 // <flow>
+  
+  from ref 129026 z 2006 to point 556 276
+  line 133634 z 2006 to ref 132098
+   write_horizontally default
+end
+flowcanvas 132866 flow_ref 140162 // <flow>
+  
+  from ref 129026 z 2006 to point 556 368
+  line 133506 z 2006 to ref 132354
+   write_horizontally default
+end
+flowcanvas 132994 flow_ref 140290 // <flow>
+  decenter_end 566
+  
+  from ref 129026 z 2006 to point 545 458
+  line 133378 z 2006 to ref 132482
+   write_horizontally default
+end
+flowcanvas 133122 flow_ref 140418 // <flow>
+  decenter_end 576
+  
+  from ref 129026 z 2006 to point 549 549
+  line 133250 z 2006 to ref 132610
+   write_horizontally default
+end
+flowcanvas 133762 flow_ref 140546 // <flow>
+  
+  from ref 132098 z 2001 to point 1058 276
+  line 133890 z 2001 to ref 130306
+   write_horizontally default
+end
+flowcanvas 134018 flow_ref 140674 // <flow>
+  
+  from ref 132354 z 2001 to point 1068 363
+  line 134146 z 2001 to ref 130306
+   write_horizontally default
+end
+flowcanvas 134274 flow_ref 140802 // <flow>
+  
+  from ref 132482 z 2001 to point 1070 456
+  line 134402 z 2001 to ref 130306
+   write_horizontally default
+end
+flowcanvas 134530 flow_ref 140930 // <flow>
+  
+  from ref 132610 z 2001 to point 1079 542
+  line 134658 z 2001 to ref 130306
+   write_horizontally default
+end
+flowcanvas 135042 flow_ref 141058 // hour keyword in query
+  
+  from ref 130306 z 2001 label "hour keyword in query" xyz 1193 206 2001 to point 1196 402
+  line 135298 z 2001 to point 1196 230
+  line 135426 z 2001 to point 1331 231
+  line 135170 z 2001 to ref 130562
+   write_horizontally default
+end
+flowcanvas 135554 flow_ref 141186 // <flow>
+  
+  from ref 130562 z 2001 to ref 131074
+   write_horizontally default
+end
+flowcanvas 135682 flow_ref 141314 // title keyword in query
+  decenter_begin 539
+  
+  from ref 131074 z 2001 label "title keyword in query" xyz 1550 96 2001 to point 1546 484
+  line 135810 z 2001 to point 1548 117
+  line 136066 z 2001 to point 1687 115
+  line 135938 z 2001 to ref 131458
+   write_horizontally default
+end
+flowcanvas 136194 flow_ref 141442 // <flow>
+  
+  from ref 131458 z 2001 to ref 131202
+   write_horizontally default
+end
+flowcanvas 136322 flow_ref 141570 // description, location
+  
+  from ref 131202 z 2001 label "description, location" xyz 1704 347 2001 to ref 131330
+   write_horizontally default
+end
+flowcanvas 136450 flow_ref 141698 // <flow>
+  
+  from ref 131330 z 2001 to ref 131586
+   write_horizontally default
+end
+end

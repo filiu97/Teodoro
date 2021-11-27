@@ -1,0 +1,17 @@
+window_sizes 1920 1031 508 1406 882 90
+cleanlooks_style
+diagrams
+  activitydiagram_ref 141570 // set_alarm
+    1406 882 60 Custom 0 0
+  activitydiagram_ref 141442 // Spotify
+    124 120 100 Custom 0 0
+  active  sequencediagram_ref 128258 // Functionalities
+    1406 882 70 Custom 1937 0
+end
+show_stereotypes
+selected activity_ref 135170 // alarm
+open
+  classview_ref 128130 // Clases
+  usecaseview_ref 128130 // Funcionalidades
+end
+end
