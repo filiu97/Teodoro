@@ -116,7 +116,7 @@ class Engine():
             window.mainloop()
 
         elif action == "Image":
-            canvas = Canvas(window, width = 1500, height = 600)      
+            canvas = Canvas(window, width = 1500, height = 800)      
             canvas.pack()      
             img = PhotoImage(file=image)      
             canvas.create_image(20,20, anchor=NW, image=img) 
@@ -124,7 +124,7 @@ class Engine():
 
         elif action == "GetCalendar":
             f = Frame(window)
-            canvas = Canvas(f, width="800")
+            canvas = Canvas(f, width="800", height="800")
             scroll = Scrollbar(f, orient = "vertical", command=canvas.yview)
             scroll_frame = Frame(canvas)
             f_close = Frame(window)
@@ -157,7 +157,7 @@ class Engine():
                 bg='LightSkyBlue1'
                 )
             f_close.pack(side=BOTTOM)
-            f.pack(side=BOTTOM)
+            f.pack(side=TOP)
             canvas.pack(side=LEFT, fill="both")
             scroll.pack(side=RIGHT, fill="y")
             label.pack()

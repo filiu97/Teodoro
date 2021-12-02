@@ -196,7 +196,7 @@ class Teodoro(System, Applications, Calendar):
 			speech, text = self.getCalendar(query)
 			if speech != None:
 				self.speak(speech)
-				self.GUI("GetCalendar", text = text, size = 12, geometry = "1000x200", prev_window = window)
+				self.GUI("GetCalendar", text = text, size = 12, geometry = "800x200", prev_window = window)
 			else:
 				self.speak("Credenciales actualizadas")
 			return None

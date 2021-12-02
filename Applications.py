@@ -31,7 +31,7 @@ class Applications(Engine):
             album = sp.getoutput(self.SpotifyActions["album"])
             artist = sp.getoutput(self.SpotifyActions["artist"])
             speech = "Es " + title + ", del album " + album + ", de " + artist
-            text = title + "\n" + album + "\n" + artist
+            text = "Canción: " + title + "\n" + "Album: " + album + "\n" + "Artista: " + artist
             return speech, text
         else:
             os.system(self.SpotifyActions[action])
