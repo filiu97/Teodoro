@@ -12,16 +12,16 @@ import iso8601
 
 class Calendar(Engine):
     
-    def __init__(self, calendarsid_file, numbers_file, Months):
+    def __init__(self, bdc_path, calendarsid_file, numbers_file, Months):
 
         self.CalendarsID = {}
-        file = open(calendarsid_file)
+        file = open(bdc_path + calendarsid_file)
         for line in file:
             key, value = line.rstrip("\n").replace(" ", "").split(":")
             self.CalendarsID[key] = value
 
         self.Numbers = {}
-        file = open(numbers_file)
+        file = open(bdc_path + numbers_file)
         for line in file:
             key, value = line.rstrip("\n").replace(" ", "").split(":")
             self.Numbers[key] = value

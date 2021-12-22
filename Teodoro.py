@@ -14,41 +14,46 @@ import threading
 class Teodoro(System, Applications, Calendar):
 	
 	def __init__(self,
+				bdc_path = "BdC/",
 				names_file = "Names.txt",
 				spotify_file = "Spotify.txt",
 				days_file = "Days.txt", 
 				months_file = "Months.txt",
 				numbers_file = "Numbers.txt",
 				calendarsid_file = "CalendarsID.txt",
-				commands_file = "Commands.txt"):
+				commands_file = "Commands.txt",
+				del_speak = True):
 
-		self.Names = open(names_file).read().splitlines()
+		self.Names = open(bdc_path + names_file).read().splitlines()
 		self.SpotifyActions = {}
-		file = open(spotify_file)
+		file = open(bdc_path + spotify_file)
 		for line in file:
 			key, value = line.rstrip("\n").split("_")
 			self.SpotifyActions[key] = value
 		self.Days = {}
-		file = open(days_file)
+		file = open(bdc_path + days_file)
 		for line in file:
 			key, value = line.rstrip("\n").replace(" ", "").split(":")
 			self.Days[key] = value
 		self.Months = {}
-		file = open(months_file)
+		file = open(bdc_path + months_file)
 		for line in file:
 			key, value = line.rstrip("\n").replace(" ", "").split(":")
 			self.Months[key] = value
 		
-		file = open(commands_file)
+		file = open(bdc_path + commands_file)
 		self.Commands = eval(file.read())
+
+		self.del_speak = del_speak
 
 		System.__init__(self)
 		Applications.__init__(self, self.SpotifyActions)
-		Calendar.__init__(self, calendarsid_file, numbers_file, self.Months)
+		Calendar.__init__(self, bdc_path, calendarsid_file, numbers_file, self.Months)
 
 	def __del__(self):
-		self.speak("Adiós señor, que tenga un buen día")
-		sys.exit() 
+		if self.del_speak:
+			self.speak("Adiós señor, que tenga un buen día")
+			sys.exit() 
 
 	def tellNames(self):
 		n = str()
@@ -64,7 +69,6 @@ class Teodoro(System, Applications, Calendar):
 			self.GUI("Close", prev_window=window)
 		self.speak("Hola señor, aquí estoy para lo que necesite.")
 		
-			
 	def tellDay(self):
 		day = str(datetime.today().weekday() + 1)
 		today = datetime.today()

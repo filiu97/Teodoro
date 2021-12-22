@@ -115,8 +115,8 @@ class Applications(Engine):
         except:
             name = "Alarma"
 
-        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
-        text = "Fin de la alarma \nde nombre " + name
+        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de cinco minutos. " + name
+        text = "Fin de la alarma \n " + name
         return t, speech, text
 
 
