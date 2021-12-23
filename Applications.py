@@ -83,7 +83,7 @@ class Applications(Engine):
         place = str(query[2]).replace(" ","")
         os.system("curl http://es.wttr.in/" + place + ".png --output '" + place + ".png'")
         weather = os.popen("curl http://es.wttr.in/"+ place).read()
-        os.system("clear")
+        #os.system("clear")
         i = weather.find("+") or weather.find("-")
         try:
             temp = float(weather[i:i+3])

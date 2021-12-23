@@ -39,7 +39,6 @@ class Engine():
                             self.speak("¿Si?")
                             window = self.GUI("Status", "Reconociendo...")
                             audio = r.record(source, 10) 
-                            # window.destroy()
                             try:
                                 Request = r.recognize_google(audio, language='es-ES')
                                 return Request, window
