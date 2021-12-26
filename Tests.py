@@ -1,102 +1,10 @@
-import pytest
-from Teodoro import Teodoro
-import os
 
-class Tests:
-
-
-    #ENG-6
-    def test_ENG_6(self):
-        test = Teodoro(del_speak=False)
-        os.system("clear")
-        # query, window = test.takeCommand()
-
-        print("  - ENG-6: ")
-        del test
-
-    #SYS-3
-    def test_SYS_3(self):
-        test = Teodoro(del_speak=False)
-
-        print(" - SYS-3: ")
-        del test
-
-    #APP-1
-    def test_APP_1(self):
-        test = Teodoro(del_speak=False)
-
-
-        print(" - APP-1: ")
-        del test
-
-    #APP-5
-    def test_APP_5(self):
-        test = Teodoro(del_speak=False)
-        query = "Qué tiempo hace en Murcia"
-        speech, image = test.weather(query)
-        print(" - APP-5: ")
-        print("           Teodoro says: '" + speech + "'")
-        print("           Image title: '" + image + "'") #Cambiar a leer el formato del place, y que sea .png
-        del test
-
-    #APP-13
-    def test_APP_13(self):
-        test = Teodoro(del_speak=False)
-
-
-        print(" - APP-13: ")
-        del test
-
-    #CAL-3
-    def test_CAL_3(self):
-        test = Teodoro(del_speak=False)
-        
-
-        print(" - CAL-3: ")
-        del test
-    #TEO-1
-    def test_TEO_1(self):
-        test = Teodoro(del_speak=False)
-        speech, text = test.tellNames()
-        assert all(name in speech for name in ["Teodoro", "Teo"]), " - TEO-1: speech value has not all allowed names"
-        assert all(name in text for name in ["Teodoro", "Teo"]),  "           text value has not all allowed names"
-        print(" - TEO-1: Allowed names was set correctly")
-        print("           Teodoro response is: '" + speech + "'")
-        del test
-
-    #TEO-4
-    def test_TEO_4(self):
-        test = Teodoro(del_speak=False)
-        query = ""
-        response = test.getAction(query)
-        assert response != None, " - TEO-4: Teodoro has done some functionality"
-        print(" - TEO-4: Teodoro has no functionality for a empty query")
-        print("           Teodoro response is: '" + response + "'")
-
-    #TEO-5
-    def test_TEO_5(self):
-        test = Teodoro(del_speak=False)
-        
-
-        print(" - TEO-5: ")
-        del test
-
-    #REND-4
-    def test_REND_4(self):
-        test = Teodoro(del_speak=False)
-
-
-        print(" - REND-4: ")
-        del test
-    
-    
 # ENG-6. Teodoro debe realizar la identificación de llamada a Teodoro. Se debe reconocer cuando el usuario llama al asistente mediante 
 # las palabras claves de nombres especificados en la BdC (Apéndice C, Names.txt). El usuario tendrá acceso a la base de datos, 
 # pudiendo customizar los diferentes nombres a los que responde Teodoro.
 
-# SYS-2. (3 o 4, son muy parecidos). Apagado (Suspensión o Reinicio) del equipo en menos de 10 segundos. 
-# Tras realizarse la secuencia de apagado (suspensión o reinicio) y tras la ejecución del comando, el equipo debe apagarse 
-# (suspender o reiniciarse) en menos de 10 segundos.
+# SYS-3. Suspensión del equipo en menos de 10 segundos. 
+# Tras realizarse la secuencia de suspensión y tras la ejecución del comando, el equipo debe suspender en menos de 10 segundos.
 
 # APP-1. Teodoro debe tener acceso a Spotify. El usuario debe acceder a una cuenta de Spotify ya registrada para que Teodoro pueda 
 # realizar las funcionalidades descritas. Se requiere que la aplicación de Spotify se encuentre abierta y con un usuario registrado, 
@@ -121,3 +29,174 @@ class Tests:
 # TEO-5. Teodoro debe poder despedirse y acabar su proceso.
 
 # REND-4. El asistente debe tardar un máximo de 35 segundos desde que el usuario trata de comunicarse hasta que la tarea es ejecutada.
+
+
+import pytest
+from Teodoro import Teodoro
+import os
+from playsound import playsound
+from time import sleep, time
+
+
+class Tests:
+
+    #ENG-6
+    def test_ENG_6(self):
+        test = Teodoro(del_speak=False)
+        os.system("clear")
+        print("\n------------------------ ENG-6 ------------------------------")
+        print("Playing Teodoro_Calling.mp3...")
+        playsound('Teodoro_Calling.mp3', block = False)
+        print("Calling Teodoro...")
+        query, window = test.takeCommand()
+        window.destroy()
+        assert query == 'hola', "Teodoro has not recognized query correctly"
+        print("Teodoro has recognized query correctly")
+        print("Query is: " + query)
+        del test
+
+    #SYS-3
+    def test_SYS_3(self):
+        print("\n------------------------ SYS-3 ------------------------------")
+        test = Teodoro(del_speak=False)
+        t_start = time()
+        test.suspend(test = True)
+        t_end = time()
+        t = t_end-t_start
+        assert t < 10, "t = " + "{:.2f}".format(t) + " s. Teodoro has not satisfied suspension requirement"
+        print("t = " + "{:.2f}".format(t) + " s. Teodoro has satisfied suspension requirement")
+        del test
+
+    #APP-1
+    def test_APP_1(self):
+        print("\n------------------------ APP-1 ------------------------------")
+        test = Teodoro(del_speak=False)
+        query = "pon la música"
+        response = test.getAction(query)
+        assert response == 256, 'Teodoro has not answered correctly'
+        print(": Not access to Spotify: Teodoro has answered correctly")
+
+        os.popen("spotify")
+        print("Abriendo Spotify...")
+        sleep(5)
+        query = "pon la música"
+        response = test.getAction(query)
+        assert response == 0, 'Teodoro has not answered correctly'
+        print("Play: Teodoro has answered correctly")
+
+        query = "qué canción es esta"
+        response = test.getAction(query)
+        assert response == 0, 'Teodoro has not answered correctly'
+        print("Song: Teodoro has answered correctly")
+
+        query = "pasa de canción"
+        response = test.getAction(query)
+        assert response == 0, 'Teodoro has not answered correctly'
+        print("Next: Teodoro has answered correctly")
+        sleep(5)
+        
+        query = "canción anterior"
+        response = test.getAction(query)
+        assert response == 0, 'Teodoro has not answered correctly'
+        print("Previous: Teodoro has answered correctly")
+        sleep(5)
+
+        query = "para la música"
+        response = test.getAction(query)
+        assert response == 0, 'Teodoro has not answered correctly'
+        print("Pause: Teodoro has answered correctly")
+
+        query = "quita la música"
+        response = test.getAction(query)
+        assert response == 0, 'Teodoro has not answered correctly'
+        print("Stop: Teodoro has answered correctly")
+        del test
+
+    #APP-5
+    def test_APP_5(self):
+        print("\n------------------------ APP-5 ------------------------------")
+        test = Teodoro(del_speak=False)
+        query = "Qué tiempo hace en Madrid"
+        test.getAction(query)
+        assert os.path.isfile("Madrid.png") == True, "Teodoro has not saved weather image correctly"
+        print("Teodoro has saved weather image correctly")
+        del test
+
+    #APP-13
+    def test_APP_13(self):
+        print("\n------------------------ APP-13 ------------------------------")
+        print("Turning off wifi connection...")
+        os.system("nmcli radio wifi off")
+        test = Teodoro(del_speak=False)
+        internetOk = test.internetCheck()
+        assert internetOk != 0, "Teodoro has not correctly detected the non-connection to Internet"
+        print("Teodoro has correctly detected the non-connection to Internet")
+        print("Turning on wifi connection...")
+        os.system("nmcli radio wifi on")
+        test.GUI("Show", text = internetOk)
+            
+
+    #CAL-3
+    def test_CAL_3(self):
+        print("\n------------------------ CAL-3 ------------------------------")
+        test = Teodoro(del_speak=False)
+        response = test.getAction("Dime mis eventos para hoy")
+        response += test.getAction("Dime mis eventos para mañana")
+        response += test.getAction("Dime mis eventos para pasado mañana")
+        response += test.getAction("Dime mis eventos para el 30 de diciembre")
+        response += test.getAction("Dime mis eventos de esta semana")
+        response += test.getAction("Dime mis eventos para los próximos tres meses")
+        error = test.getAction("Dime mis eventos")
+        assert response == 0, "Teodoro has not correctly get user's events"
+        assert error == -1, "Teodoro has not correctly solve error in user's query"
+        print("Teodoro has correctly got user's events")
+        print("Teodoro has correctly solved error in user's query")
+        del test
+
+    #TEO-1
+    def test_TEO_1(self):
+        print("\n------------------------ TEO-1 ------------------------------")
+        test = Teodoro(del_speak=False)
+        speech, text = test.tellNames()
+        assert all(name in speech for name in ["Teodoro", "Teo"]), "speech value has not all allowed names"
+        assert all(name in text for name in ["Teodoro", "Teo"]),  "text value has not all allowed names"
+        print("Allowed names was set correctly")
+        test.speak(speech)
+        print("Teodoro response is: \n" + text)
+        del test
+
+    #TEO-4
+    def test_TEO_4(self):
+        print("\n------------------------ TEO-4 ------------------------------")
+        test = Teodoro(del_speak=False)
+        query = ""
+        response = test.getAction(query)
+        assert response != None, "Teodoro has done some functionality"
+        print("Teodoro has no functionality for an empty query")
+        print("Teodoro response is: '" + response + "'")
+
+    #TEO-5
+    def test_TEO_5(self):
+        print("\n------------------------ TEO-5 ------------------------------")
+        test = Teodoro()
+        del test
+        check = "test" in locals()
+        assert check == False, "Teodoro has not deleted itself correctly"
+        print("Teodoro has deleted itself correctly")
+        
+    #REND-4
+    def test_REND_4(self):
+        print("\n------------------------ REND-4 ------------------------------")
+        test = Teodoro(del_speak=False)
+        t = []
+        for command in test.Commands.keys():
+            query = test.Commands[command][0]
+            if query != 'apaga el ordenador' and query != 'suspende el ordenador' and query != 'reinicia el ordenador':
+                t_start = time()
+                test.getAction(test.Commands[command][0])
+                t_end = time()
+                t.append(t_end-t_start)
+
+        assert max(t) < 35, "Max time = " + "{:.2f}".format(max(t)) + ". Teodoro has not satisfied the performance requirement"
+        print("Max time = " + "{:.2f}".format(max(t)) + ". Teodoro has satisfied the performance requirement")
+    

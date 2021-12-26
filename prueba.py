@@ -255,12 +255,33 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 
 # print(prueba)
 
-import pyttsx3
+# import pyttsx3
 
-engine = pyttsx3.init()
-voices = engine.getProperty('voices')
-engine.setProperty('rate', 200)
-engine.setProperty('voice', 'spanish+whisper')
+# engine = pyttsx3.init()
+# voices = engine.getProperty('voices')
+# engine.setProperty('rate', 200)
+# engine.setProperty('voice', 'spanish+whisper')
 
-engine.say('Hola, ¿cómo estás?')
-engine.runAndWait()
+# engine.say('Hola, ¿cómo estás?')
+# engine.runAndWait()
+
+# import webbrowser 
+
+
+# status = webbrowser.open("https://www.google.es/search?q=" + "caca")
+# print(status)
+
+# import os
+# from time import sleep
+
+# os.system("nmcli radio wifi off")
+# sleep(10)
+# os.system("nmcli radio wifi on")
+
+from Teodoro import Teodoro
+
+test = Teodoro(del_speak=False)
+for command in test.Commands.keys():
+    query = test.Commands[command][0]
+    if query != 'apaga el ordenador' and query != 'suspende el ordenador' and query != 'reinicia el ordenador':
+        print(query)

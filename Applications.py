@@ -20,7 +20,6 @@ class Applications(Engine):
 
         Engine.__init__(self, self.Names, pause_thr = 0.8)
 
-
     def spotify(self, action, window = None):
         if window is not None:
             self.GUI("Close", prev_window=window)
@@ -34,7 +33,10 @@ class Applications(Engine):
             text = "Canción: " + title + "\n" + "Album: " + album + "\n" + "Artista: " + artist
             return speech, text
         else:
-            os.system(self.SpotifyActions[action])
+            status = os.system(self.SpotifyActions[action])
+            if action == "previous":
+                os.system(self.SpotifyActions[action])
+            return status
 
     def google(self, query):
         words = query.split()
@@ -104,8 +106,8 @@ class Applications(Engine):
             t = int(list_of_words[list_of_words.index("de") + 1])
         except:
             t = 1
-        unit = list_of_words[list_of_words.index("de") + 2]
         try:
+            unit = list_of_words[list_of_words.index("de") + 2]
             m = self.s_time_unit.switch(unit)
         except:
             m = 60

@@ -159,12 +159,8 @@ class Calendar(Engine):
                 time_format = "date"
                 key_list = list(self.Numbers.keys())
                 val_list = list(self.Numbers.values())
-                print(key_list)
-                print(val_list)
                 position = val_list.index(number)
                 number = int(key_list[position])
-                print(number)
-                print(type(number))
                 duration = 30*number
                 eventsResult = self.get_relative_events(calendarID, duration)
 
@@ -187,6 +183,8 @@ class Calendar(Engine):
                     time_unit = "para"
                 elif "de" in query:
                     time_unit = "de"
+                else:
+                    return -1, -1
                 if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
                     time_str = "hoy"
                     time_format = "hours"
@@ -263,6 +261,9 @@ class Calendar(Engine):
         calendarID = self.CalendarsID['personal']
         list_of_words = query.split()
         time_unit = "para"
+        if time_unit not in list_of_words:
+            self.GUI("Show", text="Petición incorrecta", prev_window=window)
+            return -1
         if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
             time_str = "hoy"
             today = datetime.today()
@@ -324,3 +325,4 @@ class Calendar(Engine):
         print(location)
 
         self.create_event(time_str,summary.title(), description=description, location=location)
+        return 0

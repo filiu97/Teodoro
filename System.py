@@ -1,5 +1,6 @@
 from Engine import Engine
 import os
+from time import sleep
 
 class System(Engine):
 
@@ -7,14 +8,23 @@ class System(Engine):
         Engine.__init__(self, self.Names, pause_thr = 0.8)
 
 
-    def shutdown(self):
+    def shutdown(self, test=False):
         self.speak("En seguida, que tengas un buen día")
-        os.system("shutdown now -h")
+        if test:
+            sleep(5)
+        else:
+            os.system("shutdown now -h")
 
-    def suspend(self):
+    def suspend(self, test=False):
         self.speak("Perfecto, suspendiendo el equipo")
-        os.system("sudo pm-suspend")
+        if test:
+            sleep(5)
+        else:
+            os.system("sudo pm-suspend")
 
-    def restart(self):
+    def restart(self, test=False):
         self.speak("Perfecto, reiniciando el equipo")
-        os.system("shutdown now -r")
+        if test:
+            sleep(5)
+        else:
+            os.system("shutdown now -r")

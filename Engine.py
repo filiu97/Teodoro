@@ -2,6 +2,7 @@ import speech_recognition as sr
 import pyttsx3 
 from tkinter import *
 from time import sleep, time
+import requests
 
 
 class Engine():
@@ -21,6 +22,16 @@ class Engine():
         self.voiceEngine.setProperty('voice', self.defaultVoice)
         self.voiceEngine.setProperty('rate', self.defaultRate)
     
+    def internetCheck(self):
+        url = "http://www.google.com"
+        timeout = 5
+        try:
+            requests.get(url, timeout=timeout)
+            return 0
+        except (requests.ConnectionError, requests.Timeout) as exception:
+            text = "No tiene acceso \na Internet"
+            return text
+
     def speak(self, audio): 
         self.voiceEngine.say(audio)
         self.voiceEngine.runAndWait() 
