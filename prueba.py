@@ -288,5 +288,3 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 
 f = 5
 print(type(f) == int)
-
-#Esto es la prueba para el curso de git

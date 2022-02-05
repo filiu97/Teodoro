@@ -206,5 +206,3 @@ class Tests:
         assert max(t) < 35, "Max time = " + "{:.2f}".format(max(t)) + " s. Teodoro has not satisfied the performance requirement"
         print("Max time = " + "{:.2f}".format(max(t)) + " s. Teodoro has satisfied the performance requirement")
     
-
-    #Cambios para clase git
