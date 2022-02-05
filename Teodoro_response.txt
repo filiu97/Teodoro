@@ -1,0 +1,112 @@
+------------------------ ENG-6 ------------------------------
+Playing Teodoro_Calling.mp3...
+Calling Teodoro...
+Teodoro has recognized query correctly
+Query is: hola
+.
+------------------------ SYS-3 ------------------------------
+t = 7.87 s. Teodoro has satisfied suspension requirement
+.
+------------------------ APP-1 ------------------------------
+Error org.freedesktop.DBus.Error.ServiceUnknown: The name org.mpris.MediaPlayer2.spotify was not provided by any .service files
+Not access to Spotify: Teodoro has answered correctly
+Abriendo Spotify...
+method return time=1640683013.552736 sender=:1.142 -> destination=:1.143 serial=19 reply_serial=2
+Play: Teodoro has answered correctly
+Song: Teodoro has answered correctly
+method return time=1640683020.271190 sender=:1.142 -> destination=:1.147 serial=35 reply_serial=2
+Next: Teodoro has answered correctly
+method return time=1640683025.300276 sender=:1.142 -> destination=:1.148 serial=43 reply_serial=2
+method return time=1640683025.314038 sender=:1.142 -> destination=:1.149 serial=44 reply_serial=2
+Previous: Teodoro has answered correctly
+method return time=1640683030.339071 sender=:1.142 -> destination=:1.150 serial=53 reply_serial=2
+Pause: Teodoro has answered correctly
+method return time=1640683030.362815 sender=:1.142 -> destination=:1.151 serial=54 reply_serial=2
+Stop: Teodoro has answered correctly
+.
+------------------------ APP-6 ------------------------------
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 47526  100 47526    0     0  48446      0 --:--:-- --:--:-- --:--:-- 48446
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  8752  100  8752    0     0  14859      0 --:--:-- --:--:-- --:--:-- 14859
+Teodoro has saved weather image correctly
+.
+------------------------ APP-13 ------------------------------
+Turning off wifi connection...
+Teodoro has correctly detected the non-connection to Internet
+Turning on wifi connection...
+.
+------------------------ CAL-3 ------------------------------
+Teodoro has correctly got user's events
+Teodoro has correctly solved error in user's query
+.
+------------------------ TEO-1 ------------------------------
+Allowed names was set correctly
+Teodoro response is: 
+Teodoro
+Teo
+
+.
+------------------------ TEO-4 ------------------------------
+Teodoro has no functionality for an empty query
+Teodoro response is: 'Lo siento, no te he entendido'
+.
+------------------------ TEO-5 ------------------------------
+Exception ignored in: <function Teodoro.__del__ at 0x7fe406b37ea0>
+Traceback (most recent call last):
+  File "/home/filiu/Teodoro/Teodoro.py", line 56, in __del__
+    sys.exit() 
+SystemExit
+Teodoro has deleted itself correctly
+.
+------------------------ REND-4 ------------------------------
+Name functionality -> t = 4.88 s
+Greetings functionality -> t = 3.18 s
+Cheer up functionality -> t = 2.28 s
+Secret functionality -> t = 7.69 s
+Today functionality -> t = 4.87 s
+Time functionality -> t = 3.32 s
+Google functionality -> t = 5.04 s
+Wikipedia functionality -> t = 7.62 s
+Youtube functionality -> t = 1.32 s
+method return time=1640683138.157750 sender=:1.142 -> destination=:1.164 serial=59 reply_serial=2
+Play functionality -> t = 0.03 s
+method return time=1640683138.187573 sender=:1.142 -> destination=:1.165 serial=60 reply_serial=2
+Pause functionality -> t = 0.03 s
+method return time=1640683138.219691 sender=:1.142 -> destination=:1.166 serial=62 reply_serial=2
+Next functionality -> t = 0.03 s
+method return time=1640683138.238640 sender=:1.142 -> destination=:1.167 serial=63 reply_serial=2
+method return time=1640683138.270581 sender=:1.142 -> destination=:1.168 serial=64 reply_serial=2
+Previous functionality -> t = 0.05 s
+method return time=1640683138.330564 sender=:1.142 -> destination=:1.169 serial=66 reply_serial=2
+Stop functionality -> t = 0.06 s
+Song functionality -> t = 5.75 s
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 45771  100 45771    0     0  45272      0  0:00:01  0:00:01 --:--:-- 45272
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  8689  100  8689    0     0  25937      0 --:--:-- --:--:-- --:--:-- 25937
+Weather functionality -> t = 5.73 s
+Alarm functionality -> t = 5.86 s
+GetCalendar functionality -> t = 0.98 s
+SetCalendar functionality -> t = 0.74 s
+Nothing functionality -> t = 2.32 s
+Del functionality -> t = 0.00 s
+Max time = 7.69 s. Teodoro has satisfied the performance requirement
+.
+============================================================================= short test summary info ==============================================================================
+PASSED Tests.py::Tests::test_ENG_6
+PASSED Tests.py::Tests::test_SYS_3
+PASSED Tests.py::Tests::test_APP_1
+PASSED Tests.py::Tests::test_APP_6
+PASSED Tests.py::Tests::test_APP_13
+PASSED Tests.py::Tests::test_CAL_3
+PASSED Tests.py::Tests::test_TEO_1
+PASSED Tests.py::Tests::test_TEO_4
+PASSED Tests.py::Tests::test_TEO_5
+PASSED Tests.py::Tests::test_REND_4
+====================================================================================== PASSES ======================================================================================
+10 passed in 190.07 seconds

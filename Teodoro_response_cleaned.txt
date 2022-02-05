@@ -1,0 +1,102 @@
+------------------------ ENG-6 ------------------------------
+Playing Teodoro_Calling.mp3...
+Calling Teodoro...
+Teodoro has recognized query correctly
+Query is: hola
+
+
+
+------------------------ SYS-3 ------------------------------
+t = 7.87 s. Teodoro has satisfied suspension requirement
+
+
+
+------------------------ APP-1 ------------------------------
+Not access to Spotify: Teodoro has answered correctly
+Abriendo Spotify...
+Play: Teodoro has answered correctly
+Song: Teodoro has answered correctly
+Next: Teodoro has answered correctly
+Previous: Teodoro has answered correctly
+Pause: Teodoro has answered correctly
+Stop: Teodoro has answered correctly
+
+
+
+
+------------------------ APP-6 ------------------------------
+Teodoro has saved weather image correctly
+
+
+
+------------------------ APP-13 ------------------------------
+Turning off wifi connection...
+Teodoro has correctly detected the non-connection to Internet
+Turning on wifi connection...
+
+
+
+------------------------ CAL-3 ------------------------------
+Teodoro has correctly got user's events
+Teodoro has correctly solved error in user's query
+
+
+
+------------------------ TEO-1 ------------------------------
+Allowed names was set correctly
+Teodoro response is: 
+Teodoro
+Teo
+
+
+
+------------------------ TEO-4 ------------------------------
+Teodoro has no functionality for an empty query
+Teodoro response is: 'Lo siento, no te he entendido'
+
+
+
+------------------------ TEO-5 ------------------------------
+Teodoro has deleted itself correctly
+
+
+
+------------------------ REND-4 ------------------------------
+Name functionality -> t = 4.88 s
+Greetings functionality -> t = 3.18 s
+Cheer up functionality -> t = 2.28 s
+Secret functionality -> t = 7.69 s
+Today functionality -> t = 4.87 s
+Time functionality -> t = 3.32 s
+Google functionality -> t = 5.04 s
+Wikipedia functionality -> t = 7.62 s
+Youtube functionality -> t = 1.32 s
+Play functionality -> t = 0.03 s
+Pause functionality -> t = 0.03 s
+Next functionality -> t = 0.03 s
+Previous functionality -> t = 0.05 s
+Stop functionality -> t = 0.06 s
+Song functionality -> t = 5.75 s
+Weather functionality -> t = 5.73 s
+Alarm functionality -> t = 5.86 s
+GetCalendar functionality -> t = 0.98 s
+SetCalendar functionality -> t = 0.74 s
+Nothing functionality -> t = 2.32 s
+Del functionality -> t = 0.00 s
+Max time = 7.69 s. Teodoro has satisfied the performance requirement
+
+
+
+============================================================================= short test summary info ==============================================================================
+PASSED Tests.py::Tests::test_ENG_6
+PASSED Tests.py::Tests::test_SYS_3
+PASSED Tests.py::Tests::test_APP_1
+PASSED Tests.py::Tests::test_APP_6
+PASSED Tests.py::Tests::test_APP_13
+PASSED Tests.py::Tests::test_CAL_3
+PASSED Tests.py::Tests::test_TEO_1
+PASSED Tests.py::Tests::test_TEO_4
+PASSED Tests.py::Tests::test_TEO_5
+PASSED Tests.py::Tests::test_REND_4
+====================================================================================== PASSES ======================================================================================
+10 passed in 190.07 seconds

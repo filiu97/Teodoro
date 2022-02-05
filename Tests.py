@@ -10,9 +10,11 @@
 # realizar las funcionalidades descritas. Se requiere que la aplicación de Spotify se encuentre abierta y con un usuario registrado, 
 # en el caso que no se cumplan estas condiciones, Teodoro volverá a escucha activa de 3 segundos sin realizar ninguna funcionalidad.
 
-# APP-5. Teodoro debe tener acceso a una API en la red con soporte para el terminal para
-# consulta del tiempo. Según la localización que el usuario consulte por voz, se accederá a los
-# datos del clima de dicha localización.
+# APP-6. Teodoro debe poder guardar la imagen proporcionada por la API de consulta del tiempo.
+# Debe mostrar por pantalla el tiempo de la localización consultada mediante la GUI Image.
+# (Apéndice D, GUI). En el caso que el usuario durante la consulta no especifique correctamente la
+# localización (Apéndice E.6.1, Weather), Teodoro se lo indicará por pantalla por medio de la
+# funcionalidad SHOW de la GUI (Apéndice D, GUI).
 
 # APP-13. Las aplicaciones Youtube, Spotify, Wikipedia y Tiempo Atmosférico requieren de conectividad a internet. Si el equipo no tiene 
 # conectividad no se podrá tener acceso a dichas funcionalidad y Teodoro se lo indicará al usuario por medio de la funcionalidad SHOW de la 
@@ -74,7 +76,7 @@ class Tests:
         query = "pon la música"
         response = test.getAction(query)
         assert response == 256, 'Teodoro has not answered correctly'
-        print(": Not access to Spotify: Teodoro has answered correctly")
+        print("Not access to Spotify: Teodoro has answered correctly")
 
         os.popen("spotify")
         print("Abriendo Spotify...")
@@ -112,13 +114,16 @@ class Tests:
         print("Stop: Teodoro has answered correctly")
         del test
 
-    #APP-5
-    def test_APP_5(self):
-        print("\n------------------------ APP-5 ------------------------------")
+    #APP-6
+    def test_APP_6(self):
+        print("\n------------------------ APP-6 ------------------------------")
         test = Teodoro(del_speak=False)
         query = "Qué tiempo hace en Madrid"
+        image = "Madrid.png"
+        if os.path.isfile(image) == True:
+            os.remove(image)
         test.getAction(query)
-        assert os.path.isfile("Madrid.png") == True, "Teodoro has not saved weather image correctly"
+        assert os.path.isfile(image) == True, "Teodoro has not saved weather image correctly"
         print("Teodoro has saved weather image correctly")
         del test
 
@@ -171,7 +176,7 @@ class Tests:
         test = Teodoro(del_speak=False)
         query = ""
         response = test.getAction(query)
-        assert response != None, "Teodoro has done some functionality"
+        assert type(response) != int, "Teodoro has done some functionality"
         print("Teodoro has no functionality for an empty query")
         print("Teodoro response is: '" + response + "'")
 
@@ -196,7 +201,8 @@ class Tests:
                 test.getAction(test.Commands[command][0])
                 t_end = time()
                 t.append(t_end-t_start)
+                print(command + " functionality -> t = " + "{:.2f}".format(t_end-t_start) + " s")
 
-        assert max(t) < 35, "Max time = " + "{:.2f}".format(max(t)) + ". Teodoro has not satisfied the performance requirement"
-        print("Max time = " + "{:.2f}".format(max(t)) + ". Teodoro has satisfied the performance requirement")
+        assert max(t) < 35, "Max time = " + "{:.2f}".format(max(t)) + " s. Teodoro has not satisfied the performance requirement"
+        print("Max time = " + "{:.2f}".format(max(t)) + " s. Teodoro has satisfied the performance requirement")
     

@@ -1,0 +1,119 @@
+Los test están definidos dentro de una clase llamada Tests y cada test se 
+corresponde con un método de esa clase. Se nombran con "test_*IDRequisito".
+
+En todos los test se instancia la clase Teodoro para poder acceder a sus 
+funcionalidades.
+
+------------------------ ENG-6 ------------------------------
+
+Se reproduce un audio que dice "Teodoro, hola" (para que el test
+sea determinista) mientras se llama a la funcionalidad "takeCommand"
+de Teodoro que es la que realiza la escucha activa de 3 y 10 s
+(llamada a Teodoro y petición)
+
+Se comprueba que Teodoro recibe correctamente
+la query 'hola'.
+
+
+------------------------ SYS-3 ------------------------------
+
+Se llama directamente a la funcionalidad "suspend" con un parámetro
+test = True, para que no se suspenda el ordenador cada vez que se quiere 
+hacer el test, en su lugar se ha estimado una suspensión completa del 
+equipo en 5s (ya que depende de la antigüedad del ordenador, su memoria...).
+
+Se comprueba que el tiempo de la llamada y la ejecución de dicha funcionalidad
+es menor a 10 segundos.
+
+
+
+------------------------ APP-1 ------------------------------
+
+Para este test es importante que se inicie la ejecución de los tests
+con la aplicación de Spotify cerrada. Este método compone varios test:
+ - No tener acceso a Spotify: por eso debe estar cerrada la aplicación.
+ Comprueba que la variable devuelta por la terminal ("response") sea un 256 (fallo).
+ Tras este test, se abre Spotify automáticamente para realizar el resto.
+ - Play: Comprueba que response sea 0 (éxito).
+ - Song: Comprueba que response sea 0 (éxito) y abre la GUI Show con los datos de la canción.
+ - Next: Comprueba que response sea 0 (éxito).
+ - Previous: Comprueba que response sea 0 (éxito).
+ - Pause: Comprueba que response sea 0 (éxito).
+ - Stop: Comprueba que response sea 0 (éxito).
+ 
+ Para estos test se usa el método de Teodoro "getAction" (la que gobierna
+ la comprobación de la query del usuario para realizar la funcionalidad correspondiente)
+ con la query correponiente a la realización de la funcionalidad a testear.
+
+
+
+------------------------ APP-6 ------------------------------
+
+Como la anterior, usa el método "getAction" de Teodoro con la query "Qué tiempo hace en Madrid".
+
+Se comprueba que se ha creado un archivo "Madrid.png" en la carpeta actual. Por ello, antes de
+realizar la funcionalidad, si existe un archivo llamado "Madrid.png" en la carpeta actual, lo borra
+para no poder falsear el test.
+
+
+------------------------ APP-13 ------------------------------
+
+Se apaga automáticamente la conexión Wifi del ordenador a través de un comando
+en la terminal, y se llama al método "internetCheck" de Teodoro (clase Engine).
+
+Se comprueba que la respuesta ("internetOk") se distinta de 0 (0 sería que sí 
+hay acceso a Internet). Además, abre la GUI "Show" con la información de que el
+usuario no tiene acceso a Internet.
+
+
+
+------------------------ CAL-3 ------------------------------
+
+Utiliza la funcionalidad "getAction" (ver APP-1) para realizar múltiples
+opciones de llamada a la funcionalidad "GetCalendar" (varios intervalos temporales).
+
+Se comprueba que la suma de todas las respuestas a estas llamadas válidas sea 0
+(todas han sido 0, todas han sido exitosas).
+También se realiza el test de la detección de error de "GetCalendar" en el que la llamada
+sin intervalo temporal tiene que devolver un -1 (variable "error").
+En todas las llamadas se muestra la GUI de GetCalendar, salvo en la de error que se muestra
+"Show" para indicar que el usuario ha realizado un petición incorrecta.
+
+
+
+------------------------ TEO-1 ------------------------------
+
+Se utiliza el método "tellNames" de Teodoro para que devuelva lo que diría Teodoro
+("speech") y lo que se mostraría por la GUI "Show" ("text"). 
+
+Se comprueba que ambas variables contienen los nombres de la BdC (Teodoro y Teo).
+
+
+
+------------------------ TEO-4 ------------------------------
+
+Se realizar "getAction" (ver APP-1) con una query vacía.
+
+Se comprueba que la respuesta ("response") no se un número entero (si lo fuera habría hecho alguna
+funcionalidad). En su lugar, "response" es una cadena de texto con la frase predeterminada que tiene
+Teodoro al no poder relizar ninguna funcionalidad ('Lo siento, no te he entendido')
+
+
+
+------------------------ TEO-5 ------------------------------
+
+Se instancia Teodoro y se destruye con su método destructor. 
+
+Se comprueba la no existencia de la variable "test" (instancia de Teodoro)
+en las variables locales.
+
+
+
+------------------------ REND-4 ------------------------------
+
+Se llama a cada funcionalidad de Teodoro en un loop con los primeros comandos de cada funcionalidad de la BdC
+(salvo las de System porque tienen requisitos de tiempo propios y más estrcitos SYS-2 3 y 4). Se calcula el 
+tiempo de ejecución de cada funcionalidad, se guarda en una lista de tiempos y se van imprimiendo por pantalla.
+
+Se comprueba que el tiempo máximo de todos estos tiempos es menor de 35 segundos.
+

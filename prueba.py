@@ -278,10 +278,13 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 # sleep(10)
 # os.system("nmcli radio wifi on")
 
-from Teodoro import Teodoro
+# from Teodoro import Teodoro
 
-test = Teodoro(del_speak=False)
-for command in test.Commands.keys():
-    query = test.Commands[command][0]
-    if query != 'apaga el ordenador' and query != 'suspende el ordenador' and query != 'reinicia el ordenador':
-        print(query)
+# test = Teodoro(del_speak=False)
+# for command in test.Commands.keys():
+#     query = test.Commands[command][0]
+#     if query != 'apaga el ordenador' and query != 'suspende el ordenador' and query != 'reinicia el ordenador':
+#         print(query)
+
+f = 5
+print(type(f) == int)
