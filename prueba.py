@@ -286,5 +286,15 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 #     if query != 'apaga el ordenador' and query != 'suspende el ordenador' and query != 'reinicia el ordenador':
 #         print(query)
 
-f = 5
-print(type(f) == int)
+# f = 5
+# print(type(f) == int)
+
+import socket
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind(("",50000))
+while True:
+    data, address = sock.recvfrom(1024)
+    code = data.decode("utf-8")
+    if code == 'w':
+        print("Whatsapp recibido!")
