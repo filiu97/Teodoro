@@ -25,11 +25,7 @@ class Teodoro(System, Applications, Calendar):
 				del_speak = True):
 
 		self.Names = open(bdc_path + names_file).read().splitlines()
-		self.SpotifyActions = {}
-		file = open(bdc_path + spotify_file)
-		for line in file:
-			key, value = line.rstrip("\n").split("_")
-			self.SpotifyActions[key] = value
+	
 		self.Days = {}
 		file = open(bdc_path + days_file)
 		for line in file:
@@ -47,7 +43,7 @@ class Teodoro(System, Applications, Calendar):
 		self.del_speak = del_speak
 
 		System.__init__(self)
-		Applications.__init__(self, self.SpotifyActions)
+		Applications.__init__(self, bdc_path, spotify_file)
 		Calendar.__init__(self, bdc_path, calendarsid_file, numbers_file, self.Months)
 
 	def __del__(self):

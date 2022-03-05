@@ -78,7 +78,7 @@
 	"qué canción es esta",
 	"cual es esta canción",
 	"cómo se llama esta canción",
-	"dime el nombre de esta canción",
+	"dime el nombre de esta canción"
 	],
 "Weather":[
 	"tiempo hace"
@@ -123,5 +123,5 @@
 	"adiós",
 	"hasta luego",
 	"quítate"
-	],
+	]
 }

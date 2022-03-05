@@ -11,9 +11,13 @@ import subprocess as sp
 
 
 class Applications(Engine):
-    def __init__(self, SpotifyActions):
+    def __init__(self, bdc_path, spotify_file):
 
-        self.SpotifyActions = SpotifyActions
+        self.SpotifyActions = {}
+        file = open(bdc_path + spotify_file)
+        for line in file:
+            key, value = line.rstrip("\n").split("_")
+            self.SpotifyActions[key] = value
         wikipedia.set_lang("es") 
         self.s_time_unit = t.Tools(3)	#Instancia objeto Switch
         self.s_time_unit.setSwitch_time_unit()	#Creador del switch
