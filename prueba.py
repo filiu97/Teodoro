@@ -289,12 +289,24 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 # f = 5
 # print(type(f) == int)
 
-import socket
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind(("",50000))
-while True:
-    data, address = sock.recvfrom(1024)
-    code = data.decode("utf-8")
-    if code == 'w':
-        print("Whatsapp recibido!")
+
+
+# import socket
+
+# sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# sock.bind(("",50000))
+# while True:
+#     data, address = sock.recvfrom(1024)
+#     code = data.decode("utf-8")
+#     if code == 'w':
+#         print("Whatsapp recibido!")
+
+number = str(datetime.today().date())
+print(number)
+t = datetime.now() 
+text = t.strftime('%H:%M')
+print(text)
+hour = "01:22" 
+hour[1:2] = str(int(hour[1:2]) + 12)
+print(hour)

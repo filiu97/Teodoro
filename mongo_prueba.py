@@ -5,6 +5,7 @@ from io import BytesIO
 from PIL import Image
 from pydub import AudioSegment
 from pydub.playback import play
+from datetime import datetime
 
 def get_db():
     client = MongoClient("mongodb+srv://filiu:teodoro@teodoro.ocpsz.mongodb.net/KnowledgeBase?retryWrites=true&w=majority")
@@ -20,10 +21,12 @@ if __name__ == "__main__":
     # general = []
     # for collection in db.list_collection_names():
     #     if collection == "Applications":
-    #         applications = db[collection].find({})
+    #         for element in db[collection].find({}):
+    #             applications.append(element)
     #     elif collection == "Calendar":
-    #         calendar = db[collection].find({})
-    #     else:
+    #         for element in db[collection].find({}):
+    #             calendar.append(element)
+    #     elif collection == "General":
     #         for element in db[collection].find({}):
     #             general.append(element)
 
@@ -50,16 +53,41 @@ if __name__ == "__main__":
     #     contents = base64.b64encode(f.read())
     # fs.put(contents, filename="audio")
 
-    image = fs.find_one({"filename":"image"})
-    bytedata = image.read()
+    # image = fs.find_one({"filename":"image"})
+    # bytedata = image.read()
 
-    ima_IO = BytesIO(base64.b64decode(bytedata))
-    img_PIL = Image.open(ima_IO)
-    img_PIL.show()
+    # ima_IO = BytesIO(base64.b64decode(bytedata))
+    # img_PIL = Image.open(ima_IO)
+    # img_PIL.show()
 
-    audio = fs.find_one({"filename":"audio"})
-    bytedata = audio.read()
+    # audio = fs.find_one({"filename":"audio"})
+    # bytedata = audio.read()
 
-    aud_IO = BytesIO(base64.b64decode(bytedata))
-    song = AudioSegment.from_file(aud_IO, format="mp3")
-    play(song)
+    # aud_IO = BytesIO(base64.b64decode(bytedata))
+    # song = AudioSegment.from_file(aud_IO, format="mp3")
+    # play(song)
+
+
+
+    # new_rem = {"nombre": "Caca", "día": "2022-03-17", "hora": "19:23"}
+    # db["Reminders"].insert_one(new_rem)
+
+    while True:
+        t = datetime.now() 
+        hour = t.strftime('%H:%M')
+        today = datetime.today()
+        number = str(today.date())
+        reminders = []
+        for collection in db.list_collection_names():
+            if collection == "Reminders":
+                for element in db[collection].find({}):
+                    reminders.append(element)
+        if not len(reminders):
+            print("caca")
+        for rem in range(len(reminders)):
+            if reminders[rem]["día"] == number and reminders[rem]["hora"] <= hour:
+                print("Recordatorio " + reminders[rem]["nombre"])
+                del_rem = {"hora" : reminders[rem]["hora"]}
+                db["Reminders"].delete_one(del_rem)
+                break
+

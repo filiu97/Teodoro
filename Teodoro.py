@@ -9,42 +9,47 @@ import os
 import sys
 from time import process_time, sleep, time
 import threading
+from pymongo import MongoClient
+import gridfs
 
 
 class Teodoro(System, Applications, Calendar):
 	
 	def __init__(self,
-				bdc_path = "BdC/",
-				names_file = "Names.txt",
-				spotify_file = "Spotify.txt",
-				days_file = "Days.txt", 
-				months_file = "Months.txt",
-				numbers_file = "Numbers.txt",
-				calendarsid_file = "CalendarsID.txt",
-				commands_file = "Commands.txt",
+				mongo_key = "mongodb+srv://filiu:teodoro@teodoro.ocpsz.mongodb.net/KnowledgeBase?retryWrites=true&w=majority",
 				del_speak = True):
-
-		self.Names = open(bdc_path + names_file).read().splitlines()
-	
-		self.Days = {}
-		file = open(bdc_path + days_file)
-		for line in file:
-			key, value = line.rstrip("\n").replace(" ", "").split(":")
-			self.Days[key] = value
-		self.Months = {}
-		file = open(bdc_path + months_file)
-		for line in file:
-			key, value = line.rstrip("\n").replace(" ", "").split(":")
-			self.Months[key] = value
 		
-		file = open(bdc_path + commands_file)
-		self.Commands = eval(file.read())
+
+		self.client = MongoClient(mongo_key)
+		self.db = self.client.KnowledgeBase
+		self.fs = gridfs.GridFS(self.db)
+
+
+		self.general = []
+		for collection in self.db.list_collection_names():
+			if collection == "General":
+				for element in self.db[collection].find({}):
+					self.general.append(element)
+
+		self.Names = self.general[0]["Names"]
+		keys = []
+		for i in range(len(self.general[0]["Time"]["Days"])):
+			keys.append(str(i+1))
+		self.Days = dict(zip(keys,self.general[0]["Time"]["Days"]))
+
+		keys = []
+		for i in range(len(self.general[0]["Time"]["Months"])):
+			keys.append(str(i+1))
+		self.Months = dict(zip(keys,self.general[0]["Time"]["Months"]))
+		
+		self.Commands = self.general[1]["Commands"]
+
 
 		self.del_speak = del_speak
 
 		System.__init__(self)
-		Applications.__init__(self, bdc_path, spotify_file)
-		Calendar.__init__(self, bdc_path, calendarsid_file, numbers_file, self.Months)
+		Applications.__init__(self, self.db)
+		Calendar.__init__(self, self.db, self.Months)
 
 	def __del__(self):
 		if self.del_speak:
@@ -69,8 +74,8 @@ class Teodoro(System, Applications, Calendar):
 		day = str(datetime.today().weekday() + 1)
 		today = datetime.today()
 		number = str(today.date())
-		speech = "Hoy es " + self.Days[day]  + ", " + number[-2:] + " de " + self.Months[number[5:7]] + " de " + number[0:4]
-		text = self.Days[day] + ", " +  number[-2:] + " de\n" + self.Months[number[5:7]] + " de " + number[0:4]
+		speech = "Hoy es " + self.Days[day]  + ", " + number[-2:] + " de " + self.Months[number[6:7]] + " de " + number[0:4]
+		text = self.Days[day] + ", " +  number[-2:] + " de\n" + self.Months[number[6:7]] + " de " + number[0:4]
 		return speech, text
 	
 	def tellTime(self): 
@@ -81,6 +86,7 @@ class Teodoro(System, Applications, Calendar):
 		minutes = t[14:16] 
 		speech = "Son las" + hour + "horas y" + minutes + "minutos"
 		return speech, text  
+
 
 	def getAction(self, query, window = None):
 
@@ -210,6 +216,15 @@ class Teodoro(System, Applications, Calendar):
 			response = 0
 			return response
 		
+		elif bool([match for match in self.Commands["Reminder"] if(match in query)]):  # "(Crea un) recordatorio de nombre 'Nombre' para 'Día' a las 'Hora'"
+
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
+			speech, text = self.setReminder(query)
+			response = 0
+			return response
+
 		elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
 			speech, text = self.getCalendar(query)
 			if speech == -1:
@@ -277,16 +292,22 @@ def takeQuery(Teo):
 			del Teo
 		else:
 			query, window = Teo.takeCommand()
-			if query != 0:
+			if query != None:
 				query = query.lower()
 				response = Teo.getAction(query, window)
 				if response != 0:
 					Teo.speak("¿Puede repetir su petición?")
 					query = Teo.repeat()
 					Teo.getAction(query)
+			else:
+				speech, text = Teo.checkReminder()
+				if speech != None:
+					Teo.speak(speech)
+					Teo.GUI("Show", text = text)
 		
 				
 if __name__ == '__main__':
 
 	Teo = Teodoro()
 	takeQuery(Teo)
+	

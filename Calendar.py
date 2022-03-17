@@ -12,19 +12,16 @@ import iso8601
 
 class Calendar(Engine):
     
-    def __init__(self, bdc_path, calendarsid_file, numbers_file, Months):
+    def __init__(self, db, Months):
 
-        self.CalendarsID = {}
-        file = open(bdc_path + calendarsid_file)
-        for line in file:
-            key, value = line.rstrip("\n").replace(" ", "").split(":")
-            self.CalendarsID[key] = value
-
-        self.Numbers = {}
-        file = open(bdc_path + numbers_file)
-        for line in file:
-            key, value = line.rstrip("\n").replace(" ", "").split(":")
-            self.Numbers[key] = value
+        self.calendar = []
+        for collection in db.list_collection_names():
+            if collection == "Calendar":
+                for element in db[collection].find({}):
+                    self.calendar.append(element)
+        
+        self.CalendarsID = self.calendar[0]["CalendarsID"]
+        self.Numbers = self.calendar[0]["Numbers"]
 
         self.Months = Months
         
