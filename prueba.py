@@ -1,5 +1,6 @@
 
 
+from time import sleep
 from google_auth_oauthlib.flow import InstalledAppFlow
 from apiclient.discovery import build
 import pickle
@@ -259,8 +260,8 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 
 # engine = pyttsx3.init()
 # voices = engine.getProperty('voices')
-# engine.setProperty('rate', 200)
-# engine.setProperty('voice', 'spanish+whisper')
+# engine.setProperty('rate', 300)
+# engine.setProperty('voice', 'spanish+m3')
 
 # engine.say('Hola, ¿cómo estás?')
 # engine.runAndWait()
@@ -290,6 +291,11 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 # print(type(f) == int)
 
 
+# import webbrowser 
+
+# status = webbrowser.open("https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/Teodoro")
+# print(status)
+
 
 
 # import socket
@@ -297,16 +303,20 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # sock.bind(("",50000))
 # while True:
-#     data, address = sock.recvfrom(1024)
+#     data, _ = sock.recvfrom(1)
 #     code = data.decode("utf-8")
-#     if code == 'w':
+#     if code == 'p':
 #         print("Whatsapp recibido!")
 
-number = str(datetime.today().date())
-print(number)
-t = datetime.now() 
-text = t.strftime('%H:%M')
-print(text)
-hour = "01:22" 
-hour[1:2] = str(int(hour[1:2]) + 12)
-print(hour)
+# number = str(datetime.today().date())
+# print(number)
+# t = datetime.now() 
+# text = t.strftime('%H:%M')
+# print(text)
+# hour = "01:22" 
+# hour = hour.replace(hour[:2], str(int(hour[:2]) + 12))
+# print(hour)
+
+# import telegram_send
+# telegram_send.send(messages=["UNLOCK_MOBILE 14335"])
+

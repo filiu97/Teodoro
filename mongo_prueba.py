@@ -72,22 +72,40 @@ if __name__ == "__main__":
     # new_rem = {"nombre": "Caca", "día": "2022-03-17", "hora": "19:23"}
     # db["Reminders"].insert_one(new_rem)
 
-    while True:
-        t = datetime.now() 
-        hour = t.strftime('%H:%M')
-        today = datetime.today()
-        number = str(today.date())
-        reminders = []
-        for collection in db.list_collection_names():
-            if collection == "Reminders":
-                for element in db[collection].find({}):
-                    reminders.append(element)
-        if not len(reminders):
-            print("caca")
-        for rem in range(len(reminders)):
-            if reminders[rem]["día"] == number and reminders[rem]["hora"] <= hour:
-                print("Recordatorio " + reminders[rem]["nombre"])
-                del_rem = {"hora" : reminders[rem]["hora"]}
-                db["Reminders"].delete_one(del_rem)
-                break
+    # while True:
+    #     t = datetime.now() 
+    #     hour = t.strftime('%H:%M')
+    #     today = datetime.today()
+    #     number = str(today.date())
+    #     reminders = []
+    #     for collection in db.list_collection_names():
+    #         if collection == "Reminders":
+    #             for element in db[collection].find({}):
+    #                 reminders.append(element)
+    #     if not len(reminders):
+    #         print("caca")
+    #     for rem in range(len(reminders)):
+    #         if reminders[rem]["día"] == number and reminders[rem]["hora"] <= hour:
+    #             print("Recordatorio " + reminders[rem]["nombre"])
+    #             del_rem = {"hora" : reminders[rem]["hora"]}
+    #             db["Reminders"].delete_one(del_rem)
+    #             break
 
+
+    users = []
+    for collection in db.list_collection_names():
+        if collection == "Users":
+            for element in db[collection].find({}):
+                users.append(element)
+    User = db["Users"].find_one({"Nombre": "filiu"})
+    print(User)
+    User.pop("_id")
+    for k, v in User.items():
+        print(k, v)
+
+    # field = "caca"
+    # attribute = "marrón"
+    # name2find = { "Nombre": "carlos" }
+    # newvalues = { "$set": { field : attribute } }
+
+    # db["Users"].update_one(name2find, newvalues)

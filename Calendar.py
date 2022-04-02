@@ -12,7 +12,7 @@ import iso8601
 
 class Calendar(Engine):
     
-    def __init__(self, db, Months):
+    def __init__(self, db, Numbers, Months):
 
         self.calendar = []
         for collection in db.list_collection_names():
@@ -21,8 +21,7 @@ class Calendar(Engine):
                     self.calendar.append(element)
         
         self.CalendarsID = self.calendar[0]["CalendarsID"]
-        self.Numbers = self.calendar[0]["Numbers"]
-
+        self.Numbers = Numbers
         self.Months = Months
         
         scopes = ['https://www.googleapis.com/auth/calendar']

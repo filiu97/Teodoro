@@ -57,7 +57,7 @@ class Engine():
                                 return None, None		
                     return None, None
                 except: 
-                    continue
+                    return None, None
 
     def repeat(self):
         r = sr.Recognizer()

@@ -11,6 +11,8 @@ from time import process_time, sleep, time
 import threading
 from pymongo import MongoClient
 import gridfs
+import socket
+import webbrowser 
 
 
 class Teodoro(System, Applications, Calendar):
@@ -24,7 +26,6 @@ class Teodoro(System, Applications, Calendar):
 		self.db = self.client.KnowledgeBase
 		self.fs = gridfs.GridFS(self.db)
 
-
 		self.general = []
 		for collection in self.db.list_collection_names():
 			if collection == "General":
@@ -32,6 +33,7 @@ class Teodoro(System, Applications, Calendar):
 					self.general.append(element)
 
 		self.Names = self.general[0]["Names"]
+
 		keys = []
 		for i in range(len(self.general[0]["Time"]["Days"])):
 			keys.append(str(i+1))
@@ -41,19 +43,33 @@ class Teodoro(System, Applications, Calendar):
 		for i in range(len(self.general[0]["Time"]["Months"])):
 			keys.append(str(i+1))
 		self.Months = dict(zip(keys,self.general[0]["Time"]["Months"]))
-		
+	
+		self.Numbers = self.general[0]["Numbers"]
+
 		self.Commands = self.general[1]["Commands"]
 
+		self.users = []
+		for collection in self.db.list_collection_names():
+			if collection == "Users":
+				for element in self.db[collection].find({}):
+					self.users.append(element)
+		self.User = self.users[0]["Nombre"]
 
 		self.del_speak = del_speak
 
+		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		self.sock.bind(("",50000))
+		self.sock.setblocking(0)
+		self.macroTeodoro = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/Teodoro"
+		webbrowser.open(self.macroTeodoro)
+
 		System.__init__(self)
-		Applications.__init__(self, self.db)
-		Calendar.__init__(self, self.db, self.Months)
+		Applications.__init__(self, self.db, self.Numbers)
+		Calendar.__init__(self, self.db, self.Numbers, self.Months)
 
 	def __del__(self):
 		if self.del_speak:
-			self.speak("Adiós señor, que tenga un buen día")
+			self.speak("Adiós " + self.User + ", que tenga un buen día")
 			sys.exit() 
 
 	def tellNames(self):
@@ -68,7 +84,7 @@ class Teodoro(System, Applications, Calendar):
 	def Hello(self, window = None): 
 		if window is not None:
 			self.GUI("Close", prev_window=window)
-		self.speak("Hola señor, aquí estoy para lo que necesite.")
+		self.speak("Hola " + self.User + ", aquí estoy para lo que necesite.")
 		
 	def tellDay(self):
 		day = str(datetime.today().weekday() + 1)
@@ -86,6 +102,29 @@ class Teodoro(System, Applications, Calendar):
 		minutes = t[14:16] 
 		speech = "Son las" + hour + "horas y" + minutes + "minutos"
 		return speech, text  
+		
+	def actionUser(self, action, name2find, name):
+		if action == "new":
+			self.db["Users"].insert_one(name2find)
+			speech = "Nuevo usuario creado"
+			text = "Nuevo usuario de nombre: " + name + " creado correctamente"
+		elif action == "change":
+			self.User = self.db["Users"].find_one(name2find)["Nombre"]
+			speech = "Cambio de usuario realizado"
+			text = "Nuevo usuario: " + name
+		elif action == "remove":
+			self.db["Users"].delete_one(name2find)
+			speech = "Usuario borrado"
+			text = "Usuario: " + name + " borrado"
+		return speech, text
+	
+	def newUserInfo(self, field, attribute):
+		name2find = { "Nombre": self.User }
+		newvalues = { "$set": { field : attribute } }
+		self.db["Users"].update_one(name2find, newvalues)
+		speech = "Nueva información guardada"
+		text = "Información: " + field + ":" + attribute + " guardada"
+		return speech, text
 
 
 	def getAction(self, query, window = None):
@@ -106,7 +145,7 @@ class Teodoro(System, Applications, Calendar):
 			if window is not None:
 				self.GUI("Close", prev_window=window)
 
-			self.speak("Ánimo señor, no se preocupe")
+			self.speak("Ánimo" + self.User + ", no se preocupe")
 			response = 0
 			return response
 
@@ -134,7 +173,47 @@ class Teodoro(System, Applications, Calendar):
 			self.GUI("Show", text = text, prev_window = window) 
 			response = 0
 			return response
+
+		elif bool([match for match in self.Commands["Users"] if(match in query)]):
+			list_of_words = query.split()
+			name = list_of_words[list_of_words.index("nombre") + 1]
+			name2find = {"Nombre": name}
+			if "nuevo" in list_of_words:
+				action = "new"
+			elif "cambiar" in list_of_words:
+				action = "change"
+			elif "eliminar" in list_of_words or "borrar" in list_of_words:
+				action = "remove"
+			speech,text = self.actionUser(action, name2find, name)
+			self.speak(speech)
+			self.GUI("Show", text = text, prev_window = window)
+			response = 0
+			return response
+
+		elif bool([match for match in self.Commands["NewInformation"] if(match in query)]):
+			self.speak("Perfecto, dime primero cómo vamos a llamar esta nueva información")
+			field, window = self.repeat()
+			if isinstance(field, tuple):
+				field = " ".join(field)
+			self.speak("Bien, y ahora dime qué quieres que apunte sobre " + field)
+			attribute, window = self.repeat()
+			if isinstance(attribute, tuple):
+				attribute = " ".join(attribute)
+			speech, text = self.newUserInfo(field, attribute)
+			self.speak(speech)
+			self.GUI("Show", text = text, prev_window = window)
+			response = 0
+			return response
 		
+		elif bool([match for match in self.Commands["Information"] if(match in query)]):
+			info = self.db["Users"].find_one({"Nombre": self.User})
+			info.pop("_id")
+			self.speak("Lo que sé de ti es: ")
+			for k, v in info.items():
+				self.speak(k + v)
+			response = 0
+			return response
+
 		elif bool([match for match in self.Commands["Google"] if(match in query)]):
 			if window is not None:
 				self.GUI("Close", prev_window=window)
@@ -216,12 +295,72 @@ class Teodoro(System, Applications, Calendar):
 			response = 0
 			return response
 		
-		elif bool([match for match in self.Commands["Reminder"] if(match in query)]):  # "(Crea un) recordatorio de nombre 'Nombre' para 'Día' a las 'Hora'"
+		elif bool([match for match in self.Commands["Reminder"] if(match in query)]):  # "(Crea un) recordatorio de nombre 'Nombre' para el 'Día' a las 'Hora'"
+			speech, text = self.setReminder(query)
+			self.speak(speech)
+			self.GUI("Show", text = text, size = 16, prev_window = window) 
+			response = 0
+			return response
 
+		elif bool([match for match in self.Commands["Math"] if(match in query)]):  # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
+			list_of_words = query.split()
+			if "+" in query:
+				action = "+"
+				number_1 = list_of_words[list_of_words.index("+") - 1]
+				number_2 = list_of_words[list_of_words.index("+") + 1]
+			elif "menos" in query:
+				action = "-"
+				number_1 = list_of_words[list_of_words.index("menos") - 1]
+				number_2 = list_of_words[list_of_words.index("menos") + 1]
+			elif "*" in query:
+				action = "*"
+				number_1 = list_of_words[list_of_words.index("*") - 1]
+				number_2 = list_of_words[list_of_words.index("*") + 1]
+			elif "entre" in query:
+				action = "/"
+				number_1 = list_of_words[list_of_words.index("entre") - 1]
+				number_2 = list_of_words[list_of_words.index("entre") + 1]
+			elif "elevado" in query:
+				action = "**"
+				number_1 = list_of_words[list_of_words.index("elevado") - 1]
+				if list_of_words[list_of_words.index("elevado") + 2] == "cuadrado":
+					number_2 = "2"
+				elif list_of_words[list_of_words.index("elevado") + 2] == "cubo":
+					number_2 = "3"
+				else:
+					number_2 = list_of_words[list_of_words.index("elevado") + 2]
+			elif "raíz" in query:
+				if list_of_words[list_of_words.index("raíz") + 1] == "cuadrada":
+					action = "sqrt"
+				if list_of_words[list_of_words.index("raíz") + 1] == "cúbica":
+					action = "cbrt"
+				number_1 = list_of_words[list_of_words.index("raíz") + 3]
+				number_2 = "-1"
+
+			key_list = list(self.Numbers.keys())
+			val_list = list(self.Numbers.values())
+			try:
+				position = val_list.index(number_1)
+				number_1 = int(key_list[position])
+			except:
+				number_1 = int(number_1)
+			try:
+				position = val_list.index(number_2)
+				number_2 = int(key_list[position])
+			except:
+				number_2 = int(number_2)
+
+			speech, text = self.mathOperation(action, number_1, number_2)
+			self.speak(speech)
+			self.GUI("Show", text = text, size = 16, prev_window = window) 
+			response = 0
+			return response
+
+		elif bool([match for match in self.Commands["Phone"] if(match in query)]): # Encuentra mi teléfono/móvil (y similares)
 			if window is not None:
 				self.GUI("Close", prev_window=window)
-
-			speech, text = self.setReminder(query)
+			speech = self.findPhone()
+			self.speak(speech)
 			response = 0
 			return response
 
@@ -283,6 +422,7 @@ def takeQuery(Teo):
 
 	Teo.Hello() 
 	os.system("clear")
+	lastsave = 0
 	
 	while(True): 
 		
@@ -296,14 +436,17 @@ def takeQuery(Teo):
 				query = query.lower()
 				response = Teo.getAction(query, window)
 				if response != 0:
+					Teo.GUI("Close", prev_window = window)
 					Teo.speak("¿Puede repetir su petición?")
-					query = Teo.repeat()
-					Teo.getAction(query)
-			else:
+					query, window = Teo.repeat()
+					Teo.getAction(query, window)
+			elif time() - lastsave > 60:
 				speech, text = Teo.checkReminder()
 				if speech != None:
 					Teo.speak(speech)
 					Teo.GUI("Show", text = text)
+				Teo.checkPhone()
+				lastsave = time()
 		
 				
 if __name__ == '__main__':

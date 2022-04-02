@@ -9,10 +9,12 @@ import tools as t
 import threading
 import subprocess as sp
 from datetime import datetime, timedelta
+from numpy import sqrt, cbrt
+import telegram_send
 
 
 class Applications(Engine):
-    def __init__(self, db):
+    def __init__(self, db, Numbers):
 
         self.applications = []
         for collection in db.list_collection_names():
@@ -21,6 +23,9 @@ class Applications(Engine):
                     self.applications.append(element)
         
         self.SpotifyActions = self.applications[0]["SpotifyActions"]
+        self.Numbers = Numbers
+        
+        self.macroPhone = "UNLOCK_MOBILE 14335"
 
         wikipedia.set_lang("es") 
         self.s_time_unit = t.Tools(3)	#Instancia objeto Switch
@@ -145,7 +150,8 @@ class Applications(Engine):
             name = "Recordatorio"
         try:
             hour = list_of_words[list_of_words.index("las") + 1]
-            # if list_of_words[list_of_words.index(hour) + 3] == "tarde":
+            if list_of_words[list_of_words.index(hour) + 3] == "tarde" or list_of_words[list_of_words.index(hour) + 3] == "noche":
+                hour = hour.replace(hour[:2], str(int(hour[:2]) + 12))
         except:
             speech = "No has especificado una hora concreta"
             text = "Debes especificar una hora concreta"
@@ -159,7 +165,12 @@ class Applications(Engine):
                 day = str(today + timedelta(days=1))
             elif day == "pasado mañana":
                 day = str(today + timedelta(days=2))
-            # CUALQUIER FECHA
+            else:
+                day = list_of_words[list_of_words.index("para") + 2]
+                key_list = list(self.Numbers.keys())
+                val_list = list(self.Numbers.values())
+                position = val_list.index(day)
+                day = key_list[position]
         except:
             day = str(datetime.today().date())
         
@@ -196,5 +207,42 @@ class Applications(Engine):
         
         return speech, text
 
+    def mathOperation(self, action, number_1, number_2):
+        if action == "+":
+            result = round(number_1+number_2, 2)
+        elif action == "-":
+            result = round(number_1-number_2, 2)
+        elif action == "*":
+            result = round(number_1*number_2, 2)
+        elif action == "/":
+            result = round(number_1/number_2, 2)
+        elif action == "**":
+            result = round(number_1**number_2, 2)
+        elif action == "sqrt":
+            result = round(sqrt(number_1), 2)
+        elif action == "cbrt":
+            result = round(cbrt(number_1), 2)
+            
+        speech = str(result)
+        text = str(result)
+        return speech, text
 
-
+    def checkPhone(self):
+        try:
+            data, _ = self.sock.recvfrom(1024)
+            code = data.decode("utf-8")
+            if code == 'p':
+                self.speak("Prueba")
+            elif code == 'c':
+                self.speak(self.User + ", te están llamando")
+            elif code == 'b':
+                self.speak(self.User + ", te queda poca batería en el móvil")
+            elif code == 'f':
+                self.speak(self.User + ", tu móvil ya está cargado")
+        except:
+            pass
+        
+    def findPhone(self):
+        telegram_send.send(messages=[self.macroPhone])
+        speech = "Voy a ello"
+        return speech
