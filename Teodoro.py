@@ -11,6 +11,9 @@ from time import process_time, sleep, time
 import threading
 from pymongo import MongoClient
 import gridfs
+import base64
+from io import BytesIO
+from PIL import Image
 import socket
 import webbrowser 
 
@@ -55,6 +58,23 @@ class Teodoro(System, Applications, Calendar):
 					self.users.append(element)
 		self.User = self.users[0]["Nombre"]
 
+		self.applications = []
+		for collection in self.db.list_collection_names():
+			if collection == "Applications":
+				for element in self.db[collection].find({}):
+					self.applications.append(element)
+        
+		self.SpotifyActions = self.applications[0]["SpotifyActions"]
+		self.MathOperations = self.applications[0]["MathOperations"]
+
+		self.calendar = []
+		for collection in self.db.list_collection_names():
+			if collection == "Calendar":
+				for element in self.db[collection].find({}):
+					self.calendar.append(element)
+		
+		self.CalendarsID = self.calendar[0]["CalendarsID"]
+
 		self.del_speak = del_speak
 
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -64,8 +84,8 @@ class Teodoro(System, Applications, Calendar):
 		webbrowser.open(self.macroTeodoro)
 
 		System.__init__(self)
-		Applications.__init__(self, self.db, self.Numbers)
-		Calendar.__init__(self, self.db, self.Numbers, self.Months)
+		Applications.__init__(self, self.SpotifyActions, self.MathOperations, self.Numbers)
+		Calendar.__init__(self, self.CalendarsID, self.Numbers, self.Months)
 
 	def __del__(self):
 		if self.del_speak:
@@ -206,6 +226,18 @@ class Teodoro(System, Applications, Calendar):
 			return response
 		
 		elif bool([match for match in self.Commands["Information"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+			
+			try:
+				image = self.fs.find_one({"filename" : self.User})
+				bytedata = image.read()
+				ima_IO = BytesIO(base64.b64decode(bytedata))
+				img_PIL = Image.open(ima_IO)
+				img_PIL.show()
+			except:
+				self.speak("Parece que no tienes una foto asociada a tu usuario")
+
 			info = self.db["Users"].find_one({"Nombre": self.User})
 			info.pop("_id")
 			self.speak("Lo que sé de ti es: ")
@@ -304,39 +336,29 @@ class Teodoro(System, Applications, Calendar):
 
 		elif bool([match for match in self.Commands["Math"] if(match in query)]):  # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
 			list_of_words = query.split()
-			if "+" in query:
-				action = "+"
-				number_1 = list_of_words[list_of_words.index("+") - 1]
-				number_2 = list_of_words[list_of_words.index("+") + 1]
-			elif "menos" in query:
-				action = "-"
-				number_1 = list_of_words[list_of_words.index("menos") - 1]
-				number_2 = list_of_words[list_of_words.index("menos") + 1]
-			elif "*" in query:
-				action = "*"
-				number_1 = list_of_words[list_of_words.index("*") - 1]
-				number_2 = list_of_words[list_of_words.index("*") + 1]
-			elif "entre" in query:
-				action = "/"
-				number_1 = list_of_words[list_of_words.index("entre") - 1]
-				number_2 = list_of_words[list_of_words.index("entre") + 1]
-			elif "elevado" in query:
-				action = "**"
-				number_1 = list_of_words[list_of_words.index("elevado") - 1]
-				if list_of_words[list_of_words.index("elevado") + 2] == "cuadrado":
-					number_2 = "2"
-				elif list_of_words[list_of_words.index("elevado") + 2] == "cubo":
-					number_2 = "3"
-				else:
-					number_2 = list_of_words[list_of_words.index("elevado") + 2]
-			elif "raíz" in query:
-				if list_of_words[list_of_words.index("raíz") + 1] == "cuadrada":
-					action = "sqrt"
-				if list_of_words[list_of_words.index("raíz") + 1] == "cúbica":
-					action = "cbrt"
-				number_1 = list_of_words[list_of_words.index("raíz") + 3]
-				number_2 = "-1"
-
+			operation = None
+			for key in self.MathOperations.keys():
+				if self.MathOperations[key]["keyword"] in query:
+					operation = self.MathOperations[key]["operation"]
+					if self.MathOperations[key]["keyword"] == "elevado":
+						number_1 = list_of_words[list_of_words.index("elevado") - 1]
+						if list_of_words[list_of_words.index("elevado") + 2] == "cuadrado":
+							number_2 = "2"
+						elif list_of_words[list_of_words.index("elevado") + 2] == "cubo":
+							number_2 = "3"
+						else:
+							number_2 = list_of_words[list_of_words.index("elevado") + 2]
+					elif self.MathOperations[key]["keyword"] == "raíz cuadrada" or self.MathOperations[key]["keyword"] == "raíz cúbica":
+						number_1 = list_of_words[list_of_words.index("raíz") + 3]
+						number_2 = "-1"
+					else:
+						number_1 = list_of_words[list_of_words.index(self.MathOperations[key]["keyword"]) - 1]
+						number_2 = list_of_words[list_of_words.index(self.MathOperations[key]["keyword"]) + 1]
+			if operation == None:
+				self.speak("Lo siento, no puedo realizar esa operación")
+				response = 0
+				return response
+	
 			key_list = list(self.Numbers.keys())
 			val_list = list(self.Numbers.values())
 			try:
@@ -350,7 +372,7 @@ class Teodoro(System, Applications, Calendar):
 			except:
 				number_2 = int(number_2)
 
-			speech, text = self.mathOperation(action, number_1, number_2)
+			speech, text = self.mathOperation(operation, number_1, number_2)
 			self.speak(speech)
 			self.GUI("Show", text = text, size = 16, prev_window = window) 
 			response = 0

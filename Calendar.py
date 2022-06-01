@@ -12,15 +12,9 @@ import iso8601
 
 class Calendar(Engine):
     
-    def __init__(self, db, Numbers, Months):
+    def __init__(self, CalendarsID, Numbers, Months):
 
-        self.calendar = []
-        for collection in db.list_collection_names():
-            if collection == "Calendar":
-                for element in db[collection].find({}):
-                    self.calendar.append(element)
-        
-        self.CalendarsID = self.calendar[0]["CalendarsID"]
+        self.CalendarsID = CalendarsID
         self.Numbers = Numbers
         self.Months = Months
         

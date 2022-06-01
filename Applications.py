@@ -14,15 +14,10 @@ import telegram_send
 
 
 class Applications(Engine):
-    def __init__(self, db, Numbers):
+    def __init__(self, SpotifyActions, MathOperations, Numbers):
 
-        self.applications = []
-        for collection in db.list_collection_names():
-            if collection == "Applications":
-                for element in db[collection].find({}):
-                    self.applications.append(element)
-        
-        self.SpotifyActions = self.applications[0]["SpotifyActions"]
+        self.SpotifyActions = SpotifyActions
+        self.mathOperations = MathOperations
         self.Numbers = Numbers
         
         self.macroPhone = "UNLOCK_MOBILE 14335"
@@ -207,22 +202,8 @@ class Applications(Engine):
         
         return speech, text
 
-    def mathOperation(self, action, number_1, number_2):
-        if action == "+":
-            result = round(number_1+number_2, 2)
-        elif action == "-":
-            result = round(number_1-number_2, 2)
-        elif action == "*":
-            result = round(number_1*number_2, 2)
-        elif action == "/":
-            result = round(number_1/number_2, 2)
-        elif action == "**":
-            result = round(number_1**number_2, 2)
-        elif action == "sqrt":
-            result = round(sqrt(number_1), 2)
-        elif action == "cbrt":
-            result = round(cbrt(number_1), 2)
-            
+    def mathOperation(self, operation, number_1, number_2):
+        result = eval(operation)
         speech = str(result)
         text = str(result)
         return speech, text

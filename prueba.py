@@ -8,19 +8,19 @@ import datefinder
 from datetime import datetime, time, timedelta
 import color
 
-trello = 'qonfs68h23u3uct5656hlrscusfeiale@import.calendar.google.com'
-personal = 'karlosfiliu97@gmail.com'
+# trello = 'qonfs68h23u3uct5656hlrscusfeiale@import.calendar.google.com'
+# personal = 'karlosfiliu97@gmail.com'
 
-scopes = ['https://www.googleapis.com/auth/calendar']
-flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
+# scopes = ['https://www.googleapis.com/auth/calendar']
+# flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
 
 # Para hacerlo por primera vez, las credenciales
 # credentials = flow.run_console()
 # pickle.dump(credentials, open("token.pkl", "wb")) 
 
-credentials = pickle.load(open("token.pkl", "rb"))  
+# credentials = pickle.load(open("token.pkl", "rb"))  
 
-service = build("calendar", "v3", credentials=credentials)
+# service = build("calendar", "v3", credentials=credentials)
 # result = service.calendarList().list().execute()
 # print(result)
 # calendar_id = result['items'][0]['id']
@@ -28,34 +28,34 @@ service = build("calendar", "v3", credentials=credentials)
 # result = service.events().list(calendarId=calendar_id).execute()
 # print(result['items'][0])
 
-def create_event(start_time_str, summary, duration=1, description=None, location=None):
-    matches = list(datefinder.find_dates(start_time_str))
-    if len(matches):
-        start_time = matches[0]
-        end_time = start_time + timedelta(hours = duration)
+# def create_event(start_time_str, summary, duration=1, description=None, location=None):
+#     matches = list(datefinder.find_dates(start_time_str))
+#     if len(matches):
+#         start_time = matches[0]
+#         end_time = start_time + timedelta(hours = duration)
                 
-    event = {
-        'summary': summary,
-        'location': location,
-        'description': description,
-        'start': {
-            'dateTime': start_time.strftime("%Y-%m-%dT%H:%M:%S"),
-            'timeZone': 'Europe/Madrid',
-        },
-        'end': {
-            'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
-            'timeZone': 'Europe/Madrid',
-        },
-        'reminders': {
-            'useDefault': False,
-            'overrides': [
-                {'method': 'email', 'minutes': 24 * 60},
-                {'method': 'popup', 'minutes': 10},
-            ],
-        },
-    }
+#     event = {
+#         'summary': summary,
+#         'location': location,
+#         'description': description,
+#         'start': {
+#             'dateTime': start_time.strftime("%Y-%m-%dT%H:%M:%S"),
+#             'timeZone': 'Europe/Madrid',
+#         },
+#         'end': {
+#             'dateTime': end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+#             'timeZone': 'Europe/Madrid',
+#         },
+#         'reminders': {
+#             'useDefault': False,
+#             'overrides': [
+#                 {'method': 'email', 'minutes': 24 * 60},
+#                 {'method': 'popup', 'minutes': 10},
+#             ],
+#         },
+#     }
     
-    return service.events().insert(calendarId=personal, body=event, sendNotifications=True).execute()
+#     return service.events().insert(calendarId=personal, body=event, sendNotifications=True).execute()
 
 # create_event('11/10/2021 12:30pm',"Prueba")
 
@@ -320,3 +320,52 @@ def create_event(start_time_str, summary, duration=1, description=None, location
 # import telegram_send
 # telegram_send.send(messages=["UNLOCK_MOBILE 14335"])
 
+
+
+
+import speech_recognition as sr 
+import pyttsx3 
+
+r = sr.Recognizer()
+r.pause_threshold = 0.8
+with sr.Microphone() as source:
+    r.adjust_for_ambient_noise(source)
+voiceEngine = pyttsx3.init()
+defaultVoice = 'spanish+m3'
+defaultWisperVoice = 'spanish+whisper'
+defaultRate = 180
+maxVoices = 7
+voiceEngine.setProperty('voice', defaultVoice)
+voiceEngine.setProperty('rate', defaultRate)
+Names = {"Teodoro", "Teo"}
+
+def takeCommand(): 
+
+    r = sr.Recognizer()
+
+    while 1:
+        with sr.Microphone() as source:
+            audio = r.record(source, 3)
+            try:
+                Query = r.recognize_google(audio, language='es-ES')
+                for name in Names:
+                    if (Query.find(name)) != -1:
+                        speak("¿Si?")
+                        audio = r.record(source, 10) 
+                        try:
+                            Request = r.recognize_google(audio, language='es-ES')
+                            return Request
+                        except:
+                            return None		
+                return None
+            except: 
+                return None
+
+    def speak(audio): 
+        voiceEngine.say(audio)
+        voiceEngine.runAndWait()
+
+while(1):
+    query = takeCommand()
+    if query is not None:
+        print(query)
