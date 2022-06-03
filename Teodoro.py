@@ -322,7 +322,7 @@ class Teodoro(System, Applications, Calendar):
 				self.GUI("Close", prev_window=window)
 
 			t, speech, text = self.setAlarm(query)
-			timer = threading.Timer(t, self.alarm(speech, text))
+			timer = threading.Timer(t, self.alarm, args=(speech, text))
 			timer.start()
 			response = 0
 			return response

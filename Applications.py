@@ -21,6 +21,7 @@ class Applications(Engine):
         self.Numbers = Numbers
         
         self.macroPhone = "UNLOCK_MOBILE 14335"
+        self.macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
 
         wikipedia.set_lang("es") 
         self.s_time_unit = t.Tools(3)	#Instancia objeto Switch
@@ -124,7 +125,7 @@ class Applications(Engine):
         except:
             name = "Alarma"
 
-        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de cinco minutos. " + name
+        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma " + name
         text = "Fin de la alarma \n " + name
         return t, speech, text
 

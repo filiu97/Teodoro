@@ -12,8 +12,10 @@ class Engine():
         self.Names = Names
         r = sr.Recognizer()
         r.pause_threshold = pause_thr
-        with sr.Microphone() as source:
-            r.adjust_for_ambient_noise(source)
+        # r.energy_threshold = 4000
+        # r.dynamic_energy_adjustment_ratio = 1
+        # with sr.Microphone() as source:
+        #     r.adjust_for_ambient_noise(source)
         self.voiceEngine = pyttsx3.init()
         self.defaultVoice = 'spanish+m3'
         self.defaultWisperVoice = 'spanish+whisper'
@@ -42,18 +44,22 @@ class Engine():
 
         while 1:
             with sr.Microphone() as source:
-                audio = r.record(source, 3)
+                # audio = r.record(source, 3)
+                # r.adjust_for_ambient_noise(source)
+                audio = r.listen(source, phrase_time_limit = 3)
                 try:
                     Query = r.recognize_google(audio, language='es-ES')
                     for name in self.Names:
                         if (Query.find(name)) != -1:
                             self.speak("¿Si?")
                             window = self.GUI("Status", "Reconociendo...")
-                            audio = r.record(source, 10) 
+                            # audio = r.record(source, 10)
+                            audio = r.listen(source, phrase_time_limit = 10) 
                             try:
                                 Request = r.recognize_google(audio, language='es-ES')
                                 return Request, window
                             except:
+                                self.GUI("Close", prev_window = window)
                                 return None, None		
                     return None, None
                 except: 

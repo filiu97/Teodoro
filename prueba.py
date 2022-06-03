@@ -323,49 +323,55 @@ import color
 
 
 
-import speech_recognition as sr 
-import pyttsx3 
+# import speech_recognition as sr 
+# import pyttsx3 
 
-r = sr.Recognizer()
-r.pause_threshold = 0.8
-with sr.Microphone() as source:
-    r.adjust_for_ambient_noise(source)
-voiceEngine = pyttsx3.init()
-defaultVoice = 'spanish+m3'
-defaultWisperVoice = 'spanish+whisper'
-defaultRate = 180
-maxVoices = 7
-voiceEngine.setProperty('voice', defaultVoice)
-voiceEngine.setProperty('rate', defaultRate)
-Names = {"Teodoro", "Teo"}
+# r = sr.Recognizer()
+# r.pause_threshold = 0.8
+# with sr.Microphone() as source:
+#     r.adjust_for_ambient_noise(source)
+# voiceEngine = pyttsx3.init()
+# defaultVoice = 'spanish+m3'
+# defaultWisperVoice = 'spanish+whisper'
+# defaultRate = 180
+# maxVoices = 7
+# voiceEngine.setProperty('voice', defaultVoice)
+# voiceEngine.setProperty('rate', defaultRate)
+# Names = {"Teodoro", "Teo"}
 
-def takeCommand(): 
+# def takeCommand(): 
 
-    r = sr.Recognizer()
+#     r = sr.Recognizer()
 
-    while 1:
-        with sr.Microphone() as source:
-            audio = r.record(source, 3)
-            try:
-                Query = r.recognize_google(audio, language='es-ES')
-                for name in Names:
-                    if (Query.find(name)) != -1:
-                        speak("¿Si?")
-                        audio = r.record(source, 10) 
-                        try:
-                            Request = r.recognize_google(audio, language='es-ES')
-                            return Request
-                        except:
-                            return None		
-                return None
-            except: 
-                return None
+#     while 1:
+#         with sr.Microphone() as source:
+#             audio = r.record(source, 3)
+#             try:
+#                 Query = r.recognize_google(audio, language='es-ES')
+#                 for name in Names:
+#                     if (Query.find(name)) != -1:
+#                         speak("¿Si?")
+#                         audio = r.record(source, 10) 
+#                         try:
+#                             Request = r.recognize_google(audio, language='es-ES')
+#                             return Request
+#                         except:
+#                             return None		
+#                 return None
+#             except: 
+#                 return None
 
-    def speak(audio): 
-        voiceEngine.say(audio)
-        voiceEngine.runAndWait()
+#     def speak(audio): 
+#         voiceEngine.say(audio)
+#         voiceEngine.runAndWait()
 
-while(1):
-    query = takeCommand()
-    if query is not None:
-        print(query)
+# while(1):
+#     query = takeCommand()
+#     if query is not None:
+#         print(query)
+
+
+import webbrowser 
+
+macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
+webbrowser.open(macroEmergencyCall)
