@@ -80,6 +80,46 @@ class Engine():
             except:
                 return None, None
 
+    def changeVoice(self):
+        r = sr.Recognizer()
+        window = self.GUI("Status", "Sí -> confirmar \n No -> siguiente voz \n Cualquier cosa \n -> voz por defecto")
+        i = 1
+        change = False
+        while i <= self.maxVoices:
+            newVoice = "spanish+m" + str(i)
+            self.voiceEngine.setProperty('voice', newVoice)
+            self.speak("Esta es una prueba de voz. ¿Le gusta?")
+            with sr.Microphone() as source:
+                audio = r.listen(source, phrase_time_limit = 3)
+                try:
+                    Query = r.recognize_google(audio, language='es-ES')
+                    if Query == "si":
+                        change = True
+                        break
+                    elif Query == "no":
+                        i = i+1
+                        continue
+                    else:
+                        self.voiceEngine.setProperty('voice', self.defaultRate)
+                        break
+                except:
+                    self.speak = "Por favor, pruebe otra vez"
+                    continue
+        if i > self.maxVoices:
+            text = "Se mantiene la voz anterior"
+            speech = "No ha seleccionado niguna de las voces disponibles. Se mantiene la voz anterior"
+        elif change:
+            text = "Voz cambiada"
+            speech = "Ha cambiado la voz correctamente"
+        else:
+            text = "Voz por defecto"
+            speech = "Ha elegido al voz por defecto"
+
+        self.GUI("Close", prev_window = window)
+
+        return speech, text
+
+
     def GUI(self, action, text = None, size = 24, 
             image = None, geometry = "400x200", 
             prev_window = None):

@@ -246,6 +246,14 @@ class Teodoro(System, Applications, Calendar):
 			response = 0
 			return response
 
+		elif bool([match for match in self.Commands["ChangeVoice"] if(match in query)]):
+			self.speak("Perfecto. Tiene " + str(Teo.maxVoices) + "voces para poder elegir")
+			speech, text = self.changeVoice()
+			self.speak(speech)
+			self.GUI("Show", text = text, prev_window = window) 
+			response = 0
+			return response
+
 		elif bool([match for match in self.Commands["Google"] if(match in query)]):
 			if window is not None:
 				self.GUI("Close", prev_window=window)
