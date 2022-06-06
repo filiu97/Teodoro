@@ -256,22 +256,22 @@ import color
 
 # print(prueba)
 
-import pyttsx3
+# import pyttsx3
 
-engine = pyttsx3.init()
-voices = engine.getProperty('voices')
-for voice in voices:
-    print("Voice: %s" % voice.name)
-    print(" - ID: %s" % voice.id)
-    print(" - Languages: %s" % voice.languages)
-    print(" - Gender: %s" % voice.gender)
-    print(" - Age: %s" % voice.age)
-    print("\n")
-engine.setProperty('rate', 180)
-engine.setProperty('voice', 'spanish+m3')
+# engine = pyttsx3.init()
+# voices = engine.getProperty('voices')
+# for voice in voices:
+#     print("Voice: %s" % voice.name)
+#     print(" - ID: %s" % voice.id)
+#     print(" - Languages: %s" % voice.languages)
+#     print(" - Gender: %s" % voice.gender)
+#     print(" - Age: %s" % voice.age)
+#     print("\n")
+# engine.setProperty('rate', 180)
+# engine.setProperty('voice', 'spanish+m3')
 
-engine.say('Hola, ¿cómo estás?')
-engine.runAndWait()
+# engine.say('Hola, ¿cómo estás?')
+# engine.runAndWait()
 
 # from gtts import gTTS 
 # from playsound import playsound 
@@ -385,7 +385,7 @@ engine.runAndWait()
 #         print(query)
 
 
-# import webbrowser 
+import webbrowser 
 
-# macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
-# webbrowser.open(macroEmergencyCall)
+macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
+webbrowser.open(macroEmergencyCall)
