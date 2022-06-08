@@ -309,10 +309,7 @@ class Calendar(Engine):
         summary = list_of_words[-1]
         print(time_str)
 
-        description, location = self.GUI("SetCalendar", prev_window=window)
-
-        print(description)
-        print(location)
+        description, location = self.GUI("SetCalendar", geometry="800x400", prev_window=window)
 
         self.create_event(time_str,summary.title(), description=description, location=location)
         return 0

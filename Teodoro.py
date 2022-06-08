@@ -19,15 +19,37 @@ import webbrowser
 
 
 class Teodoro(System, Applications, Calendar):
+
+	""" Clase Teodoro. Esta clase hereda de todas las demás para poder hacer uso de las funcionalidades 
+	implementadas en las demás clases. Contiene las funcionalidades básicas de comunicación común con el
+	usuario, además de contener el bucle de acción del sistema. Supone la clase principal del asistente, 
+	en el que se inicia la base de conocimiento del asistente a través de la conexión con MongoDB.
+
+	Args:
+		- System (class): Superclase que contiene las funcionalidades relacionadas con el control del ordenador.
+		- Applications (class): Superclase que contiene las funcionalidades relacionadas con el control de
+		aplicación como búsquedas web, alarmas y recordatorios, control de la música, conexión con el teléfono...
+		- Calendar (class): Superclase que contiene las funcionalidades relacionadas con el control del calendario
+		del usuario.
+	"""
 	
 	def __init__(self,
 				mongo_key = "mongodb+srv://filiu:teodoro@teodoro.ocpsz.mongodb.net/KnowledgeBase?retryWrites=true&w=majority",
 				del_speak = True):
 		
-
 		self.client = MongoClient(mongo_key)
 		self.db = self.client.KnowledgeBase
 		self.fs = gridfs.GridFS(self.db)
+
+		name, password = self.GUI("Login")
+
+
+		# SEGUIR AQUÍ
+
+
+
+
+
 
 		self.general = []
 		for collection in self.db.list_collection_names():
@@ -56,7 +78,7 @@ class Teodoro(System, Applications, Calendar):
 			if collection == "Users":
 				for element in self.db[collection].find({}):
 					self.users.append(element)
-		self.User = self.users[0]["Nombre"]
+		self.User = self.users[0]["nombre"]
 
 		self.applications = []
 		for collection in self.db.list_collection_names():
@@ -129,7 +151,7 @@ class Teodoro(System, Applications, Calendar):
 			speech = "Nuevo usuario creado"
 			text = "Nuevo usuario de nombre: " + name + " creado correctamente"
 		elif action == "change":
-			self.User = self.db["Users"].find_one(name2find)["Nombre"]
+			self.User = self.db["Users"].find_one(name2find)["nombre"]
 			speech = "Cambio de usuario realizado"
 			text = "Nuevo usuario: " + name
 		elif action == "remove":
@@ -139,7 +161,7 @@ class Teodoro(System, Applications, Calendar):
 		return speech, text
 	
 	def newUserInfo(self, field, attribute):
-		name2find = { "Nombre": self.User }
+		name2find = { "nombre": self.User }
 		newvalues = { "$set": { field : attribute } }
 		self.db["Users"].update_one(name2find, newvalues)
 		speech = "Nueva información guardada"
@@ -197,7 +219,7 @@ class Teodoro(System, Applications, Calendar):
 		elif bool([match for match in self.Commands["Users"] if(match in query)]):
 			list_of_words = query.split()
 			name = list_of_words[list_of_words.index("nombre") + 1]
-			name2find = {"Nombre": name}
+			name2find = {"nombre": name}
 			if "nuevo" in list_of_words:
 				action = "new"
 			elif "cambiar" in list_of_words:
@@ -238,8 +260,7 @@ class Teodoro(System, Applications, Calendar):
 			except:
 				self.speak("Parece que no tienes una foto asociada a tu usuario")
 
-			info = self.db["Users"].find_one({"Nombre": self.User})
-			info.pop("_id")
+			info = self.db["Users"].find_one({"nombre": self.User}, {"_id":0})
 			self.speak("Lo que sé de ti es: ")
 			for k, v in info.items():
 				self.speak(k + v)
@@ -401,7 +422,7 @@ class Teodoro(System, Applications, Calendar):
 				response = -1
 			elif speech != None:
 				self.speak(speech)
-				self.GUI("GetCalendar", text = text, size = 12, geometry = "800x200", prev_window = window)
+				self.GUI("GetCalendar", text = text, size = 12, geometry = "800x600", prev_window = window)
 				response = 0
 			else:
 				self.speak("Credenciales actualizadas")

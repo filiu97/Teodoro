@@ -1,138 +1,8 @@
-import speech_recognition as sr 
-import pyttsx3 
 from tkinter import *
 from tkinter import scrolledtext
 from tkinter import font
-from time import sleep, time
-import requests
 
-
-class Engine():
-
-    def __init__(self, Names, pause_thr = 0.8):
-        
-        self.Names = Names
-        r = sr.Recognizer()
-        r.pause_threshold = pause_thr
-        # r.energy_threshold = 4000
-        # r.dynamic_energy_adjustment_ratio = 1
-        # with sr.Microphone() as source:
-        #     r.adjust_for_ambient_noise(source)
-        self.voiceEngine = pyttsx3.init()
-        self.defaultVoice = 'spanish+m3'
-        self.defaultWisperVoice = 'spanish+whisper'
-        self.defaultRate = 180
-        self.maxVoices = 7
-        self.voiceEngine.setProperty('voice', self.defaultVoice)
-        self.voiceEngine.setProperty('rate', self.defaultRate)
-    
-    def internetCheck(self):
-        url = "http://www.google.com"
-        timeout = 5
-        try:
-            requests.get(url, timeout=timeout)
-            return 0
-        except (requests.ConnectionError, requests.Timeout) as exception:
-            text = "No tiene acceso \na Internet"
-            return text
-
-    def speak(self, audio): 
-        self.voiceEngine.say(audio)
-        self.voiceEngine.runAndWait() 
-
-    def takeCommand(self): 
-
-        r = sr.Recognizer()
-
-        while 1:
-            with sr.Microphone() as source:
-                # audio = r.record(source, 3)
-                # r.adjust_for_ambient_noise(source)
-                audio = r.listen(source, phrase_time_limit = 3)
-                try:
-                    Query = r.recognize_google(audio, language='es-ES')
-                    for name in self.Names:
-                        if (Query.find(name)) != -1:
-                            self.speak("¿Si?")
-                            window = self.GUI("Status", "Reconociendo...")
-                            # audio = r.record(source, 10)
-                            audio = r.listen(source, phrase_time_limit = 10) 
-                            try:
-                                Request = r.recognize_google(audio, language='es-ES')
-                                return Request, window
-                            except:
-                                self.GUI("Close", prev_window = window)
-                                return None, None		
-                    return None, None
-                except: 
-                    return None, None
-
-    def repeat(self):
-        r = sr.Recognizer()
-        with sr.Microphone() as source:
-            try:
-                window = self.GUI("Status", "Reconociendo...")
-                audio = r.record(source, 10)
-                try: 
-                    Request = r.recognize_google(audio, language='es-ES')
-                    return Request, window
-                except:
-                    self.speak("No he reconocido lo que ha dicho, lo siento")
-                    return None, None
-            except:
-                return None, None
-
-    def changeVoice(self):
-        r = sr.Recognizer()
-        window = self.GUI("Status", "Sí -> confirmar \n No -> siguiente voz \n Cualquier cosa \n -> voz por defecto")
-        i = 1
-        change = False
-        while i <= self.maxVoices:
-            newVoice = "spanish+m" + str(i)
-            self.voiceEngine.setProperty('voice', newVoice)
-            self.speak("Esta es una prueba de voz. ¿Le gusta?")
-            with sr.Microphone() as source:
-                audio = r.listen(source, phrase_time_limit = 3)
-                try:
-                    Query = r.recognize_google(audio, language='es-ES')
-                    if Query == "si":
-                        change = True
-                        break
-                    elif Query == "no":
-                        i = i+1
-                        continue
-                    else:
-                        self.voiceEngine.setProperty('voice', self.defaultRate)
-                        break
-                except:
-                    self.speak = "Por favor, pruebe otra vez"
-                    continue
-        if i > self.maxVoices:
-            text = "Se mantiene la voz anterior"
-            speech = "No ha seleccionado niguna de las voces disponibles. Se mantiene la voz anterior"
-        elif change:
-            text = "Voz cambiada"
-            speech = "Ha cambiado la voz correctamente"
-        else:
-            text = "Voz por defecto"
-            speech = "Ha elegido al voz por defecto"
-
-        self.GUI("Close", prev_window = window)
-
-        return speech, text
-
-
-    def get_SetCalendar_entry(self, desc_entry, loc_entry):
-        global description, location
-        description = desc_entry.get("1.0", "1000.1000")
-        location = str(loc_entry.get())
-
-    def get_Login_entry(self, name_entry, pwd_entry):
-        global name, password
-        name = str(name_entry.get())
-        password = str(pwd_entry.get())
-
-    def GUI(self, action, text = None, size = 16, 
+def GUI(action, text = None, size = 16, 
             image = None, geometry = "400x200", 
             prev_window = None):
         
@@ -232,7 +102,7 @@ class Engine():
             frame3.pack()
             b1 = Button(
                 frame3,
-                command = lambda: [self.get_Login_entry(name_entry, pwd_entry), window.destroy()])
+                command = lambda: [get_Login_entry(name_entry, pwd_entry), window.destroy()])
             img = PhotoImage(file = ok_button)
             b1.config(image = img)
             b1.pack()
@@ -422,7 +292,7 @@ class Engine():
                 bg = bg).pack()
             b1 = Button(
                 frame3,
-                command = lambda: [self.get_SetCalendar_entry(desc_entry, loc_entry), window.destroy()])
+                command = lambda: [get_SetCalendar_entry(desc_entry, loc_entry), window.destroy()])
             img = PhotoImage(file = ok_button)
             b1.config(image=img)
             b1.pack(expand = True)
@@ -430,3 +300,28 @@ class Engine():
             window.mainloop()
 
             return description, location
+
+def get_SetCalendar_entry(desc_entry, loc_entry):
+    global description, location
+    description = desc_entry.get("1.0", "1000.1000")
+    location = str(loc_entry.get())
+
+def get_Login_entry(name_entry, pwd_entry):
+    global name, password
+    name = str(name_entry.get())
+    password = str(pwd_entry.get())
+    
+
+# description, location = GUI("SetCalendar", geometry="800x400")
+# GUI("Show", text = "Esto es una prueba")
+
+# text = str()
+# for i in range(20):
+#     text += "   -" + "Evento de caca " + str(i) + " a las 12:30 del 22-06-2022" + "\n"
+# print(text)
+# GUI("GetCalendar", text = text, size = 12, geometry = "800x600")
+
+name, password = GUI("Login")
+
+print(name)
+print(password)

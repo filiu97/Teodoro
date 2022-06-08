@@ -273,11 +273,7 @@ import color
 # engine.say('Hola, ¿cómo estás?')
 # engine.runAndWait()
 
-# from gtts import gTTS 
-# from playsound import playsound 
-# v =gTTS(text="Hola, ¿qué tal estás?",lang="es",slow=False) 
-# v.save("name.mp3") 
-# playsound("name.mp3")
+
 
 
 # import webbrowser 
@@ -385,7 +381,27 @@ import color
 #         print(query)
 
 
-import webbrowser 
+# import webbrowser 
 
-macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
-webbrowser.open(macroEmergencyCall)
+# macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
+# webbrowser.open(macroEmergencyCall)
+
+# import bcrypt
+
+# password = b'k1rl4sf3l35'
+
+# # Generate salt
+# mySalt = bcrypt.gensalt()
+# print(mySalt)
+
+# # Hash password
+# hash = bcrypt.hashpw(password, mySalt)
+# print(hash)
+
+# print(bcrypt.checkpw(b"k1rl4sf3l35", b'$2b$12$8grSVALUCAUkbq.7JR8Ahex58CUZsAlSEoIJYIv0Ojgbv.3wwDnLy'))
+
+# from gtts import gTTS 
+# from playsound import playsound 
+# v =gTTS(text="Hola, ¿qué tal estás?",lang="es",slow=False) 
+# v.save("name.mp3") 
+# playsound("name.mp3")
