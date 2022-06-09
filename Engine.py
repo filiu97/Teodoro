@@ -122,6 +122,7 @@ class Engine():
         return speech, text
 
 
+
     def get_SetCalendar_entry(self, desc_entry, loc_entry):
         global description, location
         description = desc_entry.get("1.0", "1000.1000")
@@ -131,6 +132,10 @@ class Engine():
         global name, password
         name = str(name_entry.get())
         password = str(pwd_entry.get())
+
+    def get_Text_entry(self, text_entry):
+        global info
+        info = str(text_entry.get())  
 
     def GUI(self, action, text = None, size = 16, 
             image = None, geometry = "400x200", 
@@ -184,7 +189,7 @@ class Engine():
                 padx = 10,
                 pady = 5,
                 bg=bg).grid(row=0, column=0, sticky=W)
-        
+
             name_entry = Entry(
                 frame1,
                 font = (font1, size-6),
@@ -193,6 +198,8 @@ class Engine():
                 row = 0, 
                 column = 1,
                 sticky = W)
+            if text:
+                name_entry.insert(0, text)
 
             Label(
                 frame1, 
@@ -205,6 +212,7 @@ class Engine():
             pwd_entry = Entry(
                 frame1,
                 font = (font1, size-6),
+                show = "*",
                 width = 30)
             pwd_entry.grid(
                 row = 1, 
@@ -430,3 +438,68 @@ class Engine():
             window.mainloop()
 
             return description, location
+
+        elif action == "Text":
+            
+            label = Label(
+                window,
+                text = "Introduce aquí el texto",
+                font = (font1, size, "bold"),
+                padx = 0,
+                pady = 10,
+                bg = bg
+                )
+            label.pack()
+
+            frame1 = Frame(
+                window,
+                bg = bg,
+                pady = 15
+            )
+            frame1.pack()
+
+            if text == "secret":
+                text_entry = Entry(
+                    frame1,
+                    font = (font1, size-6),
+                    show = "*",
+                    width = 50)
+            else:
+                text_entry = Entry(
+                    frame1,
+                    font = (font1, size-6),
+                    width = 50)
+            text_entry.grid(
+                row = 1, 
+                column = 0,
+                sticky = W)
+
+            frame2 = Frame(
+                window,
+                bg = bg,
+            )
+            frame2.pack()
+
+            Label(
+                frame2,
+                text = close_label,
+                font = (font2, size-6, "bold"),
+                padx = 0,
+                pady = 10,
+                bg = bg).grid(column=0, row=2)
+
+            frame3 = Frame(
+                window,
+                bg = bg
+            )
+            frame3.pack()
+            b1 = Button(
+                frame3,
+                command = lambda: [self.get_Text_entry(text_entry), window.destroy()])
+            img = PhotoImage(file = ok_button)
+            b1.config(image = img)
+            b1.pack()
+
+            window.mainloop()
+
+            return info

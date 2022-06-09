@@ -43,21 +43,21 @@ if __name__ == "__main__":
     # print(Names)
     # print(Commands["Name"])
 
-    file = "Filiu.jpg"
-    with open(file, 'rb') as f:
-        contents = base64.b64encode(f.read())
-    fs.put(contents, filename="filiu")
+    # file = "Filiu.jpg"
+    # with open(file, 'rb') as f:
+    #     contents = base64.b64encode(f.read())
+    # fs.put(contents, filename="filiu")
 
     # file = "/home/filiu/Teodoro/Teodoro_Calling.mp3"
     # with open(file, 'rb') as f:
     #     contents = base64.b64encode(f.read())
     # fs.put(contents, filename="audio")
 
-    image = fs.find_one({"filename":"filiu"})
-    bytedata = image.read()
-    ima_IO = BytesIO(base64.b64decode(bytedata))
-    img_PIL = Image.open(ima_IO)
-    img_PIL.show()
+    # image = fs.find_one({"filename":"filiu"})
+    # bytedata = image.read()
+    # ima_IO = BytesIO(base64.b64decode(bytedata))
+    # img_PIL = Image.open(ima_IO)
+    # img_PIL.show()
 
     # audio = fs.find_one({"filename":"audio"})
     # bytedata = audio.read()
@@ -137,3 +137,20 @@ if __name__ == "__main__":
     # for key in MathOperations.keys():
     #     if MathOperations[key]["keyword"] in query:
     #         print(eval(MathOperations[key]["operation"]))
+
+    # info = db["Users"].find_one({"nombre": "filiu"}, {"_id":0, "_salt":1})
+    # print(info["_salt"]) 
+
+
+    # field = ["caca", "pedo"]
+    # attribute = ["espesa", "contundente"]
+    # name2find = { "nombre": "usuario" }
+    # for i in range(len(field)):
+    #     newvalues = { "$set": { field[i] : attribute[i] } }
+    #     db["Users"].update_one(name2find, newvalues)
+
+    usuario = db["Users"].find_one({"nombre" : "usuario"})
+    try:
+        print(usuario["cosa"])
+    except:
+        pass

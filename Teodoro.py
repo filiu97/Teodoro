@@ -16,6 +16,8 @@ from io import BytesIO
 from PIL import Image
 import socket
 import webbrowser 
+import bcrypt
+
 
 
 class Teodoro(System, Applications, Calendar):
@@ -35,21 +37,36 @@ class Teodoro(System, Applications, Calendar):
 	
 	def __init__(self,
 				mongo_key = "mongodb+srv://filiu:teodoro@teodoro.ocpsz.mongodb.net/KnowledgeBase?retryWrites=true&w=majority",
+				default_user = "filiu",
 				del_speak = True):
 		
 		self.client = MongoClient(mongo_key)
 		self.db = self.client.KnowledgeBase
 		self.fs = gridfs.GridFS(self.db)
 
-		name, password = self.GUI("Login")
+		self.__defaultUser = "usuario"
+		self.__defaultSalt = "$2b$12$rPkLBpwSB34yL8nrlg21uu"
+		self.__defaultHash = "$2b$12$rPkLBpwSB34yL8nrlg21uuqHjoeJdQheW6dtnYggqvUbvJFRZ0T/C"
 
 
-		# SEGUIR AQUÍ
+		name, password = self.GUI("Login", text = default_user)
+		try:
+			info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_salt":1, "_hash":1})
+			mySalt = info["_salt"].encode('utf-8')
+			myHash = info["_hash"].encode('utf-8')
+			password = password.encode('utf-8')
 
+			newHash = bcrypt.hashpw(password, mySalt)
+			if myHash == newHash:
+				self.GUI("Show", "Inicialización correcta.\nBienvenido " + name + "!")
+				self.User = name
+				info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_CalendarsID":1})
+				self.CalendarsID = info["_CalendarsID"]
 
-
-
-
+		except:
+			self.User = self.__defaultUser
+			self.GUI("Show", "Has inicializado como \n " + self.User + ".\nBienvenido!")
+			self.CalendarsID = None
 
 		self.general = []
 		for collection in self.db.list_collection_names():
@@ -73,13 +90,6 @@ class Teodoro(System, Applications, Calendar):
 
 		self.Commands = self.general[1]["Commands"]
 
-		self.users = []
-		for collection in self.db.list_collection_names():
-			if collection == "Users":
-				for element in self.db[collection].find({}):
-					self.users.append(element)
-		self.User = self.users[0]["nombre"]
-
 		self.applications = []
 		for collection in self.db.list_collection_names():
 			if collection == "Applications":
@@ -89,13 +99,13 @@ class Teodoro(System, Applications, Calendar):
 		self.SpotifyActions = self.applications[0]["SpotifyActions"]
 		self.MathOperations = self.applications[0]["MathOperations"]
 
-		self.calendar = []
-		for collection in self.db.list_collection_names():
-			if collection == "Calendar":
-				for element in self.db[collection].find({}):
-					self.calendar.append(element)
+		# self.calendar = []
+		# for collection in self.db.list_collection_names():
+		# 	if collection == "Calendar":
+		# 		for element in self.db[collection].find({}):
+		# 			self.calendar.append(element)
 		
-		self.CalendarsID = self.calendar[0]["CalendarsID"]
+		# self.CalendarsID = self.calendar[0]["CalendarsID"]
 
 		self.del_speak = del_speak
 
@@ -148,12 +158,32 @@ class Teodoro(System, Applications, Calendar):
 	def actionUser(self, action, name2find, name):
 		if action == "new":
 			self.db["Users"].insert_one(name2find)
+			newvalues = { "$set": { "_CalendarsID":None, "_salt":self.__defaultSalt, "_hash":self.__defaultHash } }
+			self.db["Users"].update_one(name2find, newvalues)
 			speech = "Nuevo usuario creado"
-			text = "Nuevo usuario de nombre: " + name + " creado correctamente"
+			text = "Nuevo usuario de nombre: " + name + "\ncreado correctamente"
+			
 		elif action == "change":
-			self.User = self.db["Users"].find_one(name2find)["nombre"]
-			speech = "Cambio de usuario realizado"
-			text = "Nuevo usuario: " + name
+			_, password = self.GUI("Login", text = name)
+			try:
+				info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_salt":1, "_hash":1})
+				mySalt = info["_salt"].encode('utf-8')
+				myHash = info["_hash"].encode('utf-8')
+				password = password.encode('utf-8')
+
+				newHash = bcrypt.hashpw(password, mySalt)
+				if myHash == newHash:
+					self.GUI("Show", "Inicialización correcta.\nBienvenido " + name + "!")
+					self.User = name
+					info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_CalendarsID":1})
+					self.CalendarsID = info["_CalendarsID"]
+				speech = "Cambio de usuario realizado"
+				text = "Nuevo usuario: " + name
+				
+			except:
+				speech = "No se ha podido realizar el cambio de usuario"
+				text = "Operación denegada"
+
 		elif action == "remove":
 			self.db["Users"].delete_one(name2find)
 			speech = "Usuario borrado"
@@ -162,10 +192,11 @@ class Teodoro(System, Applications, Calendar):
 	
 	def newUserInfo(self, field, attribute):
 		name2find = { "nombre": self.User }
-		newvalues = { "$set": { field : attribute } }
-		self.db["Users"].update_one(name2find, newvalues)
+		for i in range(len(field)):
+			newvalues = { "$set": { field[i] : attribute[i] } }
+			self.db["Users"].update_one(name2find, newvalues)
 		speech = "Nueva información guardada"
-		text = "Información: " + field + ":" + attribute + " guardada"
+		text = "Información guardada"
 		return speech, text
 
 
@@ -217,6 +248,9 @@ class Teodoro(System, Applications, Calendar):
 			return response
 
 		elif bool([match for match in self.Commands["Users"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+
 			list_of_words = query.split()
 			name = list_of_words[list_of_words.index("nombre") + 1]
 			name2find = {"nombre": name}
@@ -228,22 +262,41 @@ class Teodoro(System, Applications, Calendar):
 				action = "remove"
 			speech,text = self.actionUser(action, name2find, name)
 			self.speak(speech)
-			self.GUI("Show", text = text, prev_window = window)
+			self.GUI("Show", text = text)
 			response = 0
 			return response
 
 		elif bool([match for match in self.Commands["NewInformation"] if(match in query)]):
+			if window is not None:
+				self.GUI("Close", prev_window=window)
+			
 			self.speak("Perfecto, dime primero cómo vamos a llamar esta nueva información")
 			field, window = self.repeat()
 			if isinstance(field, tuple):
 				field = " ".join(field)
-			self.speak("Bien, y ahora dime qué quieres que apunte sobre " + field)
-			attribute, window = self.repeat()
-			if isinstance(attribute, tuple):
-				attribute = " ".join(attribute)
+			if field == "contraseña":
+				if self.User != "usuario":
+					password = self.GUI("Text", "secret", prev_window = window)
+					password = password.encode('utf-8')
+					salt = bcrypt.gensalt()
+					newHash = bcrypt.hashpw(password, salt)
+					field = ["_salt", "_hash"]
+					attribute = [salt.decode("utf-8"), newHash.decode("utf-8")]
+				else:
+					speech = "No puedes darle contraseña al usuario por defecto"
+					text = "Operación denegada"
+					self.speak(speech)
+					self.GUI("Show", text = text)
+					response = 0
+					return response
+			else:
+				self.speak("Bien, y ahora dime qué quieres que apunte sobre " + field)
+				attribute, window = self.repeat()
+				if isinstance(attribute, tuple):
+					attribute = " ".join(attribute)
 			speech, text = self.newUserInfo(field, attribute)
 			self.speak(speech)
-			self.GUI("Show", text = text, prev_window = window)
+			self.GUI("Show", text = text)
 			response = 0
 			return response
 		
@@ -260,7 +313,7 @@ class Teodoro(System, Applications, Calendar):
 			except:
 				self.speak("Parece que no tienes una foto asociada a tu usuario")
 
-			info = self.db["Users"].find_one({"nombre": self.User}, {"_id":0})
+			info = self.db["Users"].find_one({"nombre": self.User}, {"_id":0, "_salt":0, "_hash":0, "_CalendarsID":0})
 			self.speak("Lo que sé de ti es: ")
 			for k, v in info.items():
 				self.speak(k + v)
@@ -331,7 +384,7 @@ class Teodoro(System, Applications, Calendar):
 		elif bool([match for match in self.Commands["Song"] if(match in query)]):
 			speech, text = self.spotify("song")
 			self.speak(speech)
-			self.GUI("Show", text = text, size = 16, prev_window = window) 
+			self.GUI("Show", text = text, prev_window = window) 
 			response = 0
 			return response
 			
@@ -359,7 +412,7 @@ class Teodoro(System, Applications, Calendar):
 		elif bool([match for match in self.Commands["Reminder"] if(match in query)]):  # "(Crea un) recordatorio de nombre 'Nombre' para el 'Día' a las 'Hora'"
 			speech, text = self.setReminder(query)
 			self.speak(speech)
-			self.GUI("Show", text = text, size = 16, prev_window = window) 
+			self.GUI("Show", text = text, prev_window = window) 
 			response = 0
 			return response
 
@@ -403,7 +456,7 @@ class Teodoro(System, Applications, Calendar):
 
 			speech, text = self.mathOperation(operation, number_1, number_2)
 			self.speak(speech)
-			self.GUI("Show", text = text, size = 16, prev_window = window) 
+			self.GUI("Show", text = text, prev_window = window) 
 			response = 0
 			return response
 
@@ -416,23 +469,40 @@ class Teodoro(System, Applications, Calendar):
 			return response
 
 		elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
-			speech, text = self.getCalendar(query)
-			if speech == -1:
-				self.GUI("Show", text="Petición incorrecta", prev_window=window)
-				response = -1
-			elif speech != None:
-				self.speak(speech)
-				self.GUI("GetCalendar", text = text, size = 12, geometry = "800x600", prev_window = window)
-				response = 0
+			if self.CalendarsID:
+				speech, text = self.getCalendar(query)
+				if speech == -1:
+					self.GUI("Show", text="Petición incorrecta", prev_window=window)
+					response = -1
+				elif speech != None:
+					self.speak(speech)
+					self.GUI("GetCalendar", text = text, size = 12, geometry = "800x600", prev_window = window)
+					response = 0
+				else:
+					self.speak("Credenciales actualizadas")
+					response = 0
+				return response
 			else:
-				self.speak("Credenciales actualizadas")
+				self.GUI("Show", text="Usted no tiene permiso \npara acceder a estas funcionalidades", prev_window=window)
 				response = 0
-			return response
+				return response
 
 		elif bool([match for match in self.Commands["SetCalendar"] if(match in query)]): # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' a las X de nombre X "
-			response = self.setCalendar(query, window)
-			return response
-			
+			if self.CalendarsID:
+				speech, text = self.setCalendar(query, window)
+				if speech == -1:
+					self.GUI("Show", text="Petición incorrecta", prev_window=window)
+					response = -1
+				else:
+					self.speak(speech)
+					self.GUI("Show", text = text, prev_window = window) 
+					response = 0
+				return response
+			else:
+				self.GUI("Show", text="Usted no tiene permiso \npara acceder a estas funcionalidades", prev_window=window)
+				response = 0
+				return response
+
 		elif bool([match for match in self.Commands["Shutdown"] if(match in query)]):
 			self.shutdown()
 			response = 0
@@ -487,7 +557,8 @@ def takeQuery(Teo):
 				query = query.lower()
 				response = Teo.getAction(query, window)
 				if response != 0:
-					Teo.GUI("Close", prev_window = window)
+					if window is not None:
+						Teo.GUI("Close", prev_window = window)
 					Teo.speak("¿Puede repetir su petición?")
 					query, window = Teo.repeat()
 					Teo.getAction(query, window)

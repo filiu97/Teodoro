@@ -18,14 +18,7 @@ class Calendar(Engine):
         self.Numbers = Numbers
         self.Months = Months
         
-        scopes = ['https://www.googleapis.com/auth/calendar']
-        flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
-        try:
-            self.__credentials = pickle.load(open("token.pkl", "rb")) 
-        except:
-            # Para hacerlo por primera vez, las credenciales
-            self.__credentials = flow.run_console()
-            pickle.dump(self.__credentials, open("token.pkl", "wb")) 
+        self.__credentials = pickle.load(open("token.pkl", "rb")) 
         self.service = build("calendar", "v3", credentials=self.__credentials)
 
         Engine.__init__(self, self.Names, pause_thr = 0.8)
@@ -252,8 +245,7 @@ class Calendar(Engine):
         list_of_words = query.split()
         time_unit = "para"
         if time_unit not in list_of_words:
-            self.GUI("Show", text="Petición incorrecta", prev_window=window)
-            return -1
+            return -1, -1
         if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
             time_str = "hoy"
             today = datetime.today()
@@ -307,9 +299,10 @@ class Calendar(Engine):
 
         time_str = hours_str #+ " " + hour_format
         summary = list_of_words[-1]
-        print(time_str)
-
         description, location = self.GUI("SetCalendar", geometry="800x400", prev_window=window)
-
         self.create_event(time_str,summary.title(), description=description, location=location)
-        return 0
+
+        speech = "Evento creado correctamente"
+        text = "Evento creado"
+
+        return speech, text
