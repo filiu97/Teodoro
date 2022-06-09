@@ -36,10 +36,13 @@ class Teodoro(System, Applications, Calendar):
 	"""
 	
 	def __init__(self,
-				mongo_key = "mongodb+srv://filiu:teodoro@teodoro.ocpsz.mongodb.net/KnowledgeBase?retryWrites=true&w=majority",
 				default_user = "filiu",
 				del_speak = True):
 		
+		file = open(".MongoDBKey", 'r')
+		mongo_key = file.read()
+		file.close()
+
 		self.client = MongoClient(mongo_key)
 		self.db = self.client.KnowledgeBase
 		self.fs = gridfs.GridFS(self.db)
@@ -48,8 +51,7 @@ class Teodoro(System, Applications, Calendar):
 		self.__defaultSalt = "$2b$12$rPkLBpwSB34yL8nrlg21uu"
 		self.__defaultHash = "$2b$12$rPkLBpwSB34yL8nrlg21uuqHjoeJdQheW6dtnYggqvUbvJFRZ0T/C"
 
-
-		name, password = self.GUI("Login", text = default_user)
+		name, password, phone = self.GUI("Login", text = default_user)
 		try:
 			info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_salt":1, "_hash":1})
 			mySalt = info["_salt"].encode('utf-8')
@@ -60,13 +62,16 @@ class Teodoro(System, Applications, Calendar):
 			if myHash == newHash:
 				self.GUI("Show", "Inicialización correcta.\nBienvenido " + name + "!")
 				self.User = name
-				info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_CalendarsID":1})
+				info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_CalendarsID":1, "_PhoneFunctions":1})
 				self.CalendarsID = info["_CalendarsID"]
+				self.PhoneFunctions = info["_PhoneFunctions"]
 
 		except:
 			self.User = self.__defaultUser
 			self.GUI("Show", "Has inicializado como \n " + self.User + ".\nBienvenido!")
-			self.CalendarsID = None
+			info = self.db["Users"].find_one({"nombre": self.User}, {"_id":0, "_CalendarsID":1, "_PhoneFunctions":1})
+			self.CalendarsID = info["_CalendarsID"]
+			self.PhoneFunctions = info["_PhoneFunctions"]
 
 		self.general = []
 		for collection in self.db.list_collection_names():
@@ -99,21 +104,14 @@ class Teodoro(System, Applications, Calendar):
 		self.SpotifyActions = self.applications[0]["SpotifyActions"]
 		self.MathOperations = self.applications[0]["MathOperations"]
 
-		# self.calendar = []
-		# for collection in self.db.list_collection_names():
-		# 	if collection == "Calendar":
-		# 		for element in self.db[collection].find({}):
-		# 			self.calendar.append(element)
-		
-		# self.CalendarsID = self.calendar[0]["CalendarsID"]
-
 		self.del_speak = del_speak
 
-		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		self.sock.bind(("",50000))
-		self.sock.setblocking(0)
-		self.macroTeodoro = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/Teodoro"
-		webbrowser.open(self.macroTeodoro)
+		if phone.get() and self.PhoneFunctions:
+			self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+			self.sock.bind(("",50000))
+			self.sock.setblocking(0)
+			self.macroTeodoro = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/Teodoro"
+			webbrowser.open(self.macroTeodoro)
 
 		System.__init__(self)
 		Applications.__init__(self, self.SpotifyActions, self.MathOperations, self.Numbers)
@@ -157,9 +155,7 @@ class Teodoro(System, Applications, Calendar):
 		
 	def actionUser(self, action, name2find, name):
 		if action == "new":
-			self.db["Users"].insert_one(name2find)
-			newvalues = { "$set": { "_CalendarsID":None, "_salt":self.__defaultSalt, "_hash":self.__defaultHash } }
-			self.db["Users"].update_one(name2find, newvalues)
+			self.db["Users"].insert_one({"nombre" : name, "_CalendarsID" : {"personal" : None, "trello" : None}, "_PhoneFunctions":False, "_salt":self.__defaultSalt, "_hash":self.__defaultHash})
 			speech = "Nuevo usuario creado"
 			text = "Nuevo usuario de nombre: " + name + "\ncreado correctamente"
 			
@@ -175,8 +171,9 @@ class Teodoro(System, Applications, Calendar):
 				if myHash == newHash:
 					self.GUI("Show", "Inicialización correcta.\nBienvenido " + name + "!")
 					self.User = name
-					info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_CalendarsID":1})
+					info = self.db["Users"].find_one({"nombre": name}, {"_id":0, "_CalendarsID":1, "_PhoneFunctions":1})
 					self.CalendarsID = info["_CalendarsID"]
+					self._PhoneFunctions = info["_PhoneFunctions"]
 				speech = "Cambio de usuario realizado"
 				text = "Nuevo usuario: " + name
 				
@@ -313,7 +310,7 @@ class Teodoro(System, Applications, Calendar):
 			except:
 				self.speak("Parece que no tienes una foto asociada a tu usuario")
 
-			info = self.db["Users"].find_one({"nombre": self.User}, {"_id":0, "_salt":0, "_hash":0, "_CalendarsID":0})
+			info = self.db["Users"].find_one({"nombre": self.User}, {"_id":0, "_salt":0, "_hash":0, "_CalendarsID":0, "_PhoneFunctions":0})
 			self.speak("Lo que sé de ti es: ")
 			for k, v in info.items():
 				self.speak(k + v)
@@ -463,9 +460,14 @@ class Teodoro(System, Applications, Calendar):
 		elif bool([match for match in self.Commands["Phone"] if(match in query)]): # Encuentra mi teléfono/móvil (y similares)
 			if window is not None:
 				self.GUI("Close", prev_window=window)
-			speech = self.findPhone()
-			self.speak(speech)
-			response = 0
+			
+			if self.macroPhone:
+				speech = self.findPhone()
+				self.speak(speech)
+				response = 0
+			else: 
+				self.speak("Lo siento, no puedo realizar esa operación")
+				response = 0
 			return response
 
 		elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]): # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
@@ -543,7 +545,7 @@ def takeQuery(Teo):
 
 	Teo.Hello() 
 	os.system("clear")
-	lastsave = 0
+	lastsave = time()
 	
 	while(True): 
 		
@@ -567,7 +569,8 @@ def takeQuery(Teo):
 				if speech != None:
 					Teo.speak(speech)
 					Teo.GUI("Show", text = text)
-				Teo.checkPhone()
+				if Teo.PhoneFunctions:
+					Teo.checkPhone()
 				lastsave = time()
 		
 				

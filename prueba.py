@@ -313,10 +313,10 @@ import color
 # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 # sock.bind(("",50000))
 # while True:
-#     data, _ = sock.recvfrom(1)
+#     data, _ = sock.recvfrom(1024)
 #     code = data.decode("utf-8")
-#     if code == 'p':
-#         print("Whatsapp recibido!")
+#     if code.startswith('on'):
+#         print(code[2:])
 
 # number = str(datetime.today().date())
 # print(number)
@@ -405,3 +405,19 @@ import color
 # v =gTTS(text="Hola, ¿qué tal estás?",lang="es",slow=False) 
 # v.save("name.mp3") 
 # playsound("name.mp3")
+
+# file = open(".MongoDBKey", 'r')
+# mongo_key = file.read()
+# print(mongo_key)
+# file.close()
+
+
+from time import time
+
+lastsave = time()
+
+while(True): 
+    if time() - lastsave > 10:
+        print("YA!")
+        lastsave = time()
+        break

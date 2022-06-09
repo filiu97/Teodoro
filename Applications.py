@@ -20,7 +20,7 @@ class Applications(Engine):
         self.mathOperations = MathOperations
         self.Numbers = Numbers
         
-        self.macroPhone = "UNLOCK_MOBILE 14335"
+        self.macroPhone = None
         self.macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
 
         wikipedia.set_lang("es") 
@@ -213,10 +213,10 @@ class Applications(Engine):
         try:
             data, _ = self.sock.recvfrom(1024)
             code = data.decode("utf-8")
-            if code == 'p':
-                self.speak("Prueba")
-            elif code == 'c':
-                self.speak(self.User + ", te están llamando")
+            if code.startswith('on'):
+                self.macroPhone = code[2:]
+            # elif code == 'c':
+            #     self.speak(self.User + ", te están llamando")
             elif code == 'b':
                 self.speak(self.User + ", te queda poca batería en el móvil")
             elif code == 'f':

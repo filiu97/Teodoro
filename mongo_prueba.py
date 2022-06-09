@@ -138,8 +138,11 @@ if __name__ == "__main__":
     #     if MathOperations[key]["keyword"] in query:
     #         print(eval(MathOperations[key]["operation"]))
 
-    # info = db["Users"].find_one({"nombre": "filiu"}, {"_id":0, "_salt":1})
-    # print(info["_salt"]) 
+    # info = db["Users"].find_one({"nombre": "filiu"}, {"_id":0, "_CalendarsID":1, "_PhoneFunctions":1})
+    # CalendarsID = info["_CalendarsID"]
+    # PhoneFunctions = info["_PhoneFunctions"]
+    # print(CalendarsID)
+    # print(PhoneFunctions)
 
 
     # field = ["caca", "pedo"]
@@ -149,8 +152,7 @@ if __name__ == "__main__":
     #     newvalues = { "$set": { field[i] : attribute[i] } }
     #     db["Users"].update_one(name2find, newvalues)
 
-    usuario = db["Users"].find_one({"nombre" : "usuario"})
-    try:
-        print(usuario["cosa"])
-    except:
-        pass
+   
+    # db["Users"].insert_one({"nombre" : "caca", "_CalendarsID" : {"personal" : None, "trello" : None}, "_PhoneFunctions":False, "_salt":"salt", "_hash":"hash"})
+    # newvalues = { "$set": { "_CalendarsID" : {"personal" : None, "trello" : None}, "_salt":"salt", "_hash":"hash" } }
+    # db["Users"].update_one("caca", newvalues)

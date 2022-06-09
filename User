@@ -1,3 +1,0 @@
-user: filiu
-password: teodoro
-url = mongodb+srv://filiu:teodoro@teodoro.ocpsz.mongodb.net/KnowledgeBase?retryWrites=true&w=majority

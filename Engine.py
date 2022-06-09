@@ -9,7 +9,7 @@ import requests
 
 class Engine():
 
-    def __init__(self, Names, pause_thr = 0.8):
+    def __init__(self, Names, pause_thr = 1):
         
         self.Names = Names
         r = sr.Recognizer()
@@ -219,19 +219,27 @@ class Engine():
                 column = 1,
                 sticky = W)
 
-            frame2 = Frame(
-                window,
-                bg = bg
-            )
-            frame2.pack()
-
-            Label(
-                frame2,
-                text = close_label,
-                font = (font2, size-6, "bold"),
-                padx = 0,
+            phone = IntVar()
+            Checkbutton(
+                frame1,
+                text = " Usar funcionalidades móvil", 
                 pady = 10,
-                bg = bg).grid(column=0, row=2)
+                variable = phone).grid(row = 2, column = 1, sticky = W)
+
+
+            # frame2 = Frame(
+            #     window,
+            #     bg = bg
+            # )
+            # frame2.pack()
+
+            # Label(
+            #     frame2,
+            #     text = close_label,
+            #     font = (font2, size-6, "bold"),
+            #     padx = 0,
+            #     pady = 10,
+            #     bg = bg).grid(column=0, row=2)
 
             frame3 = Frame(
                 window,
@@ -247,7 +255,7 @@ class Engine():
 
             window.mainloop()
 
-            return name, password
+            return name, password, phone
 
         elif action == "Status":
             label = Label(

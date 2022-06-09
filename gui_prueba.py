@@ -83,20 +83,27 @@ def GUI(action, text = None, size = 16,
                 row = 1, 
                 column = 1,
                 sticky = W)
-
-            frame2 = Frame(
-                window,
-                bg = bg
-            )
-            frame2.pack()
-
-            Label(
-                frame2,
-                text = close_label,
-                font = (font2, size-6, "bold"),
-                padx = 0,
+            
+            phone = IntVar()
+            Checkbutton(
+                frame1,
+                text = " Usar funcionalidades móvil", 
                 pady = 10,
-                bg = bg).grid(column=0, row=2)
+                variable = phone).grid(row = 2, column = 1, sticky = W)
+
+            # frame2 = Frame(
+            #     window,
+            #     bg = bg
+            # )
+            # frame2.pack()
+
+            # Label(
+            #     frame2,
+            #     text = close_label,
+            #     font = (font2, size-6, "bold"),
+            #     padx = 0,
+            #     pady = 5,
+            #     bg = bg).grid(column=0, row=2)
 
             frame3 = Frame(
                 window,
@@ -112,7 +119,7 @@ def GUI(action, text = None, size = 16,
 
             window.mainloop()
 
-            return name, password
+            return name, password, phone
 
         elif action == "Status":
             label = Label(
@@ -392,10 +399,14 @@ def get_Text_entry(text_entry):
 # print(text)
 # GUI("GetCalendar", text = text, size = 12, geometry = "800x600")
 
-# name, password = GUI("Login", "filiu")
+name, password, phone = GUI("Login", "filiu")
 
-# print(name)
-# print(password)
 
-password = GUI("Text", "secret")
+print(name)
 print(password)
+print(phone.get())
+if phone.get():
+    print("Okay")
+
+# password = GUI("Text", "secret")
+# print(password)
