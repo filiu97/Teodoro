@@ -1,0 +1,171 @@
+{
+"Name":[
+	"cómo te llamas",
+	"cómo te puedo llamar",
+	"dime tu nombre",
+	"quién eres"
+	],
+"Greetings":[
+	"hola",
+	"qué tal",
+	"cómo te va",
+	"hey"
+	],
+"Cheer up":[
+	"anímame",
+	"cómo te puedo llamar",
+	"dime tu nombre",
+	"quién eres"
+	],
+"Secret":[
+	"dime un secreto",
+	"cuéntame un secreto",
+	"tienes secretos"	
+	],
+"Today":[
+	"qué día es hoy",
+	"hoy qué es",
+	"a qué fecha estamos"
+	],
+"Time":[
+	"qué hora es",
+	"tienes hora",
+	"dime la hora"
+	],
+"Users":[
+	"usuario"
+	],
+"NewInformation":[
+	"contar algo sobre mí",
+	"contar algo nuevo sobre mi",
+	"información nueva",
+	"nueva información"
+	],
+"Information":[
+	"dime algo sobre mí",
+	"qué sabes sobre mí",
+	"qué sabes de mí",
+	"cuéntame algo sobre mí",
+	"cuéntame algo de mí",
+	"dime algo de mí"
+	],
+"ChangeVoice":[
+	"cambiar la voz",
+	"cambiar tu voz",
+	"qué sabes de mí",
+	"modificar la voz",
+	"modificar tu voz"
+	],
+"Google":[
+	"en google"
+	],
+"Wikipedia":[
+	"en wikipedia"
+	],
+"Youtube":[
+	"en youtube"
+	],
+"Play":[
+	"pon la música",
+	"reanuda",
+	"reproduce",
+	"play",
+	"reproducir",
+	"reanudar"
+	],
+"Pause":[
+	"para la música",
+	"pausa",
+	"pause"
+	],
+"Next":[
+	"pasa de canción",
+	"pasa la canción",
+	"pasa a la siguiente",
+	"siguiente canción",
+	"no me gusta esta canción",
+	"odio esta canción",
+	"quita esta canción",
+	"pásala"
+	],
+"Previous":[
+	"canción anterior",
+	"anterior canción",
+	"vuelve a la anterior"
+	],
+"Stop":[
+	"quita la música",
+	"quita spotify",
+	"cierra spotify"
+	],
+"Song":[
+	"qué canción es esta",
+	"cual es esta canción",
+	"cómo se llama esta canción",
+	"dime el nombre de esta canción"
+	],
+"Weather":[
+	"tiempo hace"
+	],
+"Alarm":[
+	"alarma"
+	],
+"Reminder":[
+	"recordatorio"
+	],
+"Math":[
+	"cuánto es",
+	"calcula",
+	"calcular",
+	"calcúlame",
+	"cuánto da"
+	],
+"Phone":[
+	"encuentra mi teléfono",
+	"encuentra mi móvil",
+	"dónde está mi teléfono",
+	"dónde está mi móvil",
+	"encuentra móvil",
+	"encuentra teléfono",
+	"dónde he dejado mi móvil",
+	"dónde he dejado mi teléfono"
+	],
+"GetCalendar":[
+	"eventos",
+	"calendario",
+	"tareas"
+	],
+"SetCalendar":[
+	"crear un evento",
+	"crea un evento",
+	"creame un evento",
+	"hacer un evento",
+	"haz un evento",
+	"hazme un evento"
+	],
+"Shutdown":[
+	"apaga el ordenador",
+	"apagado",
+	"apagar"
+	],
+"Suspend":[
+	"suspende el ordenador",
+	"suspensión",
+	"suspender"
+	],
+"Restart":[
+	"reinicia el ordenador",
+	"reinicio",
+	"reiniciar"	
+	],
+"Nothing":[
+	"nada",
+	"me he equivocado"	
+	],
+"Del":[
+	"apágate",
+	"adiós",
+	"hasta luego",
+	"quítate"
+	]
+}

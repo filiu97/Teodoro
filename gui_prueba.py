@@ -12,6 +12,7 @@ def GUI(action, text = None, size = 16,
                 return
 
         window = Tk()
+        print(type(window))
         window.geometry(geometry)
         # bg_img = PhotoImage(file = "bg.png")
         bg = "gainsboro"

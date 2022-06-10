@@ -1,9 +1,9 @@
+
 import speech_recognition as sr 
 import pyttsx3 
 from tkinter import *
 from tkinter import scrolledtext
 from tkinter import font
-from time import sleep, time
 import requests
 
 
