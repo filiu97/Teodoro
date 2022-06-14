@@ -28,6 +28,19 @@ class Teodoro(System, Applications, Calendar):
     usuario, además de contener el bucle de acción del sistema. Supone la clase principal del asistente, 
     en el que se inicia la base de conocimiento del asistente a través de la conexión con MongoDB.
 
+    Funcionalidades:
+        - Login del usuario.
+        - Saludo.
+        - Enunciado de los nombres por los que responde el asistente.
+        - Enunciado del día actual.
+        - Enunciado de la hora actual.
+        - Acciones sobre los usuarios:
+            > Crear nuevo.
+            > Cambiar de usuario.
+            > Eliminar usuario.
+        - Incorporación de nueva información sobre el usuario actual.
+        - Lógica de la ejecución de todas las funcionalidades del sistema.
+
     Args:
             - System (class): Superclase que contiene las funcionalidades relacionadas con el control del ordenador.
             - Applications (class): Superclase que contiene las funcionalidades relacionadas con el control de
@@ -38,7 +51,7 @@ class Teodoro(System, Applications, Calendar):
 
     def __init__(self, default_user="filiu", del_speak=True):
         """
-        Esta función es la que inicializa todos los atributos y parámetros de la clase Teodoro. Además, como esta clase
+        Función de inicialización todos los atributos y parámetros de la clase Teodoro. Además, como esta clase
         es hija de otras clases, es en esta función de inicialización donde se instancia estas clases.
         En esta función se produce:
             - Extracción de la clave para acceder a la base de conocimiento en MongoDB.
@@ -159,6 +172,18 @@ class Teodoro(System, Applications, Calendar):
                     {"nombre": name}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
                 self.CalendarsID = info["_CalendarsID"]
                 self.PhoneFunctions = info["_PhoneFunctions"]
+            elif first == True:
+                self.User = self.__defaultUser
+                self.GUI("Show", "Has inicializado como \n " +
+                        self.User + ".\nBienvenido!")
+                info = self.db["Users"].find_one(
+                    {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
+                self.CalendarsID = info["_CalendarsID"]
+                self.PhoneFunctions = info["_PhoneFunctions"]
+            else:
+                speech = "No se ha podido realizar el cambio de usuario"
+                text = "Operación denegada"
+                return speech, text
         except:
             if first == True:
                 self.User = self.__defaultUser
@@ -454,7 +479,6 @@ class Teodoro(System, Applications, Calendar):
             response = self.wikipedia(query)
             if response is None:
                 self.speak("No se ha podido encontrar la página solicitada")
-            response = 0
             return response
 
         elif bool([match for match in self.Commands["Youtube"] if(match in query)]):  # Funcionalidad *Youtube*
@@ -503,10 +527,10 @@ class Teodoro(System, Applications, Calendar):
             if window is not None:
                 self.GUI("Close", prev_window=window)
 
-            speech, image = self.weather(query)
+            speech, place = self.weather(query)
             self.speak(speech)
-            os.system("display " + image + ".png")
-            # self.GUI("Image", image = image + ".png", geometry = "1750X1000", prev_window = window)
+            os.system("display " + place + ".png")
+            # self.GUI("Image", image = place + ".png", geometry = "1750X1000", prev_window = window)
             response = 0
             return response
 
@@ -531,47 +555,7 @@ class Teodoro(System, Applications, Calendar):
 
         # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
         elif bool([match for match in self.Commands["Math"] if(match in query)]):  # Funcionalidad *Math*
-            list_of_words = query.split()
-            operation = None
-            for key in self.MathOperations.keys():
-                if self.MathOperations[key]["keyword"] in query:
-                    operation = self.MathOperations[key]["operation"]
-                    if self.MathOperations[key]["keyword"] == "elevado":
-                        number_1 = list_of_words[list_of_words.index(
-                            "elevado") - 1]
-                        if list_of_words[list_of_words.index("elevado") + 2] == "cuadrado":
-                            number_2 = "2"
-                        elif list_of_words[list_of_words.index("elevado") + 2] == "cubo":
-                            number_2 = "3"
-                        else:
-                            number_2 = list_of_words[list_of_words.index(
-                                "elevado") + 2]
-                    elif self.MathOperations[key]["keyword"] == "raíz cuadrada" or self.MathOperations[key]["keyword"] == "raíz cúbica":
-                        number_1 = list_of_words[list_of_words.index(
-                            "raíz") + 3]
-                        number_2 = "-1"
-                    else:
-                        number_1 = list_of_words[list_of_words.index(
-                            self.MathOperations[key]["keyword"]) - 1]
-                        number_2 = list_of_words[list_of_words.index(
-                            self.MathOperations[key]["keyword"]) + 1]
-            if operation == None:
-                self.speak("Lo siento, no puedo realizar esa operación")
-                response = 0
-                return response
-
-            key_list = list(self.Numbers.keys())
-            val_list = list(self.Numbers.values())
-            try:
-                position = val_list.index(number_1)
-                number_1 = int(key_list[position])
-            except:
-                number_1 = int(number_1)
-            try:
-                position = val_list.index(number_2)
-                number_2 = int(key_list[position])
-            except:
-                number_2 = int(number_2)
+            
 
             speech, text = self.mathOperation(operation, number_1, number_2)
             self.speak(speech)

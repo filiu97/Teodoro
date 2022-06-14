@@ -411,13 +411,12 @@ import color
 # print(mongo_key)
 # file.close()
 
+import json
 
-from time import time
+f = open("Commands.json",'r')
 
-lastsave = time()
+json_object = json.loads(f)
 
-while(True): 
-    if time() - lastsave > 10:
-        print("YA!")
-        lastsave = time()
-        break
+json_formatted_str = json.dumps(json_object, indent=2)
+
+print(json_formatted_str)
