@@ -49,6 +49,8 @@ class Applications(Engine):
             gráfica de usuario (GUI) 
     """
 
+#   ******************  __init__  ******************
+
     def __init__(self, SpotifyActions, MathOperations, Numbers):
         """
         Función de inicialización todos los atributos y parámetros de la clase Applications. Además se instancia la superclase 
@@ -75,7 +77,10 @@ class Applications(Engine):
         self.s_time_unit.setSwitch_time_unit()	#Creador del switch
 
         # Instanciación de la superclase Enigne de la que hereda la clase Applications
-        Engine.__init__(self, self.Names, pause_thr = 0.8)
+        Engine.__init__(self, self.Names)
+
+
+#   ******************  Spotify  ******************
 
     def spotify(self, action, window = None):
         """
@@ -115,8 +120,11 @@ class Applications(Engine):
         else:
             status = os.system(self.SpotifyActions[action])
             if action == "previous":
-                os.system(self.SpotifyActions[action])
+                status = os.system(self.SpotifyActions[action])
             return status
+
+
+#   ******************  Búsquedas web  ******************
 
     def google(self, query):
         """
@@ -183,6 +191,9 @@ class Applications(Engine):
             video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
             webbrowser.open("https://www.youtube.com/watch?v=" + video_ids[0])
 
+
+#   ******************  Tiempo meteorológico  ******************
+
     def weather(self, query):
         """
         Función que realiza una búsqueda sobre las condiciones meterológicas de una determinada zona. El resultado es
@@ -212,6 +223,9 @@ class Applications(Engine):
             i+=1
         speech = "En " + place + ",  está " + desc + " y hace " + str(temp) + " grados."
         return speech, place
+
+
+#   ******************  Alarmas  ******************
 
     def setAlarm(self, query):
         """
@@ -262,6 +276,8 @@ class Applications(Engine):
             self.speak(speech)
         self.GUI("Show", text = text)
     
+#   ******************  Recordatorios  ******************
+
     def setReminder(self, query):
         """
         Función que realiza la creación de recordatorios. Estos son guardados en la base de conocimientos.
@@ -345,6 +361,9 @@ class Applications(Engine):
         
         return speech, text
 
+
+#   ******************  Operaciones matemáticas  ******************
+
     def mathOperation(self, query):
         """
         Función que realiza las operaciones matemáticas programadas en la base de conocimiento.
@@ -402,6 +421,9 @@ class Applications(Engine):
         speech = str(result)
         text = str(result)
         return speech, text
+
+
+#   ******************  Funcionalidades del teléfono móvil  ******************
 
     def checkPhone(self):
         """

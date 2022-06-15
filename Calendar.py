@@ -11,22 +11,61 @@ import iso8601
 
 
 class Calendar(Engine):
-    
-    def __init__(self, CalendarsID, Numbers, Months):
 
+    """ Clase Calendar.
+
+    Clase de gestión del calendario de Google del usuario. En ella se establece la conexión con la API creada y configurada 
+    anteriormente para su utilización. Contiene las funcionalidades:
+        - Mostrar los eventos del calendario de Google y del Trello del usuario.
+        - Creación de eventos en el calendario de Google del usuario.
+
+    Args:
+        - Engine (class): Superclase que contiene las funcionalidades relacionadas con el control del reconocimiento y
+        la emisión de voz, la comprobación de la conexión a Internet del usuario, cambio de voz del asistente y la interfaz
+        gráfica de usuario (GUI).
+
+    """
+
+#   ******************  __init__  ******************
+
+    def __init__(self, CalendarsID, Numbers, Months):
+        """
+        Función de inicialización todos los atributos y parámetros de la clase Calendar. Se inicializa el calendario y
+        se instancia la superclase Engine, de la que se heredan todos sus atributos y métodos.
+
+        Args:
+            CalendarsID (dict): ID's del calendarios de Google y la conexión con las tareas de Trello en el mismo calendario Google.
+            Numbers (dict): Diccionario que contiene la transcripción de algunos números para el correcto funcionamiento del sistema.
+            Months (dict): Diccionario que contiene la transcripción de los meses para el correcto funcionamiento del sistema.
+        """
         self.CalendarsID = CalendarsID
         self.Numbers = Numbers
         self.Months = Months
         
+        # Inicialización del calendario
         self.__credentials = pickle.load(open("token.pkl", "rb")) 
-        self.service = build("calendar", "v3", credentials=self.__credentials)
+        self.service = build("calendar", "v3", credentials = self.__credentials)
 
-        Engine.__init__(self, self.Names, pause_thr = 0.8)
+        # Instanciación de la superclase Enigne de la que hereda la clase Calendar
+        Engine.__init__(self, self.Names)
         
 
+#   ******************  Funciones auxiliares de Calendar  ******************
 
     def get_date_hours(self, date_input, time_format = "date"):
+        """
+        Función que devuelve la fecha de un evento en diversos formatos:
+            - Fecha completa ("date").
+            - Hora ("hours").
+            - Día ("day_complete").
 
+        Args:
+            date_input (???): _description_
+            time_format (str, optional): Variable de texto que diferencia entre los formatos disponibles. Defaults to "date".
+
+        Returns:
+            date_obj: La fecha en el formato deseado.
+        """
         date_obj = iso8601.parse_date(date_input)
         if time_format == "date":
             return date_obj.strftime('%H:%M del %d-%m-%Y ')
@@ -36,39 +75,77 @@ class Calendar(Engine):
             return date_obj.strftime('%d-%m-%Y ')
 
     def get_relative_events(self, calendarID, duration, offset = 0, maxResults = 50):
+        """
+        Función que devuelve los eventos que tienen lugar en un tiempo relativo respecto a hoy. Por ejemplo, los eventos
+        de esta semana, o del próximo mes.
+
+        Args:
+            calendarID (str): ID del calendarios de Google.
+            duration (int): Número de días del intervalo buscado.
+            offset (int, optional): Desplazamiento en días desde el día actual al primero del intervalo buscado. Defaults to 0.
+            maxResults (int, optional): Número máximo de resultados que se devuelven. Defaults to 50.
+
+        Returns:
+            eventsResult(???): Listado de eventos.
+        """
         today = datetime.today()
         today = datetime.combine(today, datetime.min.time())
-        today = today + relativedelta(days=offset)
-        diff = today + relativedelta(days=duration)
+        today = today + relativedelta(days = offset)
+        diff = today + relativedelta(days = duration)
         tmin = today.isoformat('T') + "Z"
         tmax = diff.isoformat('T') + "Z"
         eventsResult = self.service.events().list(
-            calendarId=calendarID,
-            timeMin=tmin,
-            timeMax=tmax,
-            maxResults=maxResults,
-            singleEvents=True,
-            orderBy='startTime',
+            calendarId = calendarID,
+            timeMin = tmin,
+            timeMax = tmax,
+            maxResults = maxResults,
+            singleEvents = True,
+            orderBy = 'startTime',
         ).execute()
         return eventsResult
 
     def get_absolute_events(self, calendarID, day_str, maxResults = 50):
+        """
+        Función que devuelve los eventos que tienen lugar en una fecha concreta. Por ejemplo, hoy, mañana, pasado mañana o 
+        un día concreto.
+
+        Args:
+            calendarID (str): ID del calendarios de Google.
+            day_str (???): La fecha del día solicitado.
+            maxResults (int, optional): Número máximo de resultados que se devuelven. Defaults to 50.
+
+        Returns:
+            eventsResult(???): Listado de eventos.
+        """
         matches = list(datefinder.find_dates(day_str))
         day = matches[0]
-        diff = day + relativedelta(days=1)
+        diff = day + relativedelta(days = 1)
         tmin = day.isoformat('T') + "Z"
         tmax = diff.isoformat('T') + "Z"
         eventsResult = self.service.events().list(
-            calendarId=calendarID,
-            timeMin=tmin,
-            timeMax=tmax,
-            maxResults=maxResults,
-            singleEvents=True,
-            orderBy='startTime',
+            calendarId = calendarID,
+            timeMin = tmin,
+            timeMax = tmax,
+            maxResults = maxResults,
+            singleEvents = True,
+            orderBy = 'startTime',
         ).execute()
         return eventsResult
 
-    def create_event(self, start_time_str, summary, duration=1, description=None, location=None):
+    def create_event(self, start_time_str, summary, duration = 1, description = None, location = None):
+        """
+        Función que crea un evento en el calendario.
+
+        Args:
+            start_time_str (???): Día de comienzo del evento.
+            summary (str): Título del evento.
+            duration (int, optional): Duración en horas del evento. Defaults to 1.
+            description (str, optional): Descripción del evento. Defaults to None.
+            location (str, optional): Localización del evento. Defaults to None.
+
+        Returns:
+            Respuesta de la petición a la API para la creación del evento.
+        """
         matches = list(datefinder.find_dates(start_time_str))
         if len(matches):
             start_time = matches[0]
@@ -98,8 +175,25 @@ class Calendar(Engine):
         return self.service.events().insert(calendarId = self.CalendarsID['personal'], body = event, sendNotifications = True).execute()
 
 
-    def getCalendar(self, query):
+#   ******************  getCalendar y setCalendar  ******************
 
+    def getCalendar(self, query):
+        """
+        Función que implementa toda la lógica de recepción de peticiones para mostrar eventos del calendario. Otorga muchas posibilidades:
+            - Hoy.
+            - Mañana.
+            - Pasado mañana.
+            - Fecha concreta.
+            - X semanas.
+            - X meses.
+
+        Args:
+            query (str): Cadena de texto de la frase que define el tiempo de los eventos buscados.
+
+        Returns:
+            speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
+            text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
+        """
         try:
             self.service = build("calendar", "v3", credentials=self.__credentials)
 
@@ -221,6 +315,7 @@ class Calendar(Engine):
                 text = str()
                 for event in eventsResult['items']:
                     if 'dateTime' in event['start'].keys():
+                        print(type(event['start']['dateTime']))
                         text += "   -" + event['summary'] + " a las " + self.get_date_hours(event['start']['dateTime'], time_format) + "\n"
                     else:
                         text += "   -" + event['summary'] + " el día " + self.get_date_hours(event['start']['date'], 'day_complete') + "\n"
@@ -236,10 +331,24 @@ class Calendar(Engine):
             flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
             self.__credentials = flow.run_console()
             pickle.dump(self.__credentials, open("token.pkl", "wb")) 
+            
             return None, None
 
     def setCalendar(self, query, window):
+        """
+        Función que implementa toda la lógica de recepción de peticiones para crear un evento en el calendario. Otorga muchas posibilidades:
+            - Hoy.
+            - Mañana.
+            - Pasado mañana.
+            - Fecha concreta.
+        Args:
+            query (str): Cadena de texto de la frase que define el tiempo de los eventos buscados.
+            window (tkinter.Tk, optional): Ventana de la interfaz de usuario.
 
+        Returns:
+            speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
+            text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
+        """
         self.service = build("calendar", "v3", credentials=self.__credentials)
         calendarID = self.CalendarsID['personal']
         list_of_words = query.split()

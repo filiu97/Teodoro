@@ -49,7 +49,9 @@ class Teodoro(System, Applications, Calendar):
             del usuario.
     """
 
-    def __init__(self, default_user="filiu", del_speak=True):
+#   ******************  __init__ y __del__  ******************
+
+    def __init__(self, default_name = "Teodoro", default_user = "filiu", del_speak = True):
         """
         Función de inicialización todos los atributos y parámetros de la clase Teodoro. Además, como esta clase
         es hija de otras clases, es en esta función de inicialización donde se instancia estas clases.
@@ -72,6 +74,7 @@ class Teodoro(System, Applications, Calendar):
             - Instanciación de las superclases de las que hereda la clase Teodoro.
 
         Args:
+            default_name (str, optional): El nombre del asistente por defecto del sistema. Defaults to "Teodoro".
             default_user (str, optional): El nombre del usuario por defecto del sistema. Defaults to "filiu".
             del_speak (bool, optional): Flag para permitir la salida de audio al terminar la ejecución del sistema. Defaults to True.
         """
@@ -100,36 +103,24 @@ class Teodoro(System, Applications, Calendar):
         self.Login(default_user)
 
         # Obtención de datos de la base de conocimiento
-        # General
-        self.general = []
-        for collection in self.db.list_collection_names():
-            if collection == "General":
-                for element in self.db[collection].find({}):
-                    self.general.append(element)
-        self.Names = self.general[0]["Names"]  # Names
+        response = self.ExtractKnowledgeBase(default_name)
 
-        keys = []
-        for i in range(len(self.general[0]["Time"]["Days"])):
-            keys.append(str(i+1))
-        self.Days = dict(zip(keys, self.general[0]["Time"]["Days"]))  # Days
+        # Errores por falta de información en la Base de Conocimiento
+        if response == -1:
+            self.__del__()
+        elif response == 1:
+            self.GUI("Show", text="Funcionalidad 'Today' no disponible.\nCompruebe la Base de Concimiento")
+        elif response == 2:
+            self.GUI("Show", text="Funcionalidades 'Today', 'getCalendar'\n y 'setCalendar' no disponibles.\nCompruebe la Base de Concimiento")
+        elif response == 3:
+            self.GUI("Show", text="Funcionalidades 'Reminder', 'Math', \n'getCalendar' y 'setCalendar'.\nCompruebe la Base de Concimiento")
+        elif response == 4:
+            self.GUI("Show", text="Funcionalidades de control de Spotify\n no disponibles.\n Compruebe la Base de Conocimiento")
+        elif response == 5:
+            self.GUI("Show", text="Funcionalidades 'Math' no disponible.\nCompruebe la Base de Concimiento")
 
-        keys = []
-        for i in range(len(self.general[0]["Time"]["Months"])):
-            keys.append(str(i+1))
-        self.Months = dict(zip(keys, self.general[0]["Time"]["Months"]))  # Months
-
-        self.Numbers = self.general[0]["Numbers"]  # Numbers
-        self.Commands = self.general[1]["Commands"]  # Commands
-
-        # Applications
-        self.applications = []
-        for collection in self.db.list_collection_names():
-            if collection == "Applications":
-                for element in self.db[collection].find({}):
-                    self.applications.append(element)
-
-        self.SpotifyActions = self.applications[0]["SpotifyActions"]  # Spotify Actions
-        self.MathOperations = self.applications[0]["MathOperations"]  # Math Operations
+        # Frase de error
+        self.errorStr = "Usted no tiene permiso \npara acceder a estas funcionalidades"
 
         # Instanciación de las superclases de las que hereda la clase Teodoro
         System.__init__(self)  # System
@@ -144,6 +135,9 @@ class Teodoro(System, Applications, Calendar):
         if self.del_speak:
             self.speak("Adiós " + self.User + ", que tenga un buen día")
         sys.exit()
+
+
+#   ******************  Login  ******************
 
     def Login(self, default_user, first = True):
         """
@@ -207,6 +201,103 @@ class Teodoro(System, Applications, Calendar):
             self.macroTeodoro = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/Teodoro"
             webbrowser.open(self.macroTeodoro)
 
+
+#   ******************  Extracción de información básica de la Base de Conocimiento  ******************
+
+    def ExtractKnowledgeBase(self, default_name):
+        """
+        Función que extrae la información básica de la base de conocimiento para el correcto funcionamiento del sistema.
+        En concreto, extrae información de las colecciones:
+            - *General*:
+                > *Names*. Si no existe, el programa pone como nombre por defecto "Teodoro".
+                > *Days*. Si no existe, funcionalidad *Today* no disponible.
+                > *Months*. Si no existe, funcionalidades *Today*, *getCalendar* y *setCalendar* no disponibles.
+                > *Numbers*. Si no existe, funcionalidades *Reminder*, *Math*, *getCalendar* y *setCalendar* no disponibles.
+                > *Commands*. Si no existe, se termina la ejecución del programa.
+            - *Applications*:
+                > *SpotifyActions*. Si no existe, funcionalidades relacionadas con Spotify no disponibles.
+                > *MathOperations*. Si no existe, funcionalidad *Math* no disponible.
+
+        Args:
+            default_name (str): El nombre del asistente por defecto del sistema.
+
+        Returns:
+            response (int): Variable de verificación de ejecución correcta.
+        """
+        # General
+        general = []
+        for collection in self.db.list_collection_names():
+            if collection == "General":
+                for element in self.db[collection].find({}):
+                    general.append(element)
+        common = general[0]
+        commands = general[1]
+
+        # Names
+        if "Names" in common:
+            self.Names = common["Names"]  
+        else:
+            self.Names = default_name
+
+        response = 0 # Por defecto, no hay ningún fallo en la Base de Conocimiento
+            
+        # Days and Months
+        keys = []
+        for i in range(len(common["Time"]["Days"])):
+            keys.append(str(i+1))
+        if "Days" in common["Time"]:
+            self.Days = dict(zip(keys, common["Time"]["Days"]))
+        else:
+            self.Days = None
+            response = 1
+        keys = []
+        for i in range(len(common["Time"]["Months"])):
+            keys.append(str(i+1))
+        if "Months" in common["Time"]:
+            self.Months = dict(zip(keys, common["Time"]["Months"])) 
+        else:
+            self.Months = None
+            response = 2
+
+        # Numbers
+        if "Numbers" in common:
+            self.Numbers = common["Numbers"]  
+        else:
+            self.Numbers = None
+            response = 3
+
+        # Commands
+        if "Commands" in commands:
+            self.Commands = commands["Commands"]  
+        else:
+            response = -1
+
+        # Applications
+        applications = []
+        for collection in self.db.list_collection_names():
+            if collection == "Applications":
+                for element in self.db[collection].find({}):
+                    applications.append(element)
+
+        # Spotify Actions
+        if "SpotifyActions" in applications[0]:
+            self.SpotifyActions = applications[0]["SpotifyActions"]
+        else:
+            self.SpotifyActions = None
+            response = 4
+        
+        # Math Operations
+        if "MathOperations" in applications[0]:
+            self.MathOperations = applications[0]["MathOperations"]
+        else:
+            self.MathOperations = None
+            response = 5
+        
+        return response
+
+
+#   ******************  Funcionalides de comunicación comunes  ******************
+
     def Hello(self, window = None):  
         """        
         Función que pronuncia el mensaje de bienvenida al sistema.
@@ -267,6 +358,9 @@ class Teodoro(System, Applications, Calendar):
         speech = "Son las" + hour + "horas y" + minutes + "minutos"
         return speech, text
 
+
+#   ******************  Funcionalidades sobre los usuarios  ******************
+
     def actionUser(self, action, name):   
         """
         Función que realiza acciones sobre los usuarios del sistema. En concreto, existen tres posibles acciones:
@@ -320,6 +414,9 @@ class Teodoro(System, Applications, Calendar):
         text = "Información guardada"
         return speech, text
 
+
+#   ******************  Ejecución de funcionalidades  ******************
+
     def getAction(self, query, window=None):
         """
         Función principal de la ejecución de funcionalidades. En ella se verifica la entrada por voz de las peticiones que el usuario realiza
@@ -331,13 +428,13 @@ class Teodoro(System, Applications, Calendar):
             window (tkinter.Tk, optional): Ventana de la interfaz de usuario. Defaults to None.
 
         Returns:
-            response (int): Flag de comprobación del sistema. *COMPROBAR ESTO CUANDO SE VEA EL TEMA DE LOS ERRORES*
+            (response) (int): Variable de verificación de ejecución correcta.
         """
-
+        
         if bool([match for match in self.Commands["Name"] if(match in query)]):  # Funcionalidad *Name*
-            speech, text = self.tellNames()
-            self.speak(speech)
-            self.GUI("Show", text=text, prev_window=window)
+            speech, text = self.tellNames()  # Llamada al método *tellNames*
+            self.speak(speech)  # Enunciar *speech*
+            self.GUI("Show", text = text, prev_window = window)  # Mostrar *text*
             response = 0
             return response
 
@@ -366,9 +463,12 @@ class Teodoro(System, Applications, Calendar):
             return response
 
         elif bool([match for match in self.Commands["Today"] if(match in query)]):  # Funcionalidad *Today*
-            speech, text = self.tellDay()
-            self.speak(speech)
-            self.GUI("Show", text=text, prev_window=window)
+            if self.Days and self.Months:
+                speech, text = self.tellDay()
+                self.speak(speech)
+                self.GUI("Show", text = text, prev_window = window)
+            else:
+                self.GUI("Show", text = self.errorStr, prev_window = window)
             response = 0
             return response
 
@@ -490,36 +590,62 @@ class Teodoro(System, Applications, Calendar):
             return response
 
         elif bool([match for match in self.Commands["Play"] if(match in query)]):  # Funcionalidad *Play*
-            response = self.spotify("play", window)
-            if response == 256:
-                self.speak("Ha habido algún problema con Spotify")
+            if self.SpotifyActions:
+                response = self.spotify("play", window)
+                if response == 256:
+                    self.speak("Ha habido algún problema con Spotify")
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
+                response = 0
             return response
 
         elif bool([match for match in self.Commands["Next"] if(match in query)]):  # Funcionalidad *Next*
-            response = self.spotify("next", window)
-            if response == 256:
-                self.speak("Ha habido algún problema con Spotify")
+            if self.SpotifyActions:
+                response = self.spotify("next", window)
+                if response == 256:
+                    self.speak("Ha habido algún problema con Spotify")
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
+                response = 0
             return response
 
         elif bool([match for match in self.Commands["Previous"] if(match in query)]):  # Funcionalidad *Previous*
-            self.spotify("previous", window)
-            response = 0
+            if self.SpotifyActions:
+                response = self.spotify("previous", window)
+                if response == 256:
+                    self.speak("Ha habido algún problema con Spotify")
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
+                response = 0         
             return response
 
         elif bool([match for match in self.Commands["Pause"] if(match in query)]):  # Funcionalidad *Pause*
-            self.spotify("pause", window)
-            response = 0
+            if self.SpotifyActions:
+                response = self.spotify("pause", window)
+                if response == 256:
+                    self.speak("Ha habido algún problema con Spotify")
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
+                response = 0         
             return response
 
         elif bool([match for match in self.Commands["Stop"] if(match in query)]):  # Funcionalidad *Stop*
-            self.spotify("stop", window)
-            response = 0
+            if self.SpotifyActions:
+                response = self.spotify("stop", window)
+                if response == 256:
+                    self.speak("Ha habido algún problema con Spotify")
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
+                response = 0         
             return response
 
         elif bool([match for match in self.Commands["Song"] if(match in query)]):  # Funcionalidad *Song*
-            speech, text = self.spotify("song")
-            self.speak(speech)
-            self.GUI("Show", text=text, prev_window=window)
+            if self.SpotifyActions:
+                speech, text = self.spotify("song")
+                self.speak(speech)
+                self.GUI("Show", text=text, prev_window=window)
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
             response = 0
             return response
 
@@ -547,19 +673,23 @@ class Teodoro(System, Applications, Calendar):
 
         # "(Crea un) recordatorio de nombre 'Nombre' para el 'Día' a las 'Hora'"
         elif bool([match for match in self.Commands["Reminder"] if(match in query)]):  # Funcionalidad *Reminder*
-            speech, text = self.setReminder(query)
-            self.speak(speech)
-            self.GUI("Show", text=text, prev_window=window)
+            if self.Numbers:
+                speech, text = self.setReminder(query)
+                self.speak(speech)
+                self.GUI("Show", text=text, prev_window=window)
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
             response = 0
             return response
 
         # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
         elif bool([match for match in self.Commands["Math"] if(match in query)]):  # Funcionalidad *Math*
-            
-
-            speech, text = self.mathOperation(operation, number_1, number_2)
-            self.speak(speech)
-            self.GUI("Show", text=text, prev_window=window)
+            if self.Numbers and self.MathOperations:
+                speech, text = self.mathOperation(query)
+                self.speak(speech)
+                self.GUI("Show", text=text, prev_window=window)
+            else:
+                self.GUI("Show", text=self.errorStr, prev_window=window)
             response = 0
             return response
 
@@ -579,7 +709,7 @@ class Teodoro(System, Applications, Calendar):
 
         # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
         elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]):  # Funcionalidad *GetCalendar*
-            if self.CalendarsID:
+            if self.CalendarsID and self.Months and self.Numbers:
                 speech, text = self.getCalendar(query)
                 if speech == -1:
                     self.GUI("Show", text="Petición incorrecta",
@@ -596,13 +726,13 @@ class Teodoro(System, Applications, Calendar):
                 return response
             else:
                 self.GUI(
-                    "Show", text="Usted no tiene permiso \npara acceder a estas funcionalidades", prev_window=window)
+                    "Show", text=self.errorStr, prev_window=window)
                 response = 0
                 return response
 
         # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' a las X de nombre X "
         elif bool([match for match in self.Commands["SetCalendar"] if(match in query)]):  # Funcionalidad *SetCalendar*
-            if self.CalendarsID:
+            if self.CalendarsID and self.Months and self.Numbers:
                 speech, text = self.setCalendar(query, window)
                 if speech == -1:
                     self.GUI("Show", text="Petición incorrecta",
@@ -615,7 +745,7 @@ class Teodoro(System, Applications, Calendar):
                 return response
             else:
                 self.GUI(
-                    "Show", text="Usted no tiene permiso \npara acceder a estas funcionalidades", prev_window=window)
+                    "Show", text=self.errorStr, prev_window=window)
                 response = 0
                 return response
 
@@ -654,6 +784,8 @@ class Teodoro(System, Applications, Calendar):
             self.speak(response)
             return response
 
+
+#   ******************  Bucle principal del sistem  ******************
 
 def takeQuery(Teo):
     """ 

@@ -16,32 +16,28 @@ def get_db():
 if __name__ == "__main__":
 
     client, db, fs = get_db() 
-    # applications = []
-    # calendar = []
-    # general = []
-    # for collection in db.list_collection_names():
-    #     if collection == "Applications":
-    #         for element in db[collection].find({}):
-    #             applications.append(element)
-    #     elif collection == "Calendar":
-    #         for element in db[collection].find({}):
-    #             calendar.append(element)
-    #     elif collection == "General":
-    #         for element in db[collection].find({}):
-    #             general.append(element)
+    applications = []
+    calendar = []
+    general = []
+    for collection in db.list_collection_names():
+        if collection == "Applications":
+            for element in db[collection].find({}):
+                applications.append(element)
+        elif collection == "Calendar":
+            for element in db[collection].find({}):
+                calendar.append(element)
+        elif collection == "General":
+            for element in db[collection].find({}):
+                general.append(element)
 
-    # SpotifyActions = applications[0]["SpotifyActions"]
+    SpotifyActions = applications[0]["SpotifyActions"]
     # CalendarsID = calendar[0]["CalendarsID"]
     # Numbers = calendar[0]["Numbers"]
-    # Time = general[0]["Time"]
-    # Names = general[0]["Names"]
-    # Commands = general[1]["Commands"]
-    # print(SpotifyActions["play"])
-    # print(CalendarsID["personal"])
-    # print(Numbers)
-    # print(Time["Months"])
-    # print(Names)
-    # print(Commands["Name"])
+    Time = general[0]["Time"]
+    Names = general[0]["Names"]
+    Commands = general[1]["Commands"]
+
+    print("Commands" in general[1])
 
     # file = "Filiu.jpg"
     # with open(file, 'rb') as f:
