@@ -78,8 +78,10 @@ class Teodoro(System, Applications, Calendar):
             default_user (str, optional): El nombre del usuario por defecto del sistema. Defaults to "filiu".
             del_speak (bool, optional): Flag para permitir la salida de audio al terminar la ejecución del sistema. Defaults to True.
         """
-        # Inicialización de *del_speak*
+        # Recepción argumentos
         self.del_speak = del_speak
+        self.default_user = default_user
+        self.default_name = default_name
 
         # Extracción de la clave de la base de conocimiento de MongoDB.
         # Debe estar guardada en un archivo oculto del sistema de nombre "MongoDBKey"
@@ -100,10 +102,10 @@ class Teodoro(System, Applications, Calendar):
         self.__PhoneFunctions = False
 
         # Proceso de *Login* del usuario
-        self.Login(default_user)
+        self.Login(self.default_user)
 
         # Obtención de datos de la base de conocimiento
-        response = self.ExtractKnowledgeBase(default_name)
+        response = self.ExtractKnowledgeBase(self.default_name)
 
         # Errores por falta de información en la Base de Conocimiento
         if response == -1:
@@ -119,8 +121,9 @@ class Teodoro(System, Applications, Calendar):
         elif response == 5:
             self.GUI("Show", text="Funcionalidades 'Math' no disponible.\nCompruebe la Base de Concimiento")
 
-        # Frase de error
-        self.errorStr = "Usted no tiene permiso \npara acceder a estas funcionalidades"
+        # Frases de error
+        self.Error = "Usted no tiene permiso \npara acceder a estas funcionalidades"
+        self.SpotifyError = "Ha habido algún \nproblema con Spotify"
 
         # Instanciación de las superclases de las que hereda la clase Teodoro
         System.__init__(self)  # System
@@ -431,56 +434,57 @@ class Teodoro(System, Applications, Calendar):
             (response) (int): Variable de verificación de ejecución correcta.
         """
         
-        if bool([match for match in self.Commands["Name"] if(match in query)]):  # Funcionalidad *Name*
-            speech, text = self.tellNames()  # Llamada al método *tellNames*
-            self.speak(speech)  # Enunciar *speech*
-            self.GUI("Show", text = text, prev_window = window)  # Mostrar *text*
+        if bool([match for match in self.Commands["Name"] if(match in query)]):             # Funcionalidad *Name*
+            speech, text = self.tellNames()                                                 # Llamada al método *tellNames*
+            self.speak(speech)                                                              # Enunciar *speech*
+            self.GUI("Show", text = text, prev_window = window)                             # Mostrar *text*
+            response = 0    
+            return response
+
+        elif bool([match for match in self.Commands["Greetings"] if(match in query)]):      # Funcionalidad *Greetings*
+            self.Hello(window)                                                              # Llamada al método *Hello*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Greetings"] if(match in query)]):  # Funcionalidad *Greetings*
-            self.Hello(window)
-            response = 0
-            return response
-
-        elif bool([match for match in self.Commands["Cheer up"] if(match in query)]):  # Funcionalidad *Cheer up*
-            if window is not None:
+        elif bool([match for match in self.Commands["Cheer up"] if(match in query)]):       # Funcionalidad *Cheer up*
+            if window is not None:                                                          # Cierre de ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            self.speak("Ánimo" + self.User + ", no se preocupe")
+            self.speak("Ánimo" + self.User + ", no se preocupe")                            # Enunciar frase
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Secret"] if(match in query)]):  # Funcionalidad *Secret*
-            if window is not None:
+        elif bool([match for match in self.Commands["Secret"] if(match in query)]):         # Funcionalidad *Secret*
+            if window is not None:                                                          # Cierre de ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            self.voiceEngine.setProperty('voice', self.defaultWisperVoice)
-            self.speak("""En realidad, soy un extraterreste en misión oficial,
-			para poder estudiar a los humanos y observar su comportamiento""")
-            self.voiceEngine.setProperty('voice', self.defaultVoice)
+            currentVoice = self.voiceEngine.getProperty('voice')
+            self.voiceEngine.setProperty('voice', self.defaultWisperVoice)                  # Cambio de voz del asistente
+            self.speak("""En realidad, soy un extraterreste en misión oficial,  
+			para poder estudiar a los humanos y observar su comportamiento""")              # Enunciar frase
+            self.voiceEngine.setProperty('voice', currentVoice)                             # Vuelta a la voz anterior
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Today"] if(match in query)]):  # Funcionalidad *Today*
+        elif bool([match for match in self.Commands["Today"] if(match in query)]):          # Funcionalidad *Today*
             if self.Days and self.Months:
-                speech, text = self.tellDay()
-                self.speak(speech)
-                self.GUI("Show", text = text, prev_window = window)
+                speech, text = self.tellDay()                                               # Llamada al método *tellDay*
+                self.speak(speech)                                                          # Enunciar *speech*
+                self.GUI("Show", text = text, prev_window = window)                         # Mostrar *text*
             else:
-                self.GUI("Show", text = self.errorStr, prev_window = window)
+                self.GUI("Show", text = self.Error, prev_window = window)                   # Mostrar error
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Time"] if(match in query)]):  # Funcionalidad *Time*
-            speech, text = self.tellTime()
-            self.speak(speech)
-            self.GUI("Show", text=text, prev_window=window)
+        elif bool([match for match in self.Commands["Time"] if(match in query)]):           # Funcionalidad *Time*
+            speech, text = self.tellTime()                                                  # Llamada al método *tellTime*
+            self.speak(speech)                                                              # Enunciar *speech*
+            self.GUI("Show", text=text, prev_window=window)                                 # Mostrar *text*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Users"] if(match in query)]):  # Funcionalidad *Users*
-            if window is not None:
+        elif bool([match for match in self.Commands["Users"] if(match in query)]):          # Funcionalidad *Users* REVISAR
+            if window is not None:                                                          # Cierre de ventana anterior
                 self.GUI("Close", prev_window=window)
 
             list_of_words = query.split()
@@ -497,7 +501,7 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["NewInformation"] if(match in query)]):  # Funcionalidad *NewInformation*
+        elif bool([match for match in self.Commands["NewInformation"] if(match in query)]): # Funcionalidad *NewInformation* REVISAR
             if window is not None:
                 self.GUI("Close", prev_window=window)
 
@@ -533,7 +537,7 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Information"] if(match in query)]):  # Funcionalidad *Information*
+        elif bool([match for match in self.Commands["Information"] if(match in query)]):    # Funcionalidad *Information* REVISAR
             if window is not None:
                 self.GUI("Close", prev_window=window)
 
@@ -555,101 +559,101 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["ChangeVoice"] if(match in query)]):  # Funcionalidad *ChangeVoice*
+        elif bool([match for match in self.Commands["ChangeVoice"] if(match in query)]):    # Funcionalidad *ChangeVoice* REVISAR
             self.speak("Perfecto. Tiene " + str(Teo.maxVoices) +
-                       "voces para poder elegir")
-            speech, text = self.changeVoice()
-            self.speak(speech)
-            self.GUI("Show", text=text, prev_window=window)
+                       "voces para poder elegir")                                           # Frase inicial
+            speech, text = self.changeVoice()                                               # Llamada al método *changeVoice*
+            self.speak(speech)                                                              # Enunciar *speech*
+            self.GUI("Show", text=text, prev_window=window)                                 # Mostrar *text*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Google"] if(match in query)]):  # Funcionalidad *Google*
-            if window is not None:
+        elif bool([match for match in self.Commands["Google"] if(match in query)]):         # Funcionalidad *Google* REVISAR
+            if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            self.google(query)
+            self.google(query)                                                              # Llamada al método *google*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Wikipedia"] if(match in query)]):  # Funcionalidad *Wikipedia*
-            if window is not None:
+        elif bool([match for match in self.Commands["Wikipedia"] if(match in query)]):      # Funcionalidad *Wikipedia* REVISAR
+            if window is not None:                                                          # Cierre de ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            response = self.wikipedia(query)
+            response = self.wikipedia(query)                                                
             if response is None:
                 self.speak("No se ha podido encontrar la página solicitada")
             return response
 
-        elif bool([match for match in self.Commands["Youtube"] if(match in query)]):  # Funcionalidad *Youtube*
-            if window is not None:
+        elif bool([match for match in self.Commands["Youtube"] if(match in query)]):        # Funcionalidad *Youtube* REVISAR
+            if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            self.youtube(query)
+            self.youtube(query)                                                             # Llamada al método *youtube*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Play"] if(match in query)]):  # Funcionalidad *Play*
-            if self.SpotifyActions:
-                response = self.spotify("play", window)
-                if response == 256:
-                    self.speak("Ha habido algún problema con Spotify")
+        elif bool([match for match in self.Commands["Play"] if(match in query)]):           # Funcionalidad *Play*
+            if self.SpotifyActions:                                                         
+                response = self.spotify("play", window)                                     # Llamada al método *spotify*
+                if response == 256:                                                         
+                    self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
             return response
 
-        elif bool([match for match in self.Commands["Next"] if(match in query)]):  # Funcionalidad *Next*
-            if self.SpotifyActions:
-                response = self.spotify("next", window)
-                if response == 256:
-                    self.speak("Ha habido algún problema con Spotify")
+        elif bool([match for match in self.Commands["Next"] if(match in query)]):           # Funcionalidad *Next*
+            if self.SpotifyActions:                                                         
+                response = self.spotify("next", window)                                     # Llamada al método *spotify*
+                if response == 256:                                                         
+                    self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
             return response
 
-        elif bool([match for match in self.Commands["Previous"] if(match in query)]):  # Funcionalidad *Previous*
-            if self.SpotifyActions:
-                response = self.spotify("previous", window)
-                if response == 256:
-                    self.speak("Ha habido algún problema con Spotify")
+        elif bool([match for match in self.Commands["Previous"] if(match in query)]):       # Funcionalidad *Previous*
+            if self.SpotifyActions:                                                         
+                response = self.spotify("previous", window)                                 # Llamada al método *spotify*
+                if response == 256:                                                         
+                    self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
-                response = 0         
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
+                response = 0
             return response
 
-        elif bool([match for match in self.Commands["Pause"] if(match in query)]):  # Funcionalidad *Pause*
-            if self.SpotifyActions:
-                response = self.spotify("pause", window)
-                if response == 256:
-                    self.speak("Ha habido algún problema con Spotify")
+        elif bool([match for match in self.Commands["Pause"] if(match in query)]):          # Funcionalidad *Pause*
+            if self.SpotifyActions:                                                         
+                response = self.spotify("pause", window)                                    # Llamada al método *spotify*
+                if response == 256:                                                         
+                    self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
-                response = 0         
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
+                response = 0
             return response
 
-        elif bool([match for match in self.Commands["Stop"] if(match in query)]):  # Funcionalidad *Stop*
-            if self.SpotifyActions:
-                response = self.spotify("stop", window)
-                if response == 256:
-                    self.speak("Ha habido algún problema con Spotify")
+        elif bool([match for match in self.Commands["Stop"] if(match in query)]):           # Funcionalidad *Stop*
+            if self.SpotifyActions:                                                         
+                response = self.spotify("stop", window)                                     # Llamada al método *spotify*
+                if response == 256:                                                         
+                    self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
-                response = 0         
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
+                response = 0
             return response
 
-        elif bool([match for match in self.Commands["Song"] if(match in query)]):  # Funcionalidad *Song*
-            if self.SpotifyActions:
-                speech, text = self.spotify("song")
-                self.speak(speech)
-                self.GUI("Show", text=text, prev_window=window)
+        elif bool([match for match in self.Commands["Song"] if(match in query)]):           # Funcionalidad *Song*
+            if self.SpotifyActions:                                                         
+                response = self.spotify("song", window)                                     # Llamada al método *spotify*
+                if response == 256:                                                         
+                    self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
-            response = 0
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
+                response = 0
             return response
 
-        elif bool([match for match in self.Commands["Weather"] if(match in query)]):  # Funcionalidad *Weather*
+        elif bool([match for match in self.Commands["Weather"] if(match in query)]):        # Funcionalidad *Weather* REVISAR
             if window is not None:
                 self.GUI("Close", prev_window=window)
 
@@ -659,133 +663,129 @@ class Teodoro(System, Applications, Calendar):
             # self.GUI("Image", image = place + ".png", geometry = "1750X1000", prev_window = window)
             response = 0
             return response
-
-        # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
-        elif bool([match for match in self.Commands["Alarm"] if(match in query)]):  # Funcionalidad *Alarm*
-            if window is not None:
+ 
+        elif bool([match for match in self.Commands["Alarm"] if(match in query)]):          # Funcionalidad *Alarm* REVISAR
+            # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
+            if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            t, speech, text = self.setAlarm(query)
-            timer = threading.Timer(t, self.alarm, args=(speech, text))
-            timer.start()
+            t, speech, text = self.setAlarm(query)                                          # Llamada al método *setAlarm*
+            timer = threading.Timer(t, self.alarm, args=(speech, text))                     # Inicialización temporizador
+            timer.start()                                                                   # Inicio temporizador    
             response = 0
             return response
 
-        # "(Crea un) recordatorio de nombre 'Nombre' para el 'Día' a las 'Hora'"
-        elif bool([match for match in self.Commands["Reminder"] if(match in query)]):  # Funcionalidad *Reminder*
+        elif bool([match for match in self.Commands["Reminder"] if(match in query)]):       # Funcionalidad *Reminder* REVISAR
+            # "(Crea un) recordatorio de nombre 'Nombre' para el 'Día' a las 'Hora'"
             if self.Numbers:
-                speech, text = self.setReminder(query)
-                self.speak(speech)
-                self.GUI("Show", text=text, prev_window=window)
+                speech, text = self.setReminder(query)                                      # Llamada al método *setReminder*
+                self.speak(speech)                                                          # Enunciar *speech*
+                self.GUI("Show", text=text, prev_window=window)                             # Mostrar *text
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
             response = 0
             return response
-
-        # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
-        elif bool([match for match in self.Commands["Math"] if(match in query)]):  # Funcionalidad *Math*
-            if self.Numbers and self.MathOperations:
-                speech, text = self.mathOperation(query)
-                self.speak(speech)
-                self.GUI("Show", text=text, prev_window=window)
+ 
+        elif bool([match for match in self.Commands["Math"] if(match in query)]):           # Funcionalidad *Math* REVISAR
+            # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
+            if self.Numbers and self.MathOperations:            
+                speech, text = self.mathOperation(query)                                    # Llamada al método *mathOperation*
+                self.speak(speech)                                                          # Enunciar *speech*
+                self.GUI("Show", text=text, prev_window=window)                             # Mostrar *text*
             else:
-                self.GUI("Show", text=self.errorStr, prev_window=window)
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
             response = 0
             return response
-
-        # Encuentra mi teléfono/móvil (y similares)
-        elif bool([match for match in self.Commands["Phone"] if(match in query)]):  # Funcionalidad *Phone*
-            if window is not None:
+ 
+        elif bool([match for match in self.Commands["Phone"] if(match in query)]):          # Funcionalidad *Phone*
+            # Encuentra mi teléfono/móvil (y similares)
+            if window is not None:                                                          # Cierre ventana anterior  
                 self.GUI("Close", prev_window=window)
 
             if self.macroPhone:
-                speech = self.findPhone()
-                self.speak(speech)
-                response = 0
+                speech = self.findPhone()                                                   # Llamada al método *findPhone*
+                self.speak(speech)                                                          # Enunciar *speech*
             else:
-                self.speak("Lo siento, no puedo realizar esa operación")
-                response = 0
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
+            response = 0
             return response
 
-        # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
-        elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]):  # Funcionalidad *GetCalendar*
-            if self.CalendarsID and self.Months and self.Numbers:
-                speech, text = self.getCalendar(query)
+        elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]):    # Funcionalidad *GetCalendar* REVISAR
+            # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
+            if self.CalendarsID and self.Months and self.Numbers:   
+                speech, text = self.getCalendar(query)                                      # Llamada al método *getCalendar*
                 if speech == -1:
-                    self.GUI("Show", text="Petición incorrecta",
-                             prev_window=window)
+                    self.GUI("Show", text="Petición incorrecta", prev_window=window)        # Mostrar error en la petición
                     response = -1
                 elif speech != None:
-                    self.speak(speech)
+                    self.speak(speech)                                                      # Enunciar *speech*
                     self.GUI("GetCalendar", text=text, size=12,
-                             geometry="800x600", prev_window=window)
+                             geometry="800x600", prev_window=window)                        # Mostrar *text*
                     response = 0
                 else:
-                    self.speak("Credenciales actualizadas")
+                    self.speak("Credenciales actualizadas")                                 # Enunciar actualización de credenciales
                     response = 0
                 return response
             else:
-                self.GUI(
-                    "Show", text=self.errorStr, prev_window=window)
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
                 response = 0
                 return response
 
-        # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' a las X de nombre X "
-        elif bool([match for match in self.Commands["SetCalendar"] if(match in query)]):  # Funcionalidad *SetCalendar*
+        elif bool([match for match in self.Commands["SetCalendar"] if(match in query)]):    # Funcionalidad *SetCalendar* REVISAR
+            # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' a las X de nombre X "
             if self.CalendarsID and self.Months and self.Numbers:
-                speech, text = self.setCalendar(query, window)
+                speech, text = self.setCalendar(query, window)                              # Llamada al método *setCalendar*
                 if speech == -1:
-                    self.GUI("Show", text="Petición incorrecta",
-                             prev_window=window)
+                    self.GUI("Show", text="Petición incorrecta", prev_window=window)        # Mostrar error en la petición
                     response = -1
                 else:
-                    self.speak(speech)
-                    self.GUI("Show", text=text, prev_window=window)
+                    self.speak(speech)                                                      # Enunciar *speech*
+                    self.GUI("Show", text=text, prev_window=window)                         # Mostrar *text*
                     response = 0
                 return response
             else:
-                self.GUI(
-                    "Show", text=self.errorStr, prev_window=window)
+                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
                 response = 0
                 return response
 
-        elif bool([match for match in self.Commands["Shutdown"] if(match in query)]):  # Funcionalidad *Shutdown*
-            self.shutdown()
+        elif bool([match for match in self.Commands["Shutdown"] if(match in query)]):       # Funcionalidad *Shutdown* REVISAR
+            self.shutdown()                                                                 # Llamada al método *shutdown*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Suspend"] if(match in query)]):  # Funcionalidad *Suspend*
-            self.suspend()
+        elif bool([match for match in self.Commands["Suspend"] if(match in query)]):        # Funcionalidad *Suspend* REVISAR
+            self.suspend()                                                                  # Llamada al método *suspend*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Restart"] if(match in query)]):  # Funcionalidad *Restart*
-            self.restart()
+        elif bool([match for match in self.Commands["Restart"] if(match in query)]):        # Funcionalidad *Restart* REVISAR
+            self.restart()                                                                  # Llamada al método *restart*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Nothing"] if(match in query)]):  # Funcionalidad *Nothing*
-            if window is not None:
-                self.GUI("Close", prev_window=window)
+        elif bool([match for match in self.Commands["Nothing"] if(match in query)]):        # Funcionalidad *Nothing*
+            if window is not None:                                                          
+                self.GUI("Close", prev_window=window)                                       # Cierre ventana anterior
 
-            self.voiceEngine.setProperty('voice', self.defaultWisperVoice)
-            self.speak("Vale, aquí no ha pasado nada")
-            self.voiceEngine.setProperty('voice', self.defaultVoice)
+            currentVoice = self.voiceEngine.getProperty('voice')                            
+            self.voiceEngine.setProperty('voice', self.defaultWisperVoice)                  # Cambio de voz del asistente
+            self.speak("Vale, aquí no ha pasado nada")                                      # Enunciar frase
+            self.voiceEngine.setProperty('voice', currentVoice)                             # Vuelta a la voz anterior
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Del"] if(match in query)]):  # Funcionalidad *Del*
-            del self
+        elif bool([match for match in self.Commands["Del"] if(match in query)]):            # Funcionalidad *Del*
+            del self                                                                        # Terminar sistema
             response = 0
             return response
 
         else:
-            response = "Lo siento, no te he entendido"
-            self.speak(response)
+            self.speak("Lo siento, no te he entendido")                                     # Enunciar frase
+            response = 0
             return response
 
 
-#   ******************  Bucle principal del sistem  ******************
+#   ******************  Bucle principal del sistema  ******************
 
 def takeQuery(Teo):
     """ 
@@ -798,39 +798,39 @@ def takeQuery(Teo):
     Args:
         Teo (class): Instancia de la clase Teodoro.
     """
-    # Inicialización del sistema.
-    Teo.Hello()
-    os.system("clear")  
-    lastsave = time()
+    # Inicialización del sistema
+    Teo.Hello()                                                 # Saludo inicial
+    os.system("clear")                                          # Limpieza de terminal
+    lastsave = time()                                           # Inicialización tiempo de chequeo
 
     # Bucle principal
     while(True):
-        internetOk = Teo.internetCheck()
-        if internetOk != 0:
-            Teo.GUI("Show", text=internetOk)
-            del Teo
+        internetOk = Teo.internetCheck()                        # Llamada al método *internetCheck*
+        if internetOk != 0:                                     # COMPROBACIÓN ACCESO A INTERNET
+            Teo.GUI("Show", text=internetOk)                    # Mostrar error
+            del Teo                                             # Terminar sistema
         else:
-            query, window = Teo.takeCommand()
-            if query != None:
+            query, window = Teo.takeCommand()                   # Llamada al método *takeCommand*
+            if query != None:                                   # PETICIÓN REALIZADA
                 query = query.lower()
-                response = Teo.getAction(query, window)
-                if response != 0:
+                response = Teo.getAction(query, window)         # Llamada al método *getAction*
+                if response != 0:                               # ERROR EN LA PETICIÓN
                     if window is not None:
-                        Teo.GUI("Close", prev_window=window)
-                    Teo.speak("¿Puede repetir su petición?")
-                    query, window = Teo.repeat()
-                    Teo.getAction(query, window)
-            elif time() - lastsave > 60:
-                speech, text = Teo.checkReminder()
+                        Teo.GUI("Close", prev_window=window)    # Cierre ventana anterior
+                    Teo.speak("¿Puede repetir su petición?")    # Enunciar frase
+                    query, window = Teo.repeat()                # Llamada al método *repeat*
+                    Teo.getAction(query, window)                # Llamada al método *getAction*
+            elif time() - lastsave > 60:                        # PETICIÓN NO REALIZADA / COMPROBACIÓN TIEMPO DE CHEQUEO
+                speech, text = Teo.checkReminder()              # Llamada al método *checkReminder*
                 if speech != None:
-                    Teo.speak(speech)
-                    Teo.GUI("Show", text=text)
-                if Teo.PhoneFunctions:
-                    Teo.checkPhone()
-                lastsave = time()
+                    Teo.speak(speech)                           # Enunciar *speech*
+                    Teo.GUI("Show", text=text)                  # Mostrar *text*
+                if Teo.PhoneFunctions:                          
+                    Teo.checkPhone()                            # Llamada al método *checkPhone*
+                lastsave = time()                               # Reseteo del tiempo de chequeo
 
 
 if __name__ == '__main__':
 
     Teo = Teodoro()  # Instanciación de la clase Teodoro
-    takeQuery(Teo)  # Llamada a la función principal del sistema
+    takeQuery(Teo)   # Llamada a la función principal del sistema

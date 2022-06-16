@@ -38,6 +38,7 @@ class Calendar(Engine):
             Numbers (dict): Diccionario que contiene la transcripción de algunos números para el correcto funcionamiento del sistema.
             Months (dict): Diccionario que contiene la transcripción de los meses para el correcto funcionamiento del sistema.
         """
+        # Recepción de argumentos
         self.CalendarsID = CalendarsID
         self.Numbers = Numbers
         self.Months = Months
@@ -177,7 +178,7 @@ class Calendar(Engine):
 
 #   ******************  getCalendar y setCalendar  ******************
 
-    def getCalendar(self, query):
+    def getCalendar(self, query):  # REVISAR
         """
         Función que implementa toda la lógica de recepción de peticiones para mostrar eventos del calendario. Otorga muchas posibilidades:
             - Hoy.
@@ -334,7 +335,7 @@ class Calendar(Engine):
             
             return None, None
 
-    def setCalendar(self, query, window):
+    def setCalendar(self, query, window):  # REVISAR
         """
         Función que implementa toda la lógica de recepción de peticiones para crear un evento en el calendario. Otorga muchas posibilidades:
             - Hoy.

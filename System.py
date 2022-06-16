@@ -39,10 +39,10 @@ class System(Engine):
         Args:
             test (bool, optional): Bandera para el "falseado" de la funcionalidad para su testeo. Defaults to False.
         """
-        self.speak("Perfecto, que tengas un buen día")
-        if test:
+        self.speak("Perfecto, que tengas un buen día")  # Enunciar frase
+        if test:                                        # Test
             sleep(5)
-        else:
+        else:                                           # Real
             os.system("shutdown now -h")
 
     def suspend(self, test = False):
@@ -52,10 +52,10 @@ class System(Engine):
         Args:
             test (bool, optional): Bandera para el "falseado" de la funcionalidad para su testeo. Defaults to False.
         """
-        self.speak("Perfecto, suspendiendo el equipo")
-        if test:
+        self.speak("Perfecto, suspendiendo el equipo")  # Enunciar frase
+        if test:                                        # Test
             sleep(5)
-        else:
+        else:                                           # Real
             os.system("sudo pm-suspend")
 
     def restart(self, test = False):
@@ -65,8 +65,8 @@ class System(Engine):
         Args:
             test (bool, optional): Bandera para el "falseado" de la funcionalidad para su testeo. Defaults to False.
         """
-        self.speak("Perfecto, reiniciando el equipo")
-        if test:
+        self.speak("Perfecto, reiniciando el equipo")   # Enunciar frase
+        if test:                                        # Test
             sleep(5)
         else:
-            os.system("shutdown now -r")
+            os.system("shutdown now -r")                # Real

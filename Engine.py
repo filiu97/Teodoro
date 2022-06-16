@@ -28,13 +28,18 @@ class Engine():
         Args:
             Names (list): Lista de nombres reconocidos por el asistente para su invocación.
         """
+        # Recepción argumentos
         self.Names = Names
+
+        # Inicialización reconocimient de voz
         r = sr.Recognizer()
         r.pause_threshold = 1
         # r.energy_threshold = 4000
         # r.dynamic_energy_adjustment_ratio = 1
         # with sr.Microphone() as source:
         #     r.adjust_for_ambient_noise(source)
+
+        # Atributos reconocimiento y emisión de voz
         self.voiceEngine = pyttsx3.init()
         self.defaultVoice = 'spanish+m3'
         self.currentVoice = 'spanish+m3'
@@ -78,7 +83,7 @@ class Engine():
         self.voiceEngine.say(audio)
         self.voiceEngine.runAndWait() 
 
-    def takeCommand(self): 
+    def takeCommand(self):  # REVISAR
         """
         Función que contiene la lógica de recepción de peticiones del usuario. En este método se recoge el audio y
         se comprueba si el usuario a invocado al asistente. Si es así, se procede a la recepción de la petición y 
@@ -113,7 +118,7 @@ class Engine():
                 except: 
                     return None, None
 
-    def repeat(self):
+    def repeat(self):   # REVISAR
         """
         Función análoga a *takeCommand* para la repetición de peticiones del usuario tras un reconocimiento erróneo.
 
@@ -147,43 +152,51 @@ class Engine():
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
-        r = sr.Recognizer()
+        # Inicialización
+        r = sr.Recognizer()                                                 
         window = self.GUI("Status", "Sí -> confirmar \n No -> siguiente voz \n Cualquier cosa \n -> voz por defecto")
         i = 1
         change = False
+        self.currentVoice = self.voiceEngine.getProperty('voice')
+
+        # Bucle de búsqueda de voz
         while i <= self.maxVoices:
             newVoice = "spanish+m" + str(i)
             self.voiceEngine.setProperty('voice', newVoice)
             self.speak("Esta es una prueba de voz. ¿Le gusta?")
+
+            # Recepción de respuesta del usuario
             with sr.Microphone() as source:
                 audio = r.listen(source, phrase_time_limit = 3)
                 try:
                     query = r.recognize_google(audio, language='es-ES')
                     if query == "si":
                         change = True
-                        self.currentVoice = newVoice
                         break
                     elif query == "no":
                         i = i+1
                         continue
                     else:
-                        self.voiceEngine.setProperty('voice', self.defaultRate)
+                        self.voiceEngine.setProperty('voice', self.defaultVoice)
                         break
                 except:
                     self.speak = "Por favor, pruebe otra vez"
                     continue
-        if i > self.maxVoices:
+
+        # Casos posibles
+        if i > self.maxVoices:  # No se ha elegido ninguna voz
             self.voiceEngine.setProperty('voice', self.currentVoice)
             text = "Se mantiene la voz anterior"
             speech = "No ha seleccionado niguna de las voces disponibles. Se mantiene la voz anterior"
-        elif change:
+        elif change:            # Se ha cambiado la voz
             text = "Voz cambiada"
             speech = "Ha cambiado la voz correctamente"
-        else:
+        else:                   # Se ha elegido la voz por defecto
             text = "Voz por defecto"
             speech = "Ha elegido al voz por defecto"
 
-        self.GUI("Close", prev_window = window)
+        # Cierre ventana anterior
+        self.GUI("Close", prev_window = window)         
 
         return speech, text
 
@@ -225,9 +238,10 @@ class Engine():
         global info
         info = str(text_entry.get())  
 
+    # REVISAR
     def GUI(self, action, text = None, size = 16, 
             image = None, geometry = "400x200", 
-            prev_window = None):
+            prev_window = None):        
         """
         Función generadora de GUIs. En este método están definidas todas las interfaces necesarias para la ejecución
         del sistema. Son GUIs personalizadas para cada funcionalidad concreta.
