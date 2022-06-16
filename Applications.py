@@ -61,6 +61,7 @@ class Applications(Engine):
             MathOperations (dict): Diccionario que contiene la información necesaria para la lógica de las operaciones matemáticas.
             Numbers (dict): Diccionario que contiene la transcripción de algunos números para el correcto funcionamiento del sistema.
         """
+        # Recepción argumentos
         self.SpotifyActions = SpotifyActions
         self.MathOperations = MathOperations
         self.Numbers = Numbers
@@ -73,7 +74,7 @@ class Applications(Engine):
         wikipedia.set_lang("es")
 
         # Inicialización del comando Switch propio para unidades del tiempo
-        self.s_time_unit = t.Tools(3)	#Instancia objeto Switch
+        self.s_time_unit = t.Tools(3)	        #Instancia objeto Switch
         self.s_time_unit.setSwitch_time_unit()	#Creador del switch
 
         # Instanciación de la superclase Enigne de la que hereda la clase Applications
@@ -107,21 +108,21 @@ class Applications(Engine):
             status (int): Variable respuesta del sistema. 256 significa que ha habiado algún error.
         """
         if window is not None:
-            self.GUI("Close", prev_window=window)
-        if action == "status":
-            return sp.getoutput(self.SpotifyActions[action])
-        elif action == "song":
-            title = sp.getoutput(self.SpotifyActions["title"])
-            album = sp.getoutput(self.SpotifyActions["album"])
-            artist = sp.getoutput(self.SpotifyActions["artist"])
-            speech = "Es " + title + ", del album " + album + ", de " + artist
-            text = "Canción: " + title + "\n" + "Album: " + album + "\n" + "Artista: " + artist
-            return speech, text
-        else:
-            status = os.system(self.SpotifyActions[action])
-            if action == "previous":
-                status = os.system(self.SpotifyActions[action])
-            return status
+            self.GUI("Close", prev_window=window)                                                   # Cierre ventana anterior
+        if action == "status":                                                                      # *status*
+            return sp.getoutput(self.SpotifyActions[action])                                        
+        elif action == "song":                                                                      # *song*
+            title = sp.getoutput(self.SpotifyActions["title"])                                      
+            album = sp.getoutput(self.SpotifyActions["album"])                                      
+            artist = sp.getoutput(self.SpotifyActions["artist"])                                    
+            speech = "Es " + title + ", del album " + album + ", de " + artist                      
+            text = "Canción: " + title + "\n" + "Album: " + album + "\n" + "Artista: " + artist     
+            return speech, text                                                                     
+        else:                                                                                       # *play*, *pause*, *stop*, *next* y *previous*
+            status = os.system(self.SpotifyActions[action])                                         
+            if action == "previous":                                                                
+                status = os.system(self.SpotifyActions[action])                                     
+            return status                                                                           
 
 
 #   ******************  Búsquedas web  ******************
@@ -134,13 +135,13 @@ class Applications(Engine):
             query (str): palabras clave.
         """
         words = query.split()
-        if words[-1] == "google":
+        if words[-1] == "google":                                   # Obtención petición
             query = words[1]
         else:
             query = words[-1]
-        webbrowser.open("https://www.google.es/search?q=" + query)
+        webbrowser.open("https://www.google.es/search?q=" + query)  # Búsqueda web Google
 
-    def wikipedia(self, query):
+    def wikipedia(self, query):     # REVISAR
         """
         Función que realiza búsquedas en la Wikipedia.
 
@@ -180,13 +181,13 @@ class Applications(Engine):
             query (str): palabras clave.
         """   
         words = query.split()
-        if words[-1] == "youtube":
+        if words[-1] == "youtube":                                                                                      # Obtención petición                                                                         
             query = words[1]
         else:
             query = words[-1]
-        if "busca" in query:
+        if "busca" in query:                                                                                            # Búsqueda web Youtube
             webbrowser.open("https://www.youtube.com/results?search_query=" + query.replace(" ", "+"))
-        else:
+        else:                                                                                                           # Reproducción de vídeo youtube    
             html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + query.replace(" ", "+"))
             video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
             webbrowser.open("https://www.youtube.com/watch?v=" + video_ids[0])
@@ -194,7 +195,7 @@ class Applications(Engine):
 
 #   ******************  Tiempo meteorológico  ******************
 
-    def weather(self, query):
+    def weather(self, query):   # REVISAR
         """
         Función que realiza una búsqueda sobre las condiciones meterológicas de una determinada zona. El resultado es
         expuesto al usuario a través de una imagen y guardada en la carpeta por defecto.
@@ -210,7 +211,6 @@ class Applications(Engine):
         place = str(query[2]).replace(" ","")
         os.system("curl http://es.wttr.in/" + place + ".png --output '" + place + ".png'")
         weather = os.popen("curl http://es.wttr.in/"+ place).read()
-        #os.system("clear")
         i = weather.find("+") or weather.find("-")
         try:
             temp = float(weather[i:i+3])
@@ -227,7 +227,7 @@ class Applications(Engine):
 
 #   ******************  Alarmas  ******************
 
-    def setAlarm(self, query):
+    def setAlarm(self, query):  # REVISAR
         """
         Función que realiza la puesta de alarmas. Se creará una alarma no bloqueante del sistema a través de un thread.
 
@@ -268,17 +268,17 @@ class Applications(Engine):
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
-        if self.spotify("status") == "Playing":
-            self.spotify("pause")
-            self.speak(speech)
-            self.spotify("play")
+        if self.spotify("status") == "Playing": # Comprobación del status de Spotify
+            self.spotify("pause")               # Pausar reproducción
+            self.speak(speech)                  # Enunciar *speech*
+            self.spotify("play")                # Reanudar reproducción
         else:
-            self.speak(speech)
-        self.GUI("Show", text = text)
+            self.speak(speech)                  # Enunciar *speech*     
+        self.GUI("Show", text = text)           # Mostrar *text*
     
 #   ******************  Recordatorios  ******************
 
-    def setReminder(self, query):
+    def setReminder(self, query):   # REVISAR
         """
         Función que realiza la creación de recordatorios. Estos son guardados en la base de conocimientos.
 
@@ -336,25 +336,31 @@ class Applications(Engine):
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
+        
+        # Obtención día y hora actuales
         t = datetime.now() 
         hour = t.strftime('%H:%M')
         today = datetime.today()
         number = str(today.date())
+
+        # Obtención de recordatorios de la colección Reminders
         reminders = []
         for collection in self.db.list_collection_names():
             if collection == "Reminders":
                 for element in self.db[collection].find({}):
                     reminders.append(element)
-        if not len(reminders):
+        
+        # Obtención *speech* y *text*
+        if not len(reminders):                                                                       
             speech = None
             text = None
         else:
             for rem in range(len(reminders)):
-                if reminders[rem]["día"] == number and reminders[rem]["hora"] <= hour:
+                if reminders[rem]["día"] == number and reminders[rem]["hora"] <= hour:                          # Comprobación del recordatorio
                     speech = "Tienes un recordatorio para esta hora de nombre " + reminders[rem]["nombre"]
                     text = "Recordatorio " + reminders[rem]["nombre"]
                     del_rem = {"hora" : reminders[rem]["hora"]}
-                    self.db["Reminders"].delete_one(del_rem)
+                    self.db["Reminders"].delete_one(del_rem)                                                    # Borrado del recordatorio
                 else:
                     speech = None
                     text = None
@@ -364,7 +370,7 @@ class Applications(Engine):
 
 #   ******************  Operaciones matemáticas  ******************
 
-    def mathOperation(self, query):
+    def mathOperation(self, query):  # REVISAR
         """
         Función que realiza las operaciones matemáticas programadas en la base de conocimiento.
 
@@ -435,15 +441,15 @@ class Applications(Engine):
             > Carga completa ('f').
         """
         try:
-            data, _ = self.sock.recvfrom(1024)
-            code = data.decode("utf-8")
-            if code.startswith('on'):
+            data, _ = self.sock.recvfrom(1024)                                  # Recepción de infromación UDP
+            code = data.decode("utf-8") 
+            if code.startswith('on'):                                           # Inicio Teodoro en el teléfono móvil
                 self.macroPhone = code[2:]
             # elif code == 'c':
             #     self.speak(self.User + ", te están llamando")
-            elif code == 'b':
-                self.speak(self.User + ", te queda poca batería en el móvil")
-            elif code == 'f':
+            elif code == 'b':                                                   # Batería baja
+                self.speak(self.User + ", te queda poca batería en el móvil")   
+            elif code == 'f':                                                   # Carga llena
                 self.speak(self.User + ", tu móvil ya está cargado")
         except:
             pass
@@ -457,6 +463,6 @@ class Applications(Engine):
         Returns:
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
         """
-        telegram_send.send(messages=[self.macroPhone])
+        telegram_send.send(messages=[self.macroPhone])  # Trigger a través de bot en Telegram
         speech = "Voy a ello"
         return speech
