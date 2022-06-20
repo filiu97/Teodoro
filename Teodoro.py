@@ -153,7 +153,7 @@ class Teodoro(System, Applications, Calendar):
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
-        name, password, phone = self.GUI("Login", text = default_user)
+        name, password, phone = self.GUI("Login", text = "Bienvenido/a!", default_text = default_user)
         try:
             info = self.db["Users"].find_one(
                 {"nombre": name}, {"_id": 0, "_salt": 1, "_hash": 1})
@@ -169,6 +169,8 @@ class Teodoro(System, Applications, Calendar):
                     {"nombre": name}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
                 self.CalendarsID = info["_CalendarsID"]
                 self.PhoneFunctions = info["_PhoneFunctions"]
+                speech = "Cambio de usuario realizado"
+                text = "Operación aceptada"
             elif first == True:
                 self.User = self.__defaultUser
                 self.GUI("Show", "Has inicializado como \n " +
@@ -177,6 +179,8 @@ class Teodoro(System, Applications, Calendar):
                     {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
                 self.CalendarsID = info["_CalendarsID"]
                 self.PhoneFunctions = info["_PhoneFunctions"]
+                speech = None
+                text = None
             else:
                 speech = "No se ha podido realizar el cambio de usuario"
                 text = "Operación denegada"
@@ -190,6 +194,8 @@ class Teodoro(System, Applications, Calendar):
                     {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
                 self.CalendarsID = info["_CalendarsID"]
                 self.PhoneFunctions = info["_PhoneFunctions"]
+                speech = None
+                text = None
             else:
                 speech = "No se ha podido realizar el cambio de usuario"
                 text = "Operación denegada"
@@ -203,6 +209,8 @@ class Teodoro(System, Applications, Calendar):
             # Macro de inicialización
             self.macroTeodoro = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/Teodoro"
             webbrowser.open(self.macroTeodoro)
+
+        return speech, text
 
 
 #   ******************  Extracción de información básica de la Base de Conocimiento  ******************
@@ -483,64 +491,80 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Users"] if(match in query)]):          # Funcionalidad *Users* REVISAR
+        elif bool([match for match in self.Commands["Users"] if(match in query)]):          # Funcionalidad *Users*
             if window is not None:                                                          # Cierre de ventana anterior
                 self.GUI("Close", prev_window=window)
 
             list_of_words = query.split()
-            name = list_of_words[list_of_words.index("nombre") + 1]
-            if "nuevo" in list_of_words:
-                action = "new"
-            elif "cambiar" in list_of_words:
-                action = "change"
-            elif "eliminar" in list_of_words or "borrar" in list_of_words:
-                action = "remove"
-            speech, text = self.actionUser(action, name)
-            self.speak(speech)
-            self.GUI("Show", text=text)
-            response = 0
-            return response
-
-        elif bool([match for match in self.Commands["NewInformation"] if(match in query)]): # Funcionalidad *NewInformation* REVISAR
-            if window is not None:
-                self.GUI("Close", prev_window=window)
-
-            self.speak(
-                "Perfecto, dime primero cómo vamos a llamar esta nueva información")
-            field, window = self.repeat()
-            if isinstance(field, tuple):
-                field = " ".join(field)
-            if field == "contraseña":
-                if self.User != "usuario":
-                    password = self.GUI("Text", "secret", prev_window=window)
-                    password = password.encode('utf-8')
-                    salt = bcrypt.gensalt()
-                    newHash = bcrypt.hashpw(password, salt)
-                    field = ["_salt", "_hash"]
-                    attribute = [salt.decode("utf-8"), newHash.decode("utf-8")]
-                else:
-                    speech = "No puedes darle contraseña al usuario por defecto"
-                    text = "Operación denegada"
-                    self.speak(speech)
-                    self.GUI("Show", text=text)
-                    response = 0
-                    return response
+            
+            # Obtención del nombre en la petición
+            if "nombre" in query:
+                name = list_of_words[list_of_words.index("nombre") + 1]                     # Nombre por voz
             else:
-                self.speak(
-                    "Bien, y ahora dime qué quieres que apunte sobre " + field)
-                attribute, window = self.repeat()
-                if isinstance(attribute, tuple):
-                    attribute = " ".join(attribute)
-            speech, text = self.newUserInfo(field, attribute)
-            self.speak(speech)
-            self.GUI("Show", text=text)
+                name = self.GUI("Text", text="Introduce nombre del usuario")                # Nombre por texto
+
+            # Determinación de acción
+            if "nuevo" in list_of_words:                                                    
+                action = "new"                                                              # Acción de nuevo usuario
+            elif "cambiar" in list_of_words:
+                action = "change"                                                           # Acción de cambio de usuario
+            elif "eliminar" in list_of_words or "borrar" in list_of_words:
+                action = "remove"                                                           # Acción de eliminar usuario
+            else:                                                                           
+                response = 6                                                                # Error en la petición
+                return response
+
+            speech, text = self.actionUser(action, name)                                    # Llamada al método *actionUser*        
+            self.speak(speech)                                                              # Enunciar *speech*
+            self.GUI("Show", text=text)                                                     # Mostrar *text*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Information"] if(match in query)]):    # Funcionalidad *Information* REVISAR
-            if window is not None:
+        elif bool([match for match in self.Commands["NewInformation"] if(match in query)]): # Funcionalidad *NewInformation*
+            if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
+            self.speak("Perfecto, dime primero cómo vamos a llamar esta nueva información") # Enunciar frase campo
+            field_text = self.GUI("Text", text="Introduce el campo", prev_window=window)    # Campo por texto
+            field = [field_text]
+            if field_text == "":
+                response = 7
+                return response
+            else:
+                # Lógica de encriptado para nueva contraseña
+                if field_text.lower() == "contraseña":
+                    if self.User != self.__defaultUser:
+                        password = self.GUI("Text", "secret", prev_window=window)
+                        password = password.encode('utf-8')
+                        salt = bcrypt.gensalt()
+                        newHash = bcrypt.hashpw(password, salt)
+                        field = ["_salt", "_hash"]
+                        attribute = [salt.decode("utf-8"), newHash.decode("utf-8")]
+                    else:
+                        speech = "No puedes darle contraseña al usuario por defecto"
+                        text = "Operación denegada"
+                        self.speak(speech)
+                        self.GUI("Show", text=text)
+                        response = 8
+                        return response
+                else:
+                    self.speak("Bien, y ahora dime qué quieres que apunte sobre " 
+                    + field_text)                                                           # Enunciar frase atributo
+                    attribute_text = self.GUI("Text", 
+                    text="Introduce el valor del campo", prev_window=window)                # Atributo por texto
+                    attribute = [attribute_text]
+                        
+                speech, text = self.newUserInfo(field, attribute)                           # Llamada al método *newUserInfo*
+                self.speak(speech)                                                          # Enunciar *speech*
+                self.GUI("Show", text=text)                                                 # Mostrar *text*    
+                response = 0
+                return response
+
+        elif bool([match for match in self.Commands["Information"] if(match in query)]):    # Funcionalidad *Information*
+            if window is not None:                                                          # Cierre ventana anterior
+                self.GUI("Close", prev_window=window)
+
+            # Obtención de imagen del usuario
             try:
                 image = self.fs.find_one({"filename": self.User})
                 bytedata = image.read()
@@ -548,18 +572,20 @@ class Teodoro(System, Applications, Calendar):
                 img_PIL = Image.open(ima_IO)
                 img_PIL.show()
             except:
-                self.speak(
-                    "Parece que no tienes una foto asociada a tu usuario")
+                self.speak("Parece que no tienes una foto asociada a tu usuario")
 
+            # Obtención información pública del usuario
             info = self.db["Users"].find_one({"nombre": self.User}, {
                                              "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+            
+            # Enunciar información
             self.speak("Lo que sé de ti es: ")
             for k, v in info.items():
                 self.speak(k + v)
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["ChangeVoice"] if(match in query)]):    # Funcionalidad *ChangeVoice* REVISAR
+        elif bool([match for match in self.Commands["ChangeVoice"] if(match in query)]):    # Funcionalidad *ChangeVoice*
             self.speak("Perfecto. Tiene " + str(Teo.maxVoices) +
                        "voces para poder elegir")                                           # Frase inicial
             speech, text = self.changeVoice()                                               # Llamada al método *changeVoice*
@@ -568,7 +594,7 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Google"] if(match in query)]):         # Funcionalidad *Google* REVISAR
+        elif bool([match for match in self.Commands["Google"] if(match in query)]):         # Funcionalidad *Google*
             if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
@@ -576,16 +602,15 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Wikipedia"] if(match in query)]):      # Funcionalidad *Wikipedia* REVISAR
+        elif bool([match for match in self.Commands["Wikipedia"] if(match in query)]):      # Funcionalidad *Wikipedia*
             if window is not None:                                                          # Cierre de ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            response = self.wikipedia(query)                                                
-            if response is None:
-                self.speak("No se ha podido encontrar la página solicitada")
+            self.wikipedia(query)                                                
+            response = 0
             return response
 
-        elif bool([match for match in self.Commands["Youtube"] if(match in query)]):        # Funcionalidad *Youtube* REVISAR
+        elif bool([match for match in self.Commands["Youtube"] if(match in query)]):        # Funcionalidad *Youtube*
             if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
@@ -653,18 +678,18 @@ class Teodoro(System, Applications, Calendar):
                 response = 0
             return response
 
-        elif bool([match for match in self.Commands["Weather"] if(match in query)]):        # Funcionalidad *Weather* REVISAR
-            if window is not None:
+        elif bool([match for match in self.Commands["Weather"] if(match in query)]):        # Funcionalidad *Weather*
+            if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
-            speech, place = self.weather(query)
-            self.speak(speech)
-            os.system("display " + place + ".png")
-            # self.GUI("Image", image = place + ".png", geometry = "1750X1000", prev_window = window)
+            speech, place = self.weather(query)                                             # Llamada al método *weather*
+            self.speak(speech)                                                              # Enunciar *speech*
+            os.system("display " + place + ".png")                                          # Mostrar imagen información meteorológica
+            os.remove(place + ".png")                                                       # Eliminar imagen información meteorológica
             response = 0
             return response
  
-        elif bool([match for match in self.Commands["Alarm"] if(match in query)]):          # Funcionalidad *Alarm* REVISAR
+        elif bool([match for match in self.Commands["Alarm"] if(match in query)]):          # Funcionalidad *Alarm*
             # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
             if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
@@ -677,10 +702,13 @@ class Teodoro(System, Applications, Calendar):
 
         elif bool([match for match in self.Commands["Reminder"] if(match in query)]):       # Funcionalidad *Reminder* REVISAR
             # "(Crea un) recordatorio de nombre 'Nombre' para el 'Día' a las 'Hora'"
+            if window is not None:                                                          # Cierre ventana anterior
+                self.GUI("Close", prev_window=window)
+            
             if self.Numbers:
                 speech, text = self.setReminder(query)                                      # Llamada al método *setReminder*
                 self.speak(speech)                                                          # Enunciar *speech*
-                self.GUI("Show", text=text, prev_window=window)                             # Mostrar *text
+                self.GUI("Show", text=text)                                                 # Mostrar *text
             else:
                 self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
             response = 0
@@ -819,7 +847,10 @@ def takeQuery(Teo):
                         Teo.GUI("Close", prev_window=window)    # Cierre ventana anterior
                     Teo.speak("¿Puede repetir su petición?")    # Enunciar frase
                     query, window = Teo.repeat()                # Llamada al método *repeat*
-                    Teo.getAction(query, window)                # Llamada al método *getAction*
+                    if query == None:
+                        Teo.speak("No he reconocido lo que ha dicho, lo siento")
+                    else:
+                        Teo.getAction(query, window)            # Llamada al método *getAction*
             elif time() - lastsave > 60:                        # PETICIÓN NO REALIZADA / COMPROBACIÓN TIEMPO DE CHEQUEO
                 speech, text = Teo.checkReminder()              # Llamada al método *checkReminder*
                 if speech != None:

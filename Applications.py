@@ -2,6 +2,7 @@
 from Engine import Engine
 import os
 import wikipedia 
+import random
 import webbrowser 
 import urllib.request
 import re
@@ -70,6 +71,9 @@ class Applications(Engine):
         self.macroPhone = None
         self.macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
 
+        # Atributo de localización por defecto
+        self.defaultLocation = "Aravaca"
+
         # Inicialización del módulo de wikipedia
         wikipedia.set_lang("es")
 
@@ -134,14 +138,13 @@ class Applications(Engine):
         Args:
             query (str): palabras clave.
         """
-        words = query.split()
-        if words[-1] == "google":                                   # Obtención petición
-            query = words[1]
+        if "búsqueda" in query:
+            request = self.GUI("Text", text="Introduce tu búsqueda")
         else:
-            query = words[-1]
-        webbrowser.open("https://www.google.es/search?q=" + query)  # Búsqueda web Google
+            request = query.replace("busca", "").replace ("en", "").replace("google", "")
+        webbrowser.open("https://www.google.es/search?q=" + request)
 
-    def wikipedia(self, query):     # REVISAR
+    def wikipedia(self, query):
         """
         Función que realiza búsquedas en la Wikipedia.
 
@@ -151,26 +154,18 @@ class Applications(Engine):
         Returns:
             response (int): variable bandera de ejecución correcta.
         """
-        words = query.split()
-        if words[-1] == "wikipedia":
-            query = words[1]
+        if "búsqueda" in query:
+            request = self.GUI("Text", text="Introduce tu búsqueda")
         else:
-            query = words[-1]
+            request = query.replace("busca", "").replace ("en", "").replace("wikipedia", "")
         try:
-            page = wikipedia.page(query)
+            page = wikipedia.page(request)
             webbrowser.open(page.url)
-            return 0
         except wikipedia.DisambiguationError as e:
-            self.speak("Múltiples opciones para " + query)
-            print(e.options)
-            self.speak("¿Cuál desea consultar?")
-            repeated = self.repeat()
-            if repeated is None:
-                return None
-            else:
-                page = wikipedia.page(repeated)
-                webbrowser.open(page.url)
-                return 0
+            s = random.choice(e.options)
+            page = wikipedia.page(s)
+            webbrowser.open(page.url)
+            os.system("clear") 
 
     def youtube(self, query): 
         """
@@ -180,22 +175,21 @@ class Applications(Engine):
         Args:
             query (str): palabras clave.
         """   
-        words = query.split()
-        if words[-1] == "youtube":                                                                                      # Obtención petición                                                                         
-            query = words[1]
+        if "búsqueda" in query or "vídeo" in query:
+            request = self.GUI("Text", text="Introduce tu búsqueda")
         else:
-            query = words[-1]
-        if "busca" in query:                                                                                            # Búsqueda web Youtube
-            webbrowser.open("https://www.youtube.com/results?search_query=" + query.replace(" ", "+"))
+            request = query.replace("busca", "").replace ("en", "").replace("youtube", "")
+        if "búsqueda" in query or "busca" in query:                                                                                            # Búsqueda web Youtube
+            webbrowser.open("https://www.youtube.com/results?search_query=" + request.replace(" ", "+"))
         else:                                                                                                           # Reproducción de vídeo youtube    
-            html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + query.replace(" ", "+"))
+            html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + request.replace(" ", "+"))
             video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
             webbrowser.open("https://www.youtube.com/watch?v=" + video_ids[0])
 
 
 #   ******************  Tiempo meteorológico  ******************
 
-    def weather(self, query):   # REVISAR
+    def weather(self, query):
         """
         Función que realiza una búsqueda sobre las condiciones meterológicas de una determinada zona. El resultado es
         expuesto al usuario a través de una imagen y guardada en la carpeta por defecto.
@@ -207,27 +201,38 @@ class Applications(Engine):
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             place (str): Nombre del lugar de la búsqueda.
         """
-        query = query.partition("en")
-        place = str(query[2]).replace(" ","")
+        # Obtenición del lugar
+        if "en" in query:
+            query = query.partition("en")
+            place = str(query[2]).replace(" ","")
+        else:
+            place = self.GUI("Text", text="Introduce la localización", default_text=self.defaultLocation)
+
+        # Obtención información meteorológica
         os.system("curl http://es.wttr.in/" + place + ".png --output '" + place + ".png'")
-        weather = os.popen("curl http://es.wttr.in/"+ place).read()
-        i = weather.find("+") or weather.find("-")
-        try:
-            temp = float(weather[i:i+3])
-        except:
-            temp = float(weather[i:i+2])
-        i = weather.find("/") + 10
-        desc = str()
-        while weather[i] != " ":
-            desc = desc + weather[i]
-            i+=1
+        weather = os.popen("curl 'wttr.in/"+ place + "?format=%C%t&lang=es'").read()
+
+        # Obtención temperatura y descripción
+        if "+" in weather:
+            weather = weather.partition("+")
+            desc = weather[0]
+            temp = weather[2].replace("°C", "")
+        elif "-" in weather:
+            weather = weather.partition("-")
+            desc = weather[0]
+            temp = "-" + weather[2].replace("°C", "")
+        else:
+            weather = weather.replace("0", "")
+            desc = weather
+            temp = "0"   
+
         speech = "En " + place + ",  está " + desc + " y hace " + str(temp) + " grados."
         return speech, place
 
 
 #   ******************  Alarmas  ******************
 
-    def setAlarm(self, query):  # REVISAR
+    def setAlarm(self, query):
         """
         Función que realiza la puesta de alarmas. Se creará una alarma no bloqueante del sistema a través de un thread.
 
@@ -239,23 +244,23 @@ class Applications(Engine):
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
+        # Obtención de duración
         list_of_words = query.split()
         try:
             t = int(list_of_words[list_of_words.index("de") + 1])
-        except:
-            t = 1
-        try:
             unit = list_of_words[list_of_words.index("de") + 2]
             m = self.s_time_unit.switch(unit)
         except:
-            m = 60
-        t *= m
-        try:
-            name = list_of_words[list_of_words.index("nombre") + 1]
-        except:
-            name = "Alarma"
+            t, m = self.GUI("Alarm", text="Introduce duración", default_text="5")
+        t *= m # Duración en segundos
 
-        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma " + name
+        # Obtención de nombre
+        try:
+            name = ' '.join(list_of_words[list_of_words.index("nombre")+1:])
+        except:
+            name = self.GUI("Text", text="Introduce nombre", default_text="Alarma")
+
+        speech = "Riiiiiiiiiing riiiiiiiiiing. Fin de la alarma de nombre " + name
         text = "Fin de la alarma \n " + name
         return t, speech, text
 
@@ -293,15 +298,13 @@ class Applications(Engine):
         try:
             name = list_of_words[list_of_words.index("nombre") + 1]
         except:
-            name = "Recordatorio"
+            name = self.GUI("Text", text="Introduce nombre", default_text="Recordatorio")
         try:
             hour = list_of_words[list_of_words.index("las") + 1]
             if list_of_words[list_of_words.index(hour) + 3] == "tarde" or list_of_words[list_of_words.index(hour) + 3] == "noche":
                 hour = hour.replace(hour[:2], str(int(hour[:2]) + 12))
         except:
-            speech = "No has especificado una hora concreta"
-            text = "Debes especificar una hora concreta"
-            return speech, text
+            hour = self.GUI("Hour", text="Introduce la hora")
         try:
             day = list_of_words[list_of_words.index("para") + 1]
             today = datetime.today().date()
@@ -318,13 +321,13 @@ class Applications(Engine):
                 position = val_list.index(day)
                 day = key_list[position]
         except:
-            day = str(datetime.today().date())
+            day = self.GUI("Date", text="Introduce la fecha",  geometry = "400x300")
         
         new_rem = {"nombre": name, "día": day, "hora": hour}
         self.db["Reminders"].insert_one(new_rem)
 
         speech = "Recordatorio creado"
-        text = "Recordatorio de nombre: " + name + " creado correctamente"
+        text = "Recordatorio de nombre:\n" + name + "\ncreado correctamente"
         return speech, text
 
     def checkReminder(self):

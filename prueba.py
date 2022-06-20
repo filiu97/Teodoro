@@ -411,12 +411,20 @@ import color
 # print(mongo_key)
 # file.close()
 
-import json
+# import json
+#f = open("Commands.json",'r')
+#json_object = json.loads(f)
+#json_formatted_str = json.dumps(json_object, indent=2)
+#print(json_formatted_str)
 
-f = open("Commands.json",'r')
+# query  ="alarma de nombre caca de la vaca"
+# list_of_words = query.split()
 
-json_object = json.loads(f)
+# name = ' '.join(list_of_words[list_of_words.index("nombre")+1:])
+# print(name)
 
-json_formatted_str = json.dumps(json_object, indent=2)
+# name = query.partition("nombre")
+# print(name[2])
+print(str(datetime.today().date()))
+print(datetime.strptime('20/6/22', '%d/%m/%y').date())
 
-print(json_formatted_str)
