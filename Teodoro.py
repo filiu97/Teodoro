@@ -188,7 +188,7 @@ class Teodoro(System, Applications, Calendar):
         except:
             if first == True:
                 self.User = self.__defaultUser
-                self.GUI("Show", "Has inicializado como \n " +
+                self.GUI("Show", "Has inicializado como " +
                         self.User + ".\nBienvenido!")
                 info = self.db["Users"].find_one(
                     {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
@@ -690,7 +690,7 @@ class Teodoro(System, Applications, Calendar):
             return response
  
         elif bool([match for match in self.Commands["Alarm"] if(match in query)]):          # Funcionalidad *Alarm*
-            # "(Pon una) alarma de '5 segundos/minutos/horas' de nombre 'Nombre'"
+            # "(Pon una) alarma (de '5 segundos/minutos/horas') (de nombre 'Nombre')"
             if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
@@ -700,13 +700,13 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Reminder"] if(match in query)]):       # Funcionalidad *Reminder* REVISAR
-            # "(Crea un) recordatorio de nombre 'Nombre' para el 'Día' a las 'Hora'"
+        elif bool([match for match in self.Commands["Reminder"] if(match in query)]):       # Funcionalidad *Reminder*
+            # "(Crea un) recordatorio (de nombre 'Nombre') (para el 'Día')"
             if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
             
             if self.Numbers:
-                speech, text = self.setReminder(query)                                      # Llamada al método *setReminder*
+                speech, text = self.setReminder(query, self.User)                                      # Llamada al método *setReminder*
                 self.speak(speech)                                                          # Enunciar *speech*
                 self.GUI("Show", text=text)                                                 # Mostrar *text
             else:
@@ -714,7 +714,7 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
  
-        elif bool([match for match in self.Commands["Math"] if(match in query)]):           # Funcionalidad *Math* REVISAR
+        elif bool([match for match in self.Commands["Math"] if(match in query)]):           # Funcionalidad *Math*
             # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
             if self.Numbers and self.MathOperations:            
                 speech, text = self.mathOperation(query)                                    # Llamada al método *mathOperation*
@@ -760,33 +760,39 @@ class Teodoro(System, Applications, Calendar):
                 return response
 
         elif bool([match for match in self.Commands["SetCalendar"] if(match in query)]):    # Funcionalidad *SetCalendar* REVISAR
-            # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' a las X de nombre X "
+            # "Crear/crea/creame/hacer/haz/hazme un evento para hoy/mañana/pasado mañana/'fecha' de nombre X "
+            if window is not None:                                                          # Cierre ventana anterior  
+                self.GUI("Close", prev_window=window)
+            
             if self.CalendarsID and self.Months and self.Numbers:
-                speech, text = self.setCalendar(query, window)                              # Llamada al método *setCalendar*
+                speech, text = self.setCalendar(query)                                      # Llamada al método *setCalendar*
                 if speech == -1:
-                    self.GUI("Show", text="Petición incorrecta", prev_window=window)        # Mostrar error en la petición
+                    self.GUI("Show", text="Petición incorrecta")                            # Mostrar error en la petición
                     response = -1
-                else:
+                elif speech != None:
                     self.speak(speech)                                                      # Enunciar *speech*
-                    self.GUI("Show", text=text, prev_window=window)                         # Mostrar *text*
+                    self.GUI("Show", text=text)                                             # Mostrar *text*
+                    response = 0
+                else:
+                    self.speak("Credenciales actualizadas")                                 # Enunciar actualización de credenciales
                     response = 0
                 return response
             else:
-                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
+                self.GUI("Show", text=self.Error)                                           # Mostrar error
                 response = 0
                 return response
 
-        elif bool([match for match in self.Commands["Shutdown"] if(match in query)]):       # Funcionalidad *Shutdown* REVISAR
+        elif bool([match for match in self.Commands["Shutdown"] if(match in query)]):       # Funcionalidad *Shutdown*
             self.shutdown()                                                                 # Llamada al método *shutdown*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Suspend"] if(match in query)]):        # Funcionalidad *Suspend* REVISAR
+        elif bool([match for match in self.Commands["Suspend"] if(match in query)]):        # Funcionalidad *Suspend*
             self.suspend()                                                                  # Llamada al método *suspend*
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Restart"] if(match in query)]):        # Funcionalidad *Restart* REVISAR
+        elif bool([match for match in self.Commands["Restart"] if(match in query)]):        # Funcionalidad *Restart*
             self.restart()                                                                  # Llamada al método *restart*
             response = 0
             return response
@@ -808,8 +814,11 @@ class Teodoro(System, Applications, Calendar):
             return response
 
         else:
+            if window is not None:                                                          
+                self.GUI("Close", prev_window=window)                                       # Cierre ventana anterior
+            
             self.speak("Lo siento, no te he entendido")                                     # Enunciar frase
-            response = 0
+            response = 1
             return response
 
 
@@ -852,7 +861,7 @@ def takeQuery(Teo):
                     else:
                         Teo.getAction(query, window)            # Llamada al método *getAction*
             elif time() - lastsave > 60:                        # PETICIÓN NO REALIZADA / COMPROBACIÓN TIEMPO DE CHEQUEO
-                speech, text = Teo.checkReminder()              # Llamada al método *checkReminder*
+                speech, text = Teo.checkReminder(Teo.User)      # Llamada al método *checkReminder*
                 if speech != None:
                     Teo.speak(speech)                           # Enunciar *speech*
                     Teo.GUI("Show", text=text)                  # Mostrar *text*

@@ -425,6 +425,20 @@ import color
 
 # name = query.partition("nombre")
 # print(name[2])
-print(str(datetime.today().date()))
-print(datetime.strptime('20/6/22', '%d/%m/%y').date())
 
+
+# print(str(datetime.today().date()))
+# print(datetime.strptime('20/6/22', '%d/%m/%y').date() > datetime.strptime('19/6/22', '%d/%m/%y').date())
+
+
+start_time_str = "el día " + str(21) + " de " +  str(6) + " de " + str(2022) + " a las 10:30"
+# start_time_str = "21/6/22 10:30"
+duration = 2
+
+matches = list(datefinder.find_dates(start_time_str))
+if len(matches):
+    start_time = matches[0]
+    end_time = start_time + timedelta(hours = duration)
+
+print(start_time)
+print(end_time)

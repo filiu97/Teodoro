@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import scrolledtext
 from tkinter import font
 from tkcalendar import Calendar
+from datetime import datetime
+
 
 
 def GUI(action, text = None, default_text = None, size = 16, 
@@ -500,15 +502,18 @@ def GUI(action, text = None, default_text = None, size = 16,
                 frame1,
                 textvariable = hour, 
                 bg = "#48C9B0", 
-                width = 5, 
-                font = (font1, size-6)
+                width = 6, 
+                font = (font1, size-6),
+                justify='center'
                 ).grid(row = 2, column = 1)
+
             Entry(
                 frame1, 
                 textvariable = minute, 
                 bg = "#48C9B0", 
-                width = 5, 
-                font = (font1, size-6)
+                width = 6, 
+                font = (font1, size-6),
+                justify='center'
                 ).grid(row = 2, column = 2)
 
             frame2 = Frame(
@@ -540,7 +545,12 @@ def GUI(action, text = None, default_text = None, size = 16,
 
             window.mainloop()
 
-            return alarm_time
+            if(isValidTime(alarm_time)):
+                return alarm_time
+            else:
+                GUI("Show", text="Por favor, introduce una\n hora en el formato correcto")
+                alarm_time_correct = GUI("Hour", text="Introduce la hora")
+                return alarm_time_correct
 
         elif action == "Date":
             
@@ -595,7 +605,7 @@ def GUI(action, text = None, default_text = None, size = 16,
 
             window.mainloop()
 
-            return date
+            return str(datetime.strptime(date, '%d/%m/%y').date())
 
 def get_Hour_entry(hour, minute):
     global alarm_time 
@@ -625,6 +635,32 @@ def get_Date_calendar(cal):
     global date
     date = cal.get_date()
     
+import re
+
+def isValidTime(time):
+     
+    # Regex to check valid time in 24-hour format.
+    regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+ 
+    # Compile the ReGex
+    p = re.compile(regex)
+ 
+    # If the time is empty
+    # return false
+    if (time == "") :
+        return False
+         
+    # Pattern class contains matcher() method
+    # to find matching between given time
+    # and regular expression.
+    m = re.search(p, time)
+     
+    # Return True if the time
+    # matched the ReGex otherwise False
+    if m is None :
+        return False
+    else :
+        return True
 
 # description, location = GUI("SetCalendar", geometry="800x400")
 # GUI("Show", text = "Esto es una prueba")
@@ -651,10 +687,10 @@ def get_Date_calendar(cal):
 # print(number)
 # print(unit)
 
-# alarm_time = GUI("Hour", text="Introduce la hora")
+alarm_time = GUI("Hour", text="Introduce la hora")
 
-# print(alarm_time)
+print(alarm_time)
 
-date = GUI("Date", text="Introduce la fecha",  geometry = "400x300")
+# date = GUI("Date", text="Introduce la fecha",  geometry = "400x300")
 
-print(date)
+# print(date)

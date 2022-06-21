@@ -283,28 +283,30 @@ class Applications(Engine):
     
 #   ******************  Recordatorios  ******************
 
-    def setReminder(self, query):   # REVISAR
+    def setReminder(self, query, user):   # REVISAR
         """
         Función que realiza la creación de recordatorios. Estos son guardados en la base de conocimientos.
 
         Args:
             query (str): palabras clave.
+            user (str): usuario creador del recordatorio.
 
         Returns:
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
         list_of_words = query.split()
+        
+        # Obtención del nombre
         try:
-            name = list_of_words[list_of_words.index("nombre") + 1]
+            name = ' '.join(list_of_words[list_of_words.index("nombre")+1:])
         except:
-            name = self.GUI("Text", text="Introduce nombre", default_text="Recordatorio")
-        try:
-            hour = list_of_words[list_of_words.index("las") + 1]
-            if list_of_words[list_of_words.index(hour) + 3] == "tarde" or list_of_words[list_of_words.index(hour) + 3] == "noche":
-                hour = hour.replace(hour[:2], str(int(hour[:2]) + 12))
-        except:
-            hour = self.GUI("Hour", text="Introduce la hora")
+            name = self.GUI("Text", text="Introduce el nombre del recordatorio", default_text="Recordatorio")
+       
+        # Obtención de la hora
+        hour = self.GUI("Hour", text="Introduce la hora del recordatorio")
+
+        # Obtención de la fecha
         try:
             day = list_of_words[list_of_words.index("para") + 1]
             today = datetime.today().date()
@@ -321,19 +323,22 @@ class Applications(Engine):
                 position = val_list.index(day)
                 day = key_list[position]
         except:
-            day = self.GUI("Date", text="Introduce la fecha",  geometry = "400x300")
+            day = self.GUI("Date", text="Introduce la fecha del recordatorio",  geometry = "400x300")
         
-        new_rem = {"nombre": name, "día": day, "hora": hour}
+        new_rem = {"usuario": user, "nombre": name, "día": day, "hora": hour}
         self.db["Reminders"].insert_one(new_rem)
 
         speech = "Recordatorio creado"
-        text = "Recordatorio de nombre:\n" + name + "\ncreado correctamente"
+        text = "Recordatorio de nombre: " + name + "\ncreado correctamente"
         return speech, text
 
-    def checkReminder(self):
+    def checkReminder(self, user):
         """
         Función que comprueba si se ha de enunciar algún recordatorio. Se la llama periódicamente a través del 
         bucle principal.
+
+        Args:
+            user (str): usuario actual del sistema.
 
         Returns:
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
@@ -359,21 +364,25 @@ class Applications(Engine):
             text = None
         else:
             for rem in range(len(reminders)):
-                if reminders[rem]["día"] == number and reminders[rem]["hora"] <= hour:                          # Comprobación del recordatorio
-                    speech = "Tienes un recordatorio para esta hora de nombre " + reminders[rem]["nombre"]
-                    text = "Recordatorio " + reminders[rem]["nombre"]
-                    del_rem = {"hora" : reminders[rem]["hora"]}
-                    self.db["Reminders"].delete_one(del_rem)                                                    # Borrado del recordatorio
-                else:
-                    speech = None
-                    text = None
+                if reminders[rem]["usuario"] == user:
+                    if reminders[rem]["día"] == number and reminders[rem]["hora"] <= hour:                          # Comprobación del recordatorio
+                        speech = "Tienes un recordatorio para esta hora de nombre " + reminders[rem]["nombre"]
+                        text = "Recordatorio " + reminders[rem]["nombre"]
+                        del_rem = {"hora" : reminders[rem]["hora"]}
+                        self.db["Reminders"].delete_one(del_rem)                                                    # Borrado del recordatorio
+                    elif reminders[rem]["día"] > number:
+                        del_rem = {"hora" : reminders[rem]["hora"]}
+                        self.db["Reminders"].delete_one(del_rem)                                                    # Borrado del recordatorio
+                    else:
+                        speech = None
+                        text = None
         
         return speech, text
 
 
 #   ******************  Operaciones matemáticas  ******************
 
-    def mathOperation(self, query):  # REVISAR
+    def mathOperation(self, query):
         """
         Función que realiza las operaciones matemáticas programadas en la base de conocimiento.
 
@@ -386,6 +395,8 @@ class Applications(Engine):
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
         list_of_words = query.split()
+
+        # Obtención de la operación
         operation = None
         for key in self.MathOperations.keys():
             if self.MathOperations[key]["keyword"] in query:
@@ -410,10 +421,11 @@ class Applications(Engine):
                     number_2 = list_of_words[list_of_words.index(
                         self.MathOperations[key]["keyword"]) + 1]
         if operation == None:
-            self.speak("Lo siento, no puedo realizar esa operación")
-            response = 0
-            return response
+            speech = "Lo siento, no puedo realizar esa operación"
+            text = "Operación no recogida"
+            return speech, text
 
+        # Obtención de los dos números
         key_list = list(self.Numbers.keys())
         val_list = list(self.Numbers.values())
         try:
@@ -426,6 +438,8 @@ class Applications(Engine):
             number_2 = int(key_list[position])
         except:
             number_2 = int(number_2)
+
+        # Obtención del resultado
         result = eval(operation)
         speech = str(result)
         text = str(result)

@@ -32,41 +32,23 @@ class System(Engine):
 
 #   ******************  Funcionalidades para el control del ordenador  ******************
 
-    def shutdown(self, test = False):
+    def shutdown(self):
         """
         Función que realiza el apagado del ordenador.
-
-        Args:
-            test (bool, optional): Bandera para el "falseado" de la funcionalidad para su testeo. Defaults to False.
         """
         self.speak("Perfecto, que tengas un buen día")  # Enunciar frase
-        if test:                                        # Test
-            sleep(5)
-        else:                                           # Real
-            os.system("shutdown now -h")
+        os.system("shutdown now -h")
 
-    def suspend(self, test = False):
+    def suspend(self):
         """
         Función que realiza el apagado del ordenador.
-
-        Args:
-            test (bool, optional): Bandera para el "falseado" de la funcionalidad para su testeo. Defaults to False.
         """
         self.speak("Perfecto, suspendiendo el equipo")  # Enunciar frase
-        if test:                                        # Test
-            sleep(5)
-        else:                                           # Real
-            os.system("sudo pm-suspend")
+        os.system("sudo pm-suspend")
 
-    def restart(self, test = False):
+    def restart(self):
         """
         Función que realiza el apagado del ordenador.
-
-        Args:
-            test (bool, optional): Bandera para el "falseado" de la funcionalidad para su testeo. Defaults to False.
         """
         self.speak("Perfecto, reiniciando el equipo")   # Enunciar frase
-        if test:                                        # Test
-            sleep(5)
-        else:
-            os.system("shutdown now -r")                # Real
+        os.system("shutdown now -r")               

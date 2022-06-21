@@ -326,6 +326,7 @@ class Calendar(Engine):
         
             return speech, text
 
+        # Error de credenciales *REVISAR
         except:
             self.speak("Parece que ha habido un error. Por favor, vuelve a actualizar sus credenciales.")
             scopes = ['https://www.googleapis.com/auth/calendar']
@@ -335,7 +336,7 @@ class Calendar(Engine):
             
             return None, None
 
-    def setCalendar(self, query, window):  # REVISAR
+    def setCalendar(self, query):  # REVISAR
         """
         Función que implementa toda la lógica de recepción de peticiones para crear un evento en el calendario. Otorga muchas posibilidades:
             - Hoy.
@@ -350,69 +351,86 @@ class Calendar(Engine):
             speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
-        self.service = build("calendar", "v3", credentials=self.__credentials)
-        calendarID = self.CalendarsID['personal']
-        list_of_words = query.split()
-        time_unit = "para"
-        if time_unit not in list_of_words:
-            return -1, -1
-        if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
-            time_str = "hoy"
-            today = datetime.today()
-            day_str = today.strftime("%m-%d-%Y")
-        elif list_of_words[list_of_words.index(time_unit) + 1] == "mañana":
-            time_str = "mañana"
-            today = datetime.today()
-            day_str = today + timedelta(days=1)
-            day_str = day_str.strftime("%m-%d-%Y")
-        elif list_of_words[list_of_words.index(time_unit) + 1] == "pasado":
-            time_str = "pasado mañana"
-            today = datetime.today()
-            day_str = today + timedelta(days=2)
-            day_str = day_str.strftime("%m-%d-%Y")
-        else:
+        try:
+            # Inicialización calendario
+            self.service = build("calendar", "v3", credentials=self.__credentials)
+
+            # Obtención de la fecha
+            list_of_words = query.split()
+            time_unit = "para"
+            date_format = "%d/%m/%Y"
+            if time_unit not in list_of_words:
+                day_str = self.GUI("Date", text="Introduce la fecha del evento",  geometry = "400x300")
+            else:
+                if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
+                    time_str = "hoy"
+                    today = datetime.today()
+                    time_str = today.strftime(date_format)
+                elif list_of_words[list_of_words.index(time_unit) + 1] == "mañana":
+                    day_str = "mañana"
+                    today = datetime.today()
+                    day_str = today + timedelta(days=1)
+                    day_str = day_str.strftime(date_format)
+                elif list_of_words[list_of_words.index(time_unit) + 1] == "pasado":
+                    time_str = "pasado mañana"
+                    today = datetime.today()
+                    day_str = today + timedelta(days=2)
+                    day_str = day_str.strftime(date_format)
+                else:
+                    try:
+                        day = list_of_words[list_of_words.index(time_unit) + 2]
+                        key_list = list(self.Numbers.keys())
+                        val_list = list(self.Numbers.values())
+                        position = val_list.index(day)
+                        day = key_list[position]
+                    except:
+                        day = list_of_words[list_of_words.index(time_unit) + 2]
+                    try:
+                        month = list_of_words[list_of_words.index(time_unit) + 4]
+                        key_list = list(self.Months.keys())
+                        val_list = list(self.Months.values())
+                        position = val_list.index(month)
+                        month = key_list[position]
+                    except:
+                        today = datetime.today()
+                        month = today.month
+                    try:
+                        year = int(list_of_words[list_of_words.index(time_unit) + 6])
+                    except:
+                        today = datetime.today()
+                        year = today.year
+
+                    day_str = str(day) + "/" +  str(month) + "/" + str(year)
+            
+            # Obtención de la hora
+            hours_str = self.GUI("Hour", text="Introduce la hora del recordatorio")
+
+            # Obtención del tiempo del evento
+            time_str = day_str + " " + hours_str
+
+            # Obtención del título
             try:
-                day = list_of_words[list_of_words.index(time_unit) + 2]
-                key_list = list(self.Numbers.keys())
-                val_list = list(self.Numbers.values())
-                position = val_list.index(day)
-                day = key_list[position]
+                summary = ' '.join(list_of_words[list_of_words.index("nombre")+1:])
             except:
-                day = list_of_words[list_of_words.index(time_unit) + 2]
-            try:
-                month = list_of_words[list_of_words.index(time_unit) + 4]
-                key_list = list(self.Months.keys())
-                val_list = list(self.Months.values())
-                position = val_list.index(month)
-                month = key_list[position]
-            except:
-                today = datetime.today()
-                month = today.month
-            try:
-                year = int(list_of_words[list_of_words.index(time_unit) + 6])
-            except:
-                today = datetime.today()
-                year = today.year
-            time_str = "el día " + str(day) + " de " +  str(month) + " de " + str(year)
-            time_format = "hours"
+                summary = self.GUI("Text", text="Introduce el nombre del evento", default_text="Evento")
 
-            day_str = str(month) + "/" + str(day) + "/" + str(year)
-        
-        hours_str = list_of_words[list_of_words.index("a") + 2]
+            # Obtención de la descripción y localización
+            description, location = self.GUI("SetCalendar", geometry="800x400")
 
-        # if list_of_words[list_of_words.index("a") + 3] == "de":
-        #     day_moment = list_of_words[list_of_words.index("de") + 2]
-        #     if day_moment == "tarde" or day_moment == "noche":
-        #         hour_format = "pm"
-        #     else:
-        #         hour_format = "am"
+            # Creación del evento
+            self.create_event(time_str, summary.title(), description=description, location=location)
 
-        time_str = hours_str #+ " " + hour_format
-        summary = list_of_words[-1]
-        description, location = self.GUI("SetCalendar", geometry="800x400", prev_window=window)
-        self.create_event(time_str,summary.title(), description=description, location=location)
+            speech = "Evento creado correctamente"
+            text = "Evento creado"
 
-        speech = "Evento creado correctamente"
-        text = "Evento creado"
+            return speech, text
 
-        return speech, text
+        # Error de credenciales *REVISAR
+        except:
+            self.speak("Parece que ha habido un error. Por favor, vuelve a actualizar sus credenciales.")
+            scopes = ['https://www.googleapis.com/auth/calendar']
+            flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
+            self.__credentials = flow.run_console()
+            pickle.dump(self.__credentials, open("token.pkl", "wb")) 
+            
+            return None, None

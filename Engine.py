@@ -7,6 +7,7 @@ from tkinter import font
 from tkcalendar import Calendar
 from datetime import datetime
 import requests
+import re
 
 
 class Engine():
@@ -260,6 +261,17 @@ class Engine():
         global date
         date = cal.get_date()
 
+    def isValidTime(self, time):
+        regex = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$"
+        p = re.compile(regex)
+        if (time == "") :
+            return False
+        m = re.search(p, time)
+        if m is None :
+            return False
+        else :
+            return True
+
     # REVISAR
     def GUI(self, action, text = None, default_text = None,
             size = 16, geometry = "400x200", prev_window = None):        
@@ -277,7 +289,6 @@ class Engine():
         Returns:
             En algunas GUIs se devuelven cadenas de texto para la ejecución de la funcionalidad a la que sirve la interfaz.
         """
-        
         # Cierre de ventana anterior o acción *Close*
         if prev_window is not None or action == "Close":
             prev_window.destroy()
@@ -784,7 +795,12 @@ class Engine():
 
             window.mainloop()
 
-            return alarm_time
+            if(self.isValidTime(alarm_time)):
+                return alarm_time
+            else:
+                self.GUI("Show", text="Por favor, introduce una\n hora en el formato correcto")
+                alarm_time_correct = self.GUI("Hour", text="Introduce la hora")
+                return alarm_time_correct
 
         elif action == "Date":
             
