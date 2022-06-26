@@ -431,6 +431,46 @@ class Engine():
 
             window.mainloop()
 
+        elif action == "Error":         # GUI Error
+
+            Label(
+                window,
+                text = text,
+                font = (font1, size, "bold"),
+                padx = 0,
+                pady = 15,
+                bg = bg
+            ).pack()
+
+            Label(
+                window,
+                text = default_text,
+                font = (font1, size-2),
+                padx = 0,
+                pady = 20,
+                bg = bg
+            ).pack()
+
+            cls_label = Label(
+                window,
+                text = close_label,
+                font = (font2, 10, "bold"),
+                padx = 0,
+                pady = 0,
+                bg = bg
+                )
+
+            b1 = Button(
+                window,
+                command = lambda: window.destroy())
+            img = PhotoImage(file = ok_button)
+            b1.config(image = img)
+
+            cls_label.pack(expand = True)
+            b1.pack(expand = True)
+
+            window.mainloop()
+
         elif action == "GetCalendar":   # GUI GetCalendar
             
             label = Label(
@@ -802,7 +842,7 @@ class Engine():
                 alarm_time_correct = self.GUI("Hour", text="Introduce la hora")
                 return alarm_time_correct
 
-        elif action == "Date":
+        elif action == "Date":          # GUI Date
             
             label = Label(
                 window,

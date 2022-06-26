@@ -3,7 +3,7 @@ from tkinter import scrolledtext
 from tkinter import font
 from tkcalendar import Calendar
 from datetime import datetime
-
+from tkinter import messagebox
 
 
 def GUI(action, text = None, default_text = None, size = 16, 
@@ -171,11 +171,45 @@ def GUI(action, text = None, default_text = None, size = 16,
 
             window.mainloop()
 
-        elif action == "Image":
-            canvas = Canvas(window, width = 1500, height = 800)      
-            canvas.pack()      
-            img = PhotoImage(file=image)      
-            canvas.create_image(20,20, anchor=NW, image=img) 
+        elif action == "Error":
+
+            Label(
+                window,
+                text = text,
+                font = (font1, size, "bold"),
+                padx = 0,
+                pady = 15,
+                bg = bg
+            ).pack()
+
+            Label(
+                window,
+                text = default_text,
+                font = (font1, size-2),
+                padx = 0,
+                pady = 20,
+                bg = bg
+            ).pack()
+
+            cls_label = Label(
+                window,
+                text = close_label,
+                font = (font2, 10, "bold"),
+                padx = 0,
+                pady = 0,
+                bg = bg
+                )
+
+            b1 = Button(
+                window,
+                command = lambda: window.destroy())
+            img = PhotoImage(file = ok_button)
+            b1.config(image = img)
+
+
+            cls_label.pack(expand = True)
+            b1.pack(expand = True)
+
             window.mainloop()
 
         elif action == "GetCalendar":
@@ -671,8 +705,9 @@ def isValidTime(time):
 # print(text)
 # GUI("GetCalendar", text = text, size = 12, geometry = "800x600")
 
-# name, password, phone = GUI("Login", "filiu")
+name, password, phone = GUI("Login", text = "Bienvenido/a!", default_text = "filiu")
 
+print(type(phone))
 
 # print(name)
 # print(password)
@@ -687,10 +722,20 @@ def isValidTime(time):
 # print(number)
 # print(unit)
 
-alarm_time = GUI("Hour", text="Introduce la hora")
+# alarm_time = GUI("Hour", text="Introduce la hora")
 
-print(alarm_time)
+# print(alarm_time)
 
 # date = GUI("Date", text="Introduce la fecha",  geometry = "400x300")
 
 # print(date)
+
+
+# GUI("Error", 
+#     "Realizaste una petición incorrecta sobre\n el método *getCalendar*.",
+#     "La estructura debe ser:\n\n"
+#     "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas\n"
+#     "para hoy/mañana/pasado mañana/'fecha'/\n"
+#     "esta-e/próxima-o/siguiente/X siguientes\n"
+#     "semana/semanas/mes/meses",
+#     geometry="600x350")

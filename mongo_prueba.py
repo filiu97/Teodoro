@@ -16,19 +16,19 @@ def get_db():
 if __name__ == "__main__":
 
     client, db, fs = get_db() 
-    # applications = []
-    # calendar = []
-    # general = []
-    # for collection in db.list_collection_names():
-    #     if collection == "Applications":
-    #         for element in db[collection].find({}):
-    #             applications.append(element)
-    #     elif collection == "Calendar":
-    #         for element in db[collection].find({}):
-    #             calendar.append(element)
-    #     elif collection == "General":
-    #         for element in db[collection].find({}):
-    #             general.append(element)
+    applications = []
+    calendar = []
+    general = []
+    for collection in db.list_collection_names():
+        if collection == "Applications":
+            for element in db[collection].find({}):
+                applications.append(element)
+        elif collection == "Calendar":
+            for element in db[collection].find({}):
+                calendar.append(element)
+        elif collection == "General":
+            for element in db[collection].find({}):
+                general.append(element)
 
     # SpotifyActions = applications[0]["SpotifyActions"]
     # # CalendarsID = calendar[0]["CalendarsID"]
@@ -153,12 +153,19 @@ if __name__ == "__main__":
     # newvalues = { "$set": { "_CalendarsID" : {"personal" : None, "trello" : None}, "_salt":"salt", "_hash":"hash" } }
     # db["Users"].update_one("caca", newvalues)
 
-    text = "caca"
-    text1 = "blanda"
-    field = [text]
-    attribute = [text1]
+    # text = "caca"
+    # text1 = "blanda"
+    # field = [text]
+    # attribute = [text1]
 
-    name2find = {"nombre": "filiu"}
-    for i in range(len(field)):
-        newvalues = {"$set": {field[i]: attribute[i]}}
-        db["Users"].update_one(name2find, newvalues)
+    # name2find = {"nombre": "filiu"}
+    # for i in range(len(field)):
+    #     newvalues = {"$set": {field[i]: attribute[i]}}
+    #     db["Users"].update_one(name2find, newvalues)
+
+    import json
+
+    with open('client_secret.json') as file:
+        file_data = json.load(file)
+
+    db["General"].insert_one(file_data)

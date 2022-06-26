@@ -1,6 +1,9 @@
 
 
+import os
+import shlex
 from time import sleep
+import webbrowser
 from google_auth_oauthlib.flow import InstalledAppFlow
 from apiclient.discovery import build
 import pickle
@@ -431,14 +434,36 @@ import color
 # print(datetime.strptime('20/6/22', '%d/%m/%y').date() > datetime.strptime('19/6/22', '%d/%m/%y').date())
 
 
-start_time_str = "el día " + str(21) + " de " +  str(6) + " de " + str(2022) + " a las 10:30"
-# start_time_str = "21/6/22 10:30"
-duration = 2
+# start_time_str = "el día " + str(21) + " de " +  str(6) + " de " + str(2022) + " a las 10:30"
+# # start_time_str = "21/6/22 10:30"
+# duration = 2
 
-matches = list(datefinder.find_dates(start_time_str))
-if len(matches):
-    start_time = matches[0]
-    end_time = start_time + timedelta(hours = duration)
+# matches = list(datefinder.find_dates(start_time_str))
+# if len(matches):
+#     start_time = matches[0]
+#     end_time = start_time + timedelta(hours = duration)
 
-print(start_time)
-print(end_time)
+# print(start_time)
+# print(end_time)
+
+
+# f = open(".prueba", "x")
+# f.close()
+
+# webbrowser.open(".prueba")
+
+
+# f = open(".log", "w")
+# f.write(str(datetime.today().date()))
+# f.close()
+
+
+
+f = open(".log", "r")
+last_connection = f.read()
+
+if str(datetime.today().date()) == last_connection:
+    print("Yeah")
+else:
+    print("No")
+f.close()

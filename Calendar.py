@@ -8,6 +8,7 @@ from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 import pickle
 import iso8601
+import os
 
 
 class Calendar(Engine):
@@ -178,7 +179,7 @@ class Calendar(Engine):
 
 #   ******************  getCalendar y setCalendar  ******************
 
-    def getCalendar(self, query):  # REVISAR
+    def getCalendar(self, query):
         """
         Función que implementa toda la lógica de recepción de peticiones para mostrar eventos del calendario. Otorga muchas posibilidades:
             - Hoy.
@@ -196,8 +197,10 @@ class Calendar(Engine):
             text (str): Cadena de texto que contiene la frase que debe mostrar el sistema.
         """
         try:
+            # Inicialización calendario
             self.service = build("calendar", "v3", credentials=self.__credentials)
 
+            # Elección del calendario a enseñar
             list_of_words = query.split()
             if ("eventos" in query) or ("calendario" in query):
                 calendarID = self.CalendarsID['personal']
@@ -205,7 +208,10 @@ class Calendar(Engine):
             else:
                 calendarID = self.CalendarsID['trello']
                 event_type = "tareas"
+
+            date_format = "%d/%m/%Y"
             
+            # "X" semanas
             if "semanas" in query:
                 number = list_of_words[list_of_words.index("semanas") - 1]
                 time_str = "las próximas " + number + " semanas"
@@ -217,6 +223,7 @@ class Calendar(Engine):
                 duration = 7*number
                 eventsResult = self.get_relative_events(calendarID, duration)
 
+            # Esta o próxima semana
             elif "semana" in query:
                 time_unit = list_of_words[list_of_words.index("semana") - 1]
                 if time_unit == "esta":
@@ -231,6 +238,7 @@ class Calendar(Engine):
                     offset = 7
                     eventsResult = self.get_relative_events(calendarID, duration, offset)
             
+            # "X" meses
             elif "meses" in query:
                 number = list_of_words[list_of_words.index("meses") - 1]
                 time_str = "los próximos " + number + " meses"
@@ -242,6 +250,7 @@ class Calendar(Engine):
                 duration = 30*number
                 eventsResult = self.get_relative_events(calendarID, duration)
 
+            # Este o próximo mes
             elif "mes" in query:
                 time_unit = list_of_words[list_of_words.index("mes") - 1]
                 if time_unit == "este":
@@ -256,6 +265,7 @@ class Calendar(Engine):
                     offset = 30
                     eventsResult = self.get_relative_events(calendarID, duration, offset)
 
+            # Día
             else:
                 if "para" in query:
                     time_unit = "para"
@@ -263,26 +273,30 @@ class Calendar(Engine):
                     time_unit = "de"
                 else:
                     return -1, -1
+                # Hoy
                 if list_of_words[list_of_words.index(time_unit) + 1] == "hoy":
                     time_str = "hoy"
                     time_format = "hours"
                     today = datetime.today()
-                    day_str = today.strftime("%m-%d-%Y")
+                    day_str = today.strftime(date_format)
                     eventsResult = self.get_absolute_events(calendarID, day_str)
+                # Mañana
                 elif list_of_words[list_of_words.index(time_unit) + 1] == "mañana":
                     time_str = "mañana"
                     time_format = "hours"
                     today = datetime.today()
                     day_str = today + timedelta(days=1)
-                    day_str = day_str.strftime("%m-%d-%Y")
+                    day_str = day_str.strftime(date_format)
                     eventsResult = self.get_absolute_events(calendarID, day_str)
+                # Pasado mañana
                 elif list_of_words[list_of_words.index(time_unit) + 1] == "pasado":
                     time_str = "pasado mañana"
                     time_format = "hours"
                     today = datetime.today()
                     day_str = today + timedelta(days=2)
-                    day_str = day_str.strftime("%m-%d-%Y")
+                    day_str = day_str.strftime(date_format)
                     eventsResult = self.get_absolute_events(calendarID, day_str)
+                # Día concreto
                 else:
                     try:
                         day = list_of_words[list_of_words.index(time_unit) + 2]
@@ -308,9 +322,10 @@ class Calendar(Engine):
                         year = today.year
                     time_str = "el día " + str(day) + " de " +  str(month) + " de " + str(year)
                     time_format = "hours"
-                    day_str = str(month) + "/" + str(day) + "/" + str(year)
+                    day_str = str(day) + "/" + str(month) + "/" + str(year)
                     eventsResult = self.get_absolute_events(calendarID, day_str)
 
+            # Obtener resultados
             if eventsResult['items']:
                 speech = "Tus " + event_type + "  para " + time_str + " son:"
                 text = str()
@@ -326,17 +341,23 @@ class Calendar(Engine):
         
             return speech, text
 
-        # Error de credenciales *REVISAR
+        # Error de credenciales
         except:
-            self.speak("Parece que ha habido un error. Por favor, vuelve a actualizar sus credenciales.")
-            scopes = ['https://www.googleapis.com/auth/calendar']
-            flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
-            self.__credentials = flow.run_console()
-            pickle.dump(self.__credentials, open("token.pkl", "wb")) 
-            
-            return None, None
+            if os.path.isfile('.client_secret.json'):
+                self.speak("Parece que ha habido un error. Por favor, vuelve a actualizar sus credenciales.")
+                scopes = ['https://www.googleapis.com/auth/calendar']
+                flow = InstalledAppFlow.from_client_secrets_file(".client_secret.json", scopes=scopes)
+                self.__credentials = flow.run_local_server()
+                pickle.dump(self.__credentials, open("token.pkl", "wb")) 
+                speech = "Se han actualizado las credenciales"
+                text = "Credenciales actualizadas.\nVuelva a intentar su petición"
+            else:
+                speech = "Usted no tiene acceso a la API de Google Calendar"
+                text = "Gestione su acceso a la\nAPI de Google Calendar"
 
-    def setCalendar(self, query):  # REVISAR
+            return speech, text
+
+    def setCalendar(self, query):
         """
         Función que implementa toda la lógica de recepción de peticiones para crear un evento en el calendario. Otorga muchas posibilidades:
             - Hoy.
@@ -425,12 +446,18 @@ class Calendar(Engine):
 
             return speech, text
 
-        # Error de credenciales *REVISAR
+        # Error de credenciales
         except:
-            self.speak("Parece que ha habido un error. Por favor, vuelve a actualizar sus credenciales.")
-            scopes = ['https://www.googleapis.com/auth/calendar']
-            flow = InstalledAppFlow.from_client_secrets_file("client_secret.json", scopes=scopes)
-            self.__credentials = flow.run_console()
-            pickle.dump(self.__credentials, open("token.pkl", "wb")) 
-            
-            return None, None
+            if os.path.isfile('.client_secret.json'):
+                self.speak("Parece que ha habido un error. Por favor, vuelve a actualizar sus credenciales.")
+                scopes = ['https://www.googleapis.com/auth/calendar']
+                flow = InstalledAppFlow.from_client_secrets_file(".client_secret.json", scopes=scopes)
+                self.__credentials = flow.run_local_server()
+                pickle.dump(self.__credentials, open("token.pkl", "wb")) 
+                speech = "Se han actualizado las credenciales"
+                text = "Credenciales actualizadas.\nVuelva a intentar su petición"
+            else:
+                speech = "Usted no tiene acceso a la API de Google Calendar"
+                text = "Gestione su acceso a la\nAPI de Google Calendar"
+
+            return speech, text
