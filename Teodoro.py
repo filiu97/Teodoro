@@ -549,9 +549,6 @@ class Teodoro(System, Applications, Calendar):
             return response
 
         elif bool([match for match in self.Commands["NewInformation"] if(match in query)]): # Funcionalidad *NewInformation*
-            if window is not None:                                                          # Cierre ventana anterior
-                self.GUI("Close", prev_window=window)
-
             self.speak("Perfecto, dime primero cómo vamos a llamar esta nueva información") # Enunciar frase campo
             field_text = self.GUI("Text", text="Introduce el campo", prev_window=window)    # Campo por texto
             field = [field_text]
@@ -562,7 +559,7 @@ class Teodoro(System, Applications, Calendar):
                 # Lógica de encriptado para nueva contraseña
                 if field_text.lower() == "contraseña":
                     if self.User != self.__defaultUser:
-                        password = self.GUI("Text", "secret", prev_window=window)
+                        password = self.GUI("Text", "secret")
                         password = password.encode('utf-8')
                         salt = bcrypt.gensalt()
                         newHash = bcrypt.hashpw(password, salt)
@@ -575,7 +572,7 @@ class Teodoro(System, Applications, Calendar):
                     self.speak("Bien, y ahora dime qué quieres que apunte sobre " 
                     + field_text)                                                           # Enunciar frase atributo
                     attribute_text = self.GUI("Text", 
-                    text="Introduce el valor del campo", prev_window=window)                # Atributo por texto
+                    text="Introduce el valor del campo")                                    # Atributo por texto
                     attribute = [attribute_text]
                         
                 speech, text = self.newUserInfo(field, attribute)                           # Llamada al método *newUserInfo*
@@ -606,6 +603,58 @@ class Teodoro(System, Applications, Calendar):
             self.speak("Lo que sé de ti es: ")
             for k, v in info.items():
                 self.speak(k + v)
+            response = 0
+            return response
+
+        elif bool([match for match in self.Commands["DelInformation"] if(match in query)]): # Funcionalidad *DelInformation*
+            # Obtención información pública del usuario
+            info = self.db["Users"].find_one({"nombre": self.User}, {
+                                             "nombre": 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+            l = list(info.keys())
+            height = 200 + 20*len(l)
+
+            # Mostrar información
+            if len(l) > 0:
+                self.speak("Esta es la información que se puede eliminar de tu usuario")
+                self.GUI("Show", "\n".join(str(e) for e in l), geometry="400x"+str(height), prev_window=window)
+                del_field = self.GUI("Text", "¿Qué información deseas eliminar?")
+                if del_field in l:
+                    self.db["Users"].update_one({"nombre": self.User},{"$unset": {del_field: ""}})
+                    self.speak("Información eliminada")
+                    self.GUI("Show", "Información eliminada\ncorrectamente")
+                else:
+                    response = 4
+                    return response
+            else:
+                self.speck("No hay campos que se puedan eliminar de tu usuario")
+
+            response = 0
+            return response
+
+        elif bool([match for match in self.Commands["ChgInformation"] if(match in query)]): # Funcionalidad *ChgInformation* 
+            # Obtención información pública del usuario
+            info = self.db["Users"].find_one({"nombre": self.User}, {
+                                             "nombre": 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+            l = list(info.items())
+            k = list(info.keys())
+            height = 200 + 20*len(l)
+
+            # Mostrar información
+            if len(l) > 0:
+                self.speak("Esta es la información que se puede cambiar de tu usuario")
+                self.GUI("Show", "\n".join(" : ".join(e) for e in l), geometry="400x"+str(height), prev_window=window)
+                chg_field = self.GUI("Text", "¿Qué información deseas cambiar?")
+                if chg_field in k:
+                    chg_attr = self.GUI("Text", "Introduce aquí el nuevo valor de\n" + chg_field)
+                    self.db["Users"].update_one({"nombre": self.User},{"$set": {chg_field: chg_attr}})
+                    self.speak("Información cambiada")
+                    self.GUI("Show", "Información cambiada\ncorrectamente")
+                else:
+                    response = 4
+                    return response
+            else:
+                self.speck("No hay campos que se puedan cambiar en tu usuario")
+
             response = 0
             return response
 
@@ -647,7 +696,7 @@ class Teodoro(System, Applications, Calendar):
                 spotify_response = self.spotify("play", window)                             # Llamada al método *spotify*
                 if spotify_response == 256:                                                         
                     self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
-                    response = 4
+                    response = 5
             else:
                 self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
@@ -658,7 +707,7 @@ class Teodoro(System, Applications, Calendar):
                 spotify_response = self.spotify("next", window)                             # Llamada al método *spotify*
                 if spotify_response == 256:                                                         
                     self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
-                    response = 4
+                    response = 5
             else:
                 self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
@@ -669,7 +718,7 @@ class Teodoro(System, Applications, Calendar):
                 spotify_response = self.spotify("previous", window)                             # Llamada al método *spotify*
                 if spotify_response == 256:                                                         
                     self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
-                    response = 4
+                    response = 5
             else:
                 self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
@@ -680,7 +729,7 @@ class Teodoro(System, Applications, Calendar):
                 spotify_response = self.spotify("pause", window)                             # Llamada al método *spotify*
                 if spotify_response == 256:                                                         
                     self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
-                    response = 4
+                    response = 5
             else:
                 self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
@@ -691,7 +740,7 @@ class Teodoro(System, Applications, Calendar):
                 spotify_response = self.spotify("stop", window)                             # Llamada al método *spotify*
                 if spotify_response == 256:                                                         
                     self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
-                    response = 4
+                    response = 5
             else:
                 self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
@@ -702,7 +751,7 @@ class Teodoro(System, Applications, Calendar):
                 spotify_response = self.spotify("song", window)                             # Llamada al método *spotify*
                 if spotify_response == 256:                                                         
                     self.GUI("Show", text=self.SpotifyError)                                # Mostrar error
-                    response = 4
+                    response = 5
             else:
                 self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar *text*
                 response = 0
@@ -720,7 +769,6 @@ class Teodoro(System, Applications, Calendar):
             return response
  
         elif bool([match for match in self.Commands["Alarm"] if(match in query)]):          # Funcionalidad *Alarm*
-            # "(Pon una) alarma (de '5 segundos/minutos/horas') (de nombre 'Nombre')"
             if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
@@ -731,7 +779,6 @@ class Teodoro(System, Applications, Calendar):
             return response
 
         elif bool([match for match in self.Commands["Reminder"] if(match in query)]):       # Funcionalidad *Reminder*
-            # "(Crea un) recordatorio (de nombre 'Nombre') (para el 'Día')"
             if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
             
@@ -745,7 +792,6 @@ class Teodoro(System, Applications, Calendar):
             return response
  
         elif bool([match for match in self.Commands["Math"] if(match in query)]):           # Funcionalidad *Math*
-            # "Cuánto da/Cuánto es/Calcula/Calcular/Calcúlame *operación matemática como suena*"
             if self.Numbers and self.MathOperations:            
                 speech, text = self.mathOperation(query)                                    # Llamada al método *mathOperation*
                 self.speak(speech)                                                          # Enunciar *speech*
@@ -756,7 +802,6 @@ class Teodoro(System, Applications, Calendar):
             return response
  
         elif bool([match for match in self.Commands["Phone"] if(match in query)]):          # Funcionalidad *Phone*
-            # Encuentra mi teléfono/móvil (y similares)
             if window is not None:                                                          # Cierre ventana anterior  
                 self.GUI("Close", prev_window=window)
 
@@ -769,12 +814,11 @@ class Teodoro(System, Applications, Calendar):
             return response
 
         elif bool([match for match in self.Commands["GetCalendar"] if(match in query)]):    # Funcionalidad *GetCalendar*
-            # "(Enséñame/muéstrame mis/mi) eventos/calendario/tareas para hoy/mañana/pasado mañana/'fecha'/esta-e/próxima-o/siguiente/X siguientes semana/semanas/mes/meses"
             if self.CalendarsID and self.Months and self.Numbers:   
                 speech, text = self.getCalendar(query)                                      # Llamada al método *getCalendar*
                 if speech == -1:
                     self.GUI("Show", text="Petición incorrecta", prev_window=window)        # Mostrar error en la petición
-                    response = 5
+                    response = 6
                 else:
                     self.speak(speech)                                                      # Enunciar *speech*
                     self.GUI("GetCalendar", text=text, size=12,
@@ -792,13 +836,9 @@ class Teodoro(System, Applications, Calendar):
             
             if self.CalendarsID and self.Months and self.Numbers:
                 speech, text = self.setCalendar(query)                                      # Llamada al método *setCalendar*
-                if speech == -1:
-                    self.GUI("Show", text="Petición incorrecta")                            # Mostrar error en la petición
-                    response = 6
-                else:
-                    self.speak(speech)                                                      # Enunciar *speech*
-                    self.GUI("Show", text=text)                                             # Mostrar *text*
-                    response = 0
+                self.speak(speech)                                                          # Enunciar *speech*
+                self.GUI("Show", text=text)                                                 # Mostrar *text*
+                response = 0
                 return response
             else:
                 self.GUI("Show", text=self.Error)                                           # Mostrar error
@@ -903,9 +943,13 @@ def takeQuery(Teo):
                             "No se puede poner una contraseña\n al usuario por defecto")
                 elif response == 4:
                     Teo.GUI("Error", 
+                            "Petición de cambiar/eliminar información en usuario incorrecta.\n",
+                            "Debe especificar uno de los campos\n existentes en el usuario")
+                elif response == 5:
+                    Teo.GUI("Error", 
                             "Petición de acción sobre Spotify incorrecta.\n",
                             "Parece haber algún problema con Spotify.\n Comprueba tu acceso a Spotify")
-                elif response == 5:
+                elif response == 6:
                     Teo.GUI("Error", 
                             "Petición de mostrar eventos del calendario incorrecta.\n\n",
                             "La estructura debe ser:\n\n"

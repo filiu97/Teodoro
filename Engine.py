@@ -86,7 +86,7 @@ class Engine():
         self.voiceEngine.say(audio)
         self.voiceEngine.runAndWait() 
 
-    def takeCommand(self):  # REVISAR
+    def takeCommand(self):
         """
         Función que contiene la lógica de recepción de peticiones del usuario. En este método se recoge el audio y
         se comprueba si el usuario a invocado al asistente. Si es así, se procede a la recepción de la petición y 
@@ -100,8 +100,6 @@ class Engine():
 
         while 1:
             with sr.Microphone() as source:
-                # audio = r.record(source, 3)
-                # r.adjust_for_ambient_noise(source)
                 audio = r.listen(source, phrase_time_limit = 5)
                 try:
                     query = r.recognize_google(audio, language='es-ES')
@@ -109,8 +107,8 @@ class Engine():
                         if (query.find(name)) != -1:
                             self.speak("¿Si?")
                             window = self.GUI("Status", "Reconociendo...")
-                            # audio = r.record(source, 10)
-                            audio = r.listen(source, phrase_time_limit = 10) 
+                            audio = r.record(source, 10)
+                            # audio = r.listen(source, phrase_time_limit = 10) 
                             try:
                                 request = r.recognize_google(audio, language='es-ES')
                                 return request, window
@@ -121,7 +119,7 @@ class Engine():
                 except: 
                     return None, None
 
-    def repeat(self):   # REVISAR
+    def repeat(self):
         """
         Función análoga a *takeCommand* para la repetición de peticiones del usuario tras un reconocimiento erróneo.
 

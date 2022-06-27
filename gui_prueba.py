@@ -705,9 +705,9 @@ def isValidTime(time):
 # print(text)
 # GUI("GetCalendar", text = text, size = 12, geometry = "800x600")
 
-name, password, phone = GUI("Login", text = "Bienvenido/a!", default_text = "filiu")
+# name, password, phone = GUI("Login", text = "Bienvenido/a!", default_text = "filiu")
 
-print(type(phone))
+# print(type(phone))
 
 # print(name)
 # print(password)
@@ -739,3 +739,8 @@ print(type(phone))
 #     "esta-e/próxima-o/siguiente/X siguientes\n"
 #     "semana/semanas/mes/meses",
 #     geometry="600x350")
+
+l = ["color de ojos", "edad", "nombre", "caca", "caca1", "caca2", "caca3", "caca4"]
+height = 200 + 20*len(l)
+
+GUI("Show", "\n".join(str(e) for e in l), geometry="400x"+str(height))

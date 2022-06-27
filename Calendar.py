@@ -424,7 +424,7 @@ class Calendar(Engine):
                     day_str = str(day) + "/" +  str(month) + "/" + str(year)
             
             # Obtención de la hora
-            hours_str = self.GUI("Hour", text="Introduce la hora del recordatorio")
+            hours_str = self.GUI("Hour", text="Introduce la hora del evento")
 
             # Obtención del tiempo del evento
             time_str = day_str + " " + hours_str

@@ -1,3 +1,4 @@
+from attr import attr
 from pymongo import MongoClient
 import gridfs
 import base64
@@ -163,9 +164,27 @@ if __name__ == "__main__":
     #     newvalues = {"$set": {field[i]: attribute[i]}}
     #     db["Users"].update_one(name2find, newvalues)
 
-    import json
+    # import json
 
-    with open('client_secret.json') as file:
-        file_data = json.load(file)
+    # with open('client_secret.json') as file:
+    #     file_data = json.load(file)
 
-    db["General"].insert_one(file_data)
+    # db["General"].insert_one(file_data)
+
+    info = db["Users"].find_one({"nombre": "filiu"}, {
+                                            "nombre" : 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+            
+    # Enunciar información
+
+    # keys = list(info.keys())
+    # attr = list(info.values())
+
+    # info = " : ".join(keys, attr)
+
+    # print(str(list(info.items())))
+
+    l = list(info.items())
+    print(len(l))
+    print("\n".join(" : ".join(e) for e in l))
+
+    # db["Users"].update_one({"nombre": "filiu"},{"$unset": {"edad": ""}})
