@@ -89,6 +89,9 @@ class Teodoro(System, Applications, Calendar):
         self.__defaultHash = "$2b$12$rPkLBpwSB34yL8nrlg21uuqHjoeJdQheW6dtnYggqvUbvJFRZ0T/C"
         self.__CalendarsID = {"personal": None, "trello": None}
         self.__PhoneFunctions = False
+        self.__OnMacro = False
+        self.__OffMacro = False
+        self.__EmergencyMacro = False
         self.__MongoFile = '.MongoDBKey'
 
         # Extracción de la clave de la base de conocimiento de MongoDB.
@@ -163,6 +166,8 @@ class Teodoro(System, Applications, Calendar):
         """
         if self.del_speak:
             self.speak("Adiós " + self.User + ", que tenga un buen día")
+        if self.PhoneFunctions:
+            webbrowser.open(self.OffMacro)
         sys.exit()
 
 
@@ -193,9 +198,12 @@ class Teodoro(System, Applications, Calendar):
                     "Show", "Inicialización correcta.\nBienvenido " + name + "!")
                 self.User = name
                 info = self.db["Users"].find_one(
-                    {"nombre": name}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
+                    {"nombre": name}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1, "_OnMacro": 1, "_OffMacro": 1, "_EmergencyMacro": 1})
                 self.CalendarsID = info["_CalendarsID"]
                 self.PhoneFunctions = info["_PhoneFunctions"]
+                self.OnMacro = info["_OnMacro"]
+                self.OffMacro = info["_OffMacro"]
+                self.EmergencyMacro= info["_EmergencyMacro"]
                 speech = "Cambio de usuario realizado"
                 text = "Operación aceptada"
             elif first == True:
@@ -203,9 +211,12 @@ class Teodoro(System, Applications, Calendar):
                 self.GUI("Show", "Has inicializado como \n " +
                         self.User + ".\nBienvenido!")
                 info = self.db["Users"].find_one(
-                    {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
+                    {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1, "_OnMacro": 1, "_OffMacro": 1, "_EmergencyMacro": 1})
                 self.CalendarsID = info["_CalendarsID"]
                 self.PhoneFunctions = info["_PhoneFunctions"]
+                self.OnMacro = info["_OnMacro"]
+                self.OffMacro = info["_OffMacro"]
+                self.EmergencyMacro= info["_EmergencyMacro"]
                 speech = None
                 text = None
             else:
@@ -218,9 +229,12 @@ class Teodoro(System, Applications, Calendar):
                 self.GUI("Show", "Has inicializado como " +
                         self.User + ".\nBienvenido!")
                 info = self.db["Users"].find_one(
-                    {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1})
+                    {"nombre": self.User}, {"_id": 0, "_CalendarsID": 1, "_PhoneFunctions": 1, "_OnMacro": 1, "_OffMacro": 1, "_EmergencyMacro": 1})
                 self.CalendarsID = info["_CalendarsID"]
                 self.PhoneFunctions = info["_PhoneFunctions"]
+                self.OnMacro = info["_OnMacro"]
+                self.OffMacro = info["_OffMacro"]
+                self.EmergencyMacro= info["_EmergencyMacro"]
                 phone = False
                 speech = None
                 text = None
@@ -234,9 +248,7 @@ class Teodoro(System, Applications, Calendar):
             self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             self.sock.bind(("", 50000))
             self.sock.setblocking(0)
-            # Macro de inicialización
-            self.macroTeodoro = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/Teodoro"
-            webbrowser.open(self.macroTeodoro)
+            webbrowser.open(self.OnMacro)
 
         return speech, text
 
@@ -418,7 +430,9 @@ class Teodoro(System, Applications, Calendar):
         """
         if action == "new":
             self.db["Users"].insert_one({"nombre": name, "_CalendarsID": self.__CalendarsID,
-                                        "_PhoneFunctions": self.__PhoneFunctions, "_salt": self.__defaultSalt, "_hash": self.__defaultHash})
+                                        "_PhoneFunctions": self.__PhoneFunctions,
+                                        "_OnMacro": self.__OnMacro, "_OffMacro": self.__OffMacro, "_EmergencyMacro": self.__EmergencyMacro,
+                                         "_salt": self.__defaultSalt, "_hash": self.__defaultHash})
             speech = "Nuevo usuario creado"
             text = "Nuevo usuario de nombre: " + name + "\ncreado correctamente"
 
@@ -597,7 +611,8 @@ class Teodoro(System, Applications, Calendar):
 
             # Obtención información pública del usuario
             info = self.db["Users"].find_one({"nombre": self.User}, {
-                                             "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+                                             "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0,
+                                             "_PhoneFunctions": 0, "_OnMacro": 0, "_OffMacro": 0, "_EmergencyMacro": 0})
             
             # Enunciar información
             self.speak("Lo que sé de ti es: ")
@@ -609,7 +624,8 @@ class Teodoro(System, Applications, Calendar):
         elif bool([match for match in self.Commands["DelInformation"] if(match in query)]): # Funcionalidad *DelInformation*
             # Obtención información pública del usuario
             info = self.db["Users"].find_one({"nombre": self.User}, {
-                                             "nombre": 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+                                             "nombre": 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0,
+                                             "_PhoneFunctions": 0, "_OnMacro": 0, "_OffMacro": 0, "_EmergencyMacro": 0})
             l = list(info.keys())
             height = 200 + 20*len(l)
 
@@ -634,7 +650,8 @@ class Teodoro(System, Applications, Calendar):
         elif bool([match for match in self.Commands["ChgInformation"] if(match in query)]): # Funcionalidad *ChgInformation* 
             # Obtención información pública del usuario
             info = self.db["Users"].find_one({"nombre": self.User}, {
-                                             "nombre": 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+                                             "nombre": 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0,
+                                             "_PhoneFunctions": 0, "_OnMacro": 0, "_OffMacro": 0, "_EmergencyMacro": 0})
             l = list(info.items())
             k = list(info.keys())
             height = 200 + 20*len(l)
@@ -802,14 +819,29 @@ class Teodoro(System, Applications, Calendar):
             return response
  
         elif bool([match for match in self.Commands["Phone"] if(match in query)]):          # Funcionalidad *Phone*
-            if window is not None:                                                          # Cierre ventana anterior  
+            if window is not None:                                                          # Cierre ventana anterior
                 self.GUI("Close", prev_window=window)
 
             if self.macroPhone:
                 speech = self.findPhone()                                                   # Llamada al método *findPhone*
                 self.speak(speech)                                                          # Enunciar *speech*
             else:
-                self.GUI("Show", text=self.Error, prev_window=window)                       # Mostrar error
+                self.GUI("Show", text=self.Error)                                           # Mostrar error
+            response = 0
+            return response
+        
+        elif bool([match for match in self.Commands["EmergencyCall"] if(match in query)]):  # Funcionalidad *EmergencyCall*
+            if window is not None:                                                          # Cierre ventana anterior
+                self.GUI("Close", prev_window=window)
+            
+            if self.EmergencyMacro:
+                speech = self.EmergencyCall()                                               # Llamada al método *EmergencyCall*
+                self.speak(speech)                                                          # Enunciar *speech*
+                status = None
+                while status == None:                                                       # Bucle para confirmación de llamada
+                    status = self.checkPhone()                                              # Llamada al método *checkPhone*
+            else:
+                self.GUI("Show", text=self.Error)                                           # Mostrar error
             response = 0
             return response
 
@@ -871,7 +903,7 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Del"] if(match in query)]):            # Funcionalidad *Del*
+        elif bool([match for match in self.Commands["Del"] if(match in query)]):            # Funcionalidad *Del* REVISAR
             del self                                                                        # Terminar sistema
             response = 0
             return response
@@ -917,8 +949,8 @@ def takeQuery(Teo):
 
                 # Errores en la ejecución de acciones
                 if response == -1:                             
-                    if window is not None:
-                        Teo.GUI("Close", prev_window=window)    # Cierre ventana anterior
+                    # if window is not None:
+                    #     Teo.GUI("Close", prev_window=window)    # Cierre ventana anterior
                     Teo.speak("¿Puede repetir su petición?")    # Enunciar frase
                     query, window = Teo.repeat()                # Llamada al método *repeat*
                     if query == None:

@@ -45,10 +45,10 @@ if __name__ == "__main__":
     #     contents = base64.b64encode(f.read())
     # fs.put(contents, filename="filiu")
 
-    # file = "/home/filiu/Teodoro/Teodoro_Calling.mp3"
+    # file = "/home/filiu/Teodoro/EmergencyCall.mp3"
     # with open(file, 'rb') as f:
     #     contents = base64.b64encode(f.read())
-    # fs.put(contents, filename="audio")
+    # fs.put(contents, filename="EmergencyCall")
 
     # image = fs.find_one({"filename":"filiu"})
     # bytedata = image.read()
@@ -56,12 +56,11 @@ if __name__ == "__main__":
     # img_PIL = Image.open(ima_IO)
     # img_PIL.show()
 
-    # audio = fs.find_one({"filename":"audio"})
-    # bytedata = audio.read()
-
-    # aud_IO = BytesIO(base64.b64decode(bytedata))
-    # song = AudioSegment.from_file(aud_IO, format="mp3")
-    # play(song)
+    audio = fs.find_one({"filename":"EmergencyCall"})
+    bytedata = audio.read()
+    aud_IO = BytesIO(base64.b64decode(bytedata))
+    song = AudioSegment.from_file(aud_IO, format="mp3")
+    play(song)
 
 
 
@@ -171,8 +170,8 @@ if __name__ == "__main__":
 
     # db["General"].insert_one(file_data)
 
-    info = db["Users"].find_one({"nombre": "filiu"}, {
-                                            "nombre" : 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
+    # info = db["Users"].find_one({"nombre": "filiu"}, {
+    #                                         "nombre" : 0, "_id": 0, "_salt": 0, "_hash": 0, "_CalendarsID": 0, "_PhoneFunctions": 0})
             
     # Enunciar información
 
@@ -183,8 +182,8 @@ if __name__ == "__main__":
 
     # print(str(list(info.items())))
 
-    l = list(info.items())
-    print(len(l))
-    print("\n".join(" : ".join(e) for e in l))
+    # l = list(info.items())
+    # print(len(l))
+    # print("\n".join(" : ".join(e) for e in l))
 
     # db["Users"].update_one({"nombre": "filiu"},{"$unset": {"edad": ""}})

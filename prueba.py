@@ -1,5 +1,3 @@
-
-
 import os
 import shlex
 from time import sleep
@@ -310,16 +308,25 @@ import color
 # print(status)
 
 
+import webbrowser 
+import socket
 
-# import socket
+webbrowser.open("https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call")
 
-# sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-# sock.bind(("",50000))
-# while True:
-#     data, _ = sock.recvfrom(1024)
-#     code = data.decode("utf-8")
-#     if code.startswith('on'):
-#         print(code[2:])
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind(("",50000))
+sock.setblocking(0)
+status = None
+while status == None:
+    try:
+        data, _ = sock.recvfrom(1024)
+        code = data.decode("utf-8")
+        if code == 'c':
+            sleep(10)
+            print("Ok")
+            status = 1
+    except:
+        status = None
 
 # number = str(datetime.today().date())
 # print(number)
@@ -459,11 +466,11 @@ import color
 
 
 
-f = open(".log", "r")
-last_connection = f.read()
+# f = open(".log", "r")
+# last_connection = f.read()
 
-if str(datetime.today().date()) == last_connection:
-    print("Yeah")
-else:
-    print("No")
-f.close()
+# if str(datetime.today().date()) == last_connection:
+#     print("Yeah")
+# else:
+#     print("No")
+# f.close()

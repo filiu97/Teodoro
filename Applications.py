@@ -12,6 +12,11 @@ import subprocess as sp
 from datetime import datetime, timedelta
 from numpy import sqrt, cbrt
 import telegram_send
+import base64
+from pydub import AudioSegment
+from pydub.playback import play
+from io import BytesIO
+from time import sleep
 
 
 class Applications(Engine):
@@ -69,7 +74,6 @@ class Applications(Engine):
         
         # Atributos de las funcionalidades del teléfono móvil
         self.macroPhone = None
-        self.macroEmergencyCall = "https://trigger.macrodroid.com/66e970ab-dfed-4d8a-9e54-00ecf148d064/emergency_call"
 
         # Atributo de localización por defecto
         self.defaultLocation = "Aravaca"
@@ -462,14 +466,20 @@ class Applications(Engine):
             code = data.decode("utf-8") 
             if code.startswith('on'):                                           # Inicio Teodoro en el teléfono móvil
                 self.macroPhone = code[2:]
-            # elif code == 'c':
-            #     self.speak(self.User + ", te están llamando")
+            elif code == 'c':                                                   # Reproducción audio de llamada de emergencia
+                sleep(10)
+                audio = self.fs.find_one({"filename":"EmergencyCall"})
+                bytedata = audio.read()
+                aud_IO = BytesIO(base64.b64decode(bytedata))
+                song = AudioSegment.from_file(aud_IO, format="mp3")
+                play(song)
+                return 1
             elif code == 'b':                                                   # Batería baja
                 self.speak(self.User + ", te queda poca batería en el móvil")   
             elif code == 'f':                                                   # Carga llena
                 self.speak(self.User + ", tu móvil ya está cargado")
         except:
-            pass
+            return None
         
     def findPhone(self):
         """
@@ -482,4 +492,16 @@ class Applications(Engine):
         """
         telegram_send.send(messages=[self.macroPhone])  # Trigger a través de bot en Telegram
         speech = "Voy a ello"
+        return speech
+
+    def EmergencyCall(self):
+        """
+        Función que realiza la funcionalidad de llamada de emergencia con el teléfono móvil de usuario. 
+        Debe estar configurado la macro para poder realizarlo, al igual que existir un audio en la base de conocimiento.
+
+        Returns:
+            speech (str): Cadena de texto que contiene la frase que debe pronunciar el sistema.
+        """
+        webbrowser.open(self.EmergencyMacro)
+        speech = "Llamando a emergencias"
         return speech
