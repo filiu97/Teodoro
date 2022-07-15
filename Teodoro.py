@@ -1,4 +1,4 @@
-#! /usr/bin python3
+#!/usr/bin/python3
 
 from Applications import Applications
 from Calendar import Calendar
@@ -903,9 +903,8 @@ class Teodoro(System, Applications, Calendar):
             response = 0
             return response
 
-        elif bool([match for match in self.Commands["Del"] if(match in query)]):            # Funcionalidad *Del* REVISAR
-            del self                                                                        # Terminar sistema
-            response = 0
+        elif bool([match for match in self.Commands["Del"] if(match in query)]):            # Funcionalidad *Del* REVISAR                                                                     # Terminar sistema
+            response = -2
             return response
 
         else:
@@ -940,15 +939,17 @@ def takeQuery(Teo):
         internetOk = Teo.internetCheck()                        # Llamada al método *internetCheck*
         if internetOk != 0:                                     # COMPROBACIÓN ACCESO A INTERNET
             Teo.GUI("Show", text=internetOk)                    # Mostrar error
-            del Teo                                             # Terminar sistema
         else:
             query, window = Teo.takeCommand()                   # Llamada al método *takeCommand*
             if query != None:                                   # PETICIÓN REALIZADA
                 query = query.lower()
                 response = Teo.getAction(query, window)         # Llamada al método *getAction*
 
+                # Fin del programa
+                if response == -2:
+                    break
                 # Errores en la ejecución de acciones
-                if response == -1:                             
+                elif response == -1:                             
                     # if window is not None:
                     #     Teo.GUI("Close", prev_window=window)    # Cierre ventana anterior
                     Teo.speak("¿Puede repetir su petición?")    # Enunciar frase
@@ -1005,3 +1006,4 @@ if __name__ == '__main__':
 
     Teo = Teodoro()  # Instanciación de la clase Teodoro
     takeQuery(Teo)   # Llamada a la función principal del sistema
+    del Teo          # Destructor de Teodoro

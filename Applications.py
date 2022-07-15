@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 from Engine import Engine
 import os
@@ -467,8 +468,8 @@ class Applications(Engine):
             if code.startswith('on'):                                           # Inicio Teodoro en el teléfono móvil
                 self.macroPhone = code[2:]
             elif code == 'c':                                                   # Reproducción audio de llamada de emergencia
-                sleep(10)
-                audio = self.fs.find_one({"filename":"EmergencyCall"})
+                sleep(10)                                                       # Espera a que coja la llamada
+                audio = self.fs.find_one({"filename":"EmergencyCall"})          # Reproducción del audio
                 bytedata = audio.read()
                 aud_IO = BytesIO(base64.b64decode(bytedata))
                 song = AudioSegment.from_file(aud_IO, format="mp3")
