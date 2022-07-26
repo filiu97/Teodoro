@@ -3,6 +3,7 @@
 from Engine import Engine
 
 import os
+import webbrowser
 
 class System(Engine):
     
@@ -37,6 +38,8 @@ class System(Engine):
         Función que realiza el apagado del ordenador.
         """
         self.speak("Perfecto, que tengas un buen día")  # Enunciar frase
+        if self.PhoneFunctions:
+            webbrowser.open(self.OffMacro)
         os.system("shutdown now -h")
 
     def suspend(self):
@@ -51,4 +54,6 @@ class System(Engine):
         Función que realiza el apagado del ordenador.
         """
         self.speak("Perfecto, reiniciando el equipo")   # Enunciar frase
+        if self.PhoneFunctions:
+            webbrowser.open(self.OffMacro)
         os.system("shutdown now -r")               
